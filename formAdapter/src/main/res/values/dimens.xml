@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="formTextSize">14sp</dimen>
+
+    <dimen name="formVerticalLocalMarginSize">8dp</dimen>
+    <dimen name="formVerticalGlobalMarginSize">16dp</dimen>
+    <dimen name="formHorizontalLocalMarginSize">8dp</dimen>
+    <dimen name="formHorizontalGlobalMarginSize">16dp</dimen>
+
+    <dimen name="formVerticalLocalPaddingSize">8dp</dimen>
+    <dimen name="formVerticalGlobalPaddingSize">16dp</dimen>
+    <dimen name="formHorizontalLocalPaddingSize">8dp</dimen>
+    <dimen name="formHorizontalGlobalPaddingSize">16dp</dimen>
+</resources>
