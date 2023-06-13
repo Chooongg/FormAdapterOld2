@@ -1,5 +1,7 @@
 package com.chooongg.formAdapter.typeset
 
-interface Typeset {
+import com.chooongg.formAdapter.enum.FormEmsMode
+
+abstract class Typeset(val ems: Int, emsMode: FormEmsMode) {
 
 }

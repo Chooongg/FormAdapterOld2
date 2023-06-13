@@ -1,6 +1,5 @@
 package com.chooongg.formAdapter.style
 
-import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import com.chooongg.formAdapter.FormViewHolder
@@ -11,6 +10,8 @@ import com.chooongg.formAdapter.item.FormGroupTitle
  * 表单分组样式
  */
 abstract class Style {
+
+    open fun isNeedDecorationMargins() = true
 
     /**
      * 创建样式布局

@@ -1,4 +1,4 @@
-package com.chooongg.formAdapter.mode
+package com.chooongg.formAdapter.enum
 
 /**
  * 可见模式

@@ -1,4 +1,4 @@
-package com.chooongg.formAdapter.mode
+package com.chooongg.formAdapter.enum
 
 /**
  * 选项加载模式

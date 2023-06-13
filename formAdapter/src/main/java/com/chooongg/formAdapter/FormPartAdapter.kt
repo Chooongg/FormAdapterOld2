@@ -6,10 +6,20 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListUpdateCallback
 import androidx.recyclerview.widget.RecyclerView
+import com.chooongg.formAdapter.data.PartCreator
+import com.chooongg.formAdapter.data.PartData
 import com.chooongg.formAdapter.item.BaseForm
 import com.chooongg.formAdapter.item.FormGroupTitle
+import com.chooongg.formAdapter.style.Style
+import java.lang.ref.WeakReference
 
-class FormAdapter : RecyclerView.Adapter<FormViewHolder>() {
+class FormPartAdapter(
+    val style: Style
+) : RecyclerView.Adapter<FormViewHolder>() {
+
+    private var _formView: WeakReference<FormView>? = null
+
+    val formView get() = _formView?.get()
 
     private val asyncDiffer =
         AsyncListDiffer(object : ListUpdateCallback {
@@ -33,6 +43,27 @@ class FormAdapter : RecyclerView.Adapter<FormViewHolder>() {
                 oldItem.antiRepeatCode == newItem.antiRepeatCode
         }).build())
 
+    var data: PartData = PartData()
+        private set
+
+    var isShow = true
+        set(value) {
+            field = value
+            update()
+        }
+
+    fun submit(creator: PartCreator.() -> Unit) {
+        submit(PartCreator().apply(creator))
+    }
+
+    fun submit(creator: PartCreator) {
+        this.data = PartData(creator)
+        update()
+    }
+
+    fun update() {
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FormViewHolder {
         TODO("Not yet implemented")
     }
@@ -41,5 +72,13 @@ class FormAdapter : RecyclerView.Adapter<FormViewHolder>() {
 
     override fun onBindViewHolder(holder: FormViewHolder, position: Int) {
         TODO("Not yet implemented")
+    }
+
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        if (recyclerView is FormView) _formView = WeakReference(recyclerView)
+    }
+
+    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
+        _formView = null
     }
 }

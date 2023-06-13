@@ -2,9 +2,9 @@ package com.chooongg.formAdapter.item
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.Px
-import com.chooongg.formAdapter.mode.FormEnableMode
-import com.chooongg.formAdapter.mode.FormOutputMode
-import com.chooongg.formAdapter.mode.FormVisibilityMode
+import com.chooongg.formAdapter.enum.FormEnableMode
+import com.chooongg.formAdapter.enum.FormOutputMode
+import com.chooongg.formAdapter.enum.FormVisibilityMode
 import com.chooongg.formAdapter.typeset.Typeset
 import org.json.JSONObject
 import kotlin.random.Random
