@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListUpdateCallback
 import androidx.recyclerview.widget.RecyclerView
-import com.chooongg.formAdapter.data.PartCreator
 import com.chooongg.formAdapter.data.PartData
 import com.chooongg.formAdapter.item.BaseForm
 import com.chooongg.formAdapter.item.FormGroupTitle
@@ -14,12 +13,13 @@ import com.chooongg.formAdapter.style.Style
 import java.lang.ref.WeakReference
 
 class FormPartAdapter(
-    val style: Style
+    val helper: FormHelper,
+    private val style: Style
 ) : RecyclerView.Adapter<FormViewHolder>() {
 
-    private var _formView: WeakReference<FormView>? = null
+    private var _recyclerView: WeakReference<RecyclerView>? = null
 
-    val formView get() = _formView?.get()
+    val recyclerView get() = _recyclerView?.get()
 
     private val asyncDiffer =
         AsyncListDiffer(object : ListUpdateCallback {
@@ -36,49 +36,90 @@ class FormPartAdapter(
                 notifyItemMoved(fromPosition, toPosition)
 
         }, AsyncDifferConfig.Builder(object : DiffUtil.ItemCallback<BaseForm>() {
-            override fun areItemsTheSame(oldItem: BaseForm, newItem: BaseForm) =
-                if (oldItem is FormGroupTitle || newItem is FormGroupTitle) false else oldItem == newItem
+            override fun areItemsTheSame(oldItem: BaseForm, newItem: BaseForm) =when{
+                oldItem is FormGroupTitle -> false
+                newItem is FormGroupTitle -> false
+                else-> true
+            }
 
             override fun areContentsTheSame(oldItem: BaseForm, newItem: BaseForm) =
                 oldItem.antiRepeatCode == newItem.antiRepeatCode
         }).build())
 
-    var data: PartData = PartData()
-        private set
-
-    var isShow = true
+    var isEnable = true
         set(value) {
             field = value
             update()
         }
 
-    fun submit(creator: PartCreator.() -> Unit) {
-        submit(PartCreator().apply(creator))
+    var data = PartData()
+
+    fun create(data: PartData.() -> Unit) {
+        create(PartData().apply(data))
     }
 
-    fun submit(creator: PartCreator) {
-        this.data = PartData(creator)
+    fun create(data: PartData) {
+        this.data = data
         update()
     }
 
     fun update() {
+        if (!isEnable) {
+            asyncDiffer.submitList(null)
+            return
+        }
+        // 去除空组
+        data.groups.forEach { if (it.items.isEmpty()) data.groups.remove(it) }
+        data.groups.forEachIndexed { index, group ->
+            group.items.forEach {
+
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FormViewHolder {
-        TODO("Not yet implemented")
+        val styleLayout = style.onCreateStyleLayout(parent)
+        val typesetLayout = helper.getTypesetForItemViewType(viewType)
+            .onCreateTypesetLayout(styleLayout ?: parent)
+        val itemView = helper.getItemProviderForItemViewType(viewType)
+            .onCreateItemView(typesetLayout ?: styleLayout ?: parent)
+        return FormViewHolder(styleLayout ?: typesetLayout ?: itemView)
     }
 
     override fun getItemCount() = asyncDiffer.currentList.size
 
     override fun onBindViewHolder(holder: FormViewHolder, position: Int) {
-        TODO("Not yet implemented")
+        val item = asyncDiffer.currentList[position]
+        style.onBindStyleLayout(holder, item)
+        helper.getTypesetForItemViewType(holder.itemViewType).onBindTypesetLayout(holder, item)
+        helper.getItemProviderForItemViewType(holder.itemViewType)
+            .onBindItemView(helper, holder, item)
+    }
+
+    override fun onBindViewHolder(
+        holder: FormViewHolder,
+        position: Int,
+        payloads: MutableList<Any>
+    ) {
+        val item = asyncDiffer.currentList[position]
+        style.onBindStyleLayout(holder, item)
+        helper.getTypesetForItemViewType(holder.itemViewType).onBindTypesetLayout(holder, item)
+        helper.getItemProviderForItemViewType(holder.itemViewType)
+            .onBindItemView(helper, holder, item, payloads)
     }
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
-        if (recyclerView is FormView) _formView = WeakReference(recyclerView)
+        _recyclerView = WeakReference(recyclerView)
     }
 
     override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
-        _formView = null
+        _recyclerView = null
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        val item = asyncDiffer.currentList[position]
+        return helper.getItemViewType(
+            style, item.typeset ?: style.defaultTypeset, item.getItemProvider(helper)
+        )
     }
 }

@@ -2,14 +2,16 @@ package com.chooongg.formAdapter.item
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.Px
+import com.chooongg.formAdapter.FormHelper
 import com.chooongg.formAdapter.enum.FormEnableMode
 import com.chooongg.formAdapter.enum.FormOutputMode
 import com.chooongg.formAdapter.enum.FormVisibilityMode
+import com.chooongg.formAdapter.provider.BaseFormProvider
 import com.chooongg.formAdapter.typeset.Typeset
 import org.json.JSONObject
 import kotlin.random.Random
 
-open class BaseForm(
+abstract class BaseForm(
     /**
      * 名称
      */
@@ -18,9 +20,15 @@ open class BaseForm(
      * 字段
      */
     val field: String?,
+    /**
+     * 视图提供器
+     */
+    val provider: () -> BaseFormProvider
 ) {
 
     //<editor-fold desc="基础 Basic">
+
+    abstract fun getItemProvider(helper: FormHelper): BaseFormProvider
 
     /**
      * 提示
@@ -62,11 +70,6 @@ open class BaseForm(
     //<editor-fold desc="菜单 Menu">
 
     /**
-     * 菜单可见模式
-     */
-    open var menuVisibilityMode: FormVisibilityMode = FormVisibilityMode.ALWAYS
-
-    /**
      * 菜单文本
      */
     open var menuText: CharSequence? = null
@@ -82,6 +85,11 @@ open class BaseForm(
      */
     @Px
     open var menuIconSize: Int? = null
+
+    /**
+     * 菜单可见模式
+     */
+    open var menuVisibilityMode: FormVisibilityMode = FormVisibilityMode.ALWAYS
 
     /**
      * 菜单启用模式

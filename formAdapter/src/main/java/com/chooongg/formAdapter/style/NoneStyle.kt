@@ -5,9 +5,10 @@ import com.chooongg.formAdapter.FormViewHolder
 import com.chooongg.formAdapter.R
 import com.chooongg.formAdapter.item.BaseForm
 import com.chooongg.formAdapter.item.FormGroupTitle
+import com.chooongg.formAdapter.typeset.NoneTypeset
 import com.google.android.material.textview.MaterialTextView
 
-object NoneStyle : Style() {
+object NoneStyle : Style(NoneTypeset) {
 
     override fun isNeedDecorationMargins() = false
     override fun onCreateStyleLayout(parent: ViewGroup) = null

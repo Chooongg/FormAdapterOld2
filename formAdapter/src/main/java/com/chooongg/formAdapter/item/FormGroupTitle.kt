@@ -1,4 +1,9 @@
 package com.chooongg.formAdapter.item
 
-class FormGroupTitle(name: CharSequence?) : BaseForm(name, null) {
+import com.chooongg.formAdapter.provider.FormGroupTitleProvider
+
+class FormGroupTitle(
+    name: CharSequence?
+) : BaseForm(name, null, { FormGroupTitleProvider }) {
+
 }

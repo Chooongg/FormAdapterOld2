@@ -1,14 +1,8 @@
 package com.chooongg.formAdapter.data
 
-class PartData : PartCreator {
+class PartData {
 
-    constructor()
+    val groups = mutableListOf<GroupData>()
 
-    constructor(creator: PartCreator) {
-        if (creator is PartData) {
 
-        } else {
-
-        }
-    }
 }
