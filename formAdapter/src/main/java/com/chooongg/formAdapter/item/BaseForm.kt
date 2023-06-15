@@ -20,14 +20,13 @@ abstract class BaseForm(
      * 字段
      */
     val field: String?,
-    /**
-     * 视图提供器
-     */
-    val provider: () -> BaseFormProvider
 ) {
 
     //<editor-fold desc="基础 Basic">
 
+    /**
+     * 可根据helper中的信息动态配置视图代理，建议非必要除本身代理和 Text 代理外不要使用其他代理
+     */
     abstract fun getItemProvider(helper: FormHelper): BaseFormProvider
 
     /**

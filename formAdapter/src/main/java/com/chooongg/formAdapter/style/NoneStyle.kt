@@ -10,7 +10,6 @@ import com.google.android.material.textview.MaterialTextView
 
 object NoneStyle : Style(NoneTypeset) {
 
-    override fun isNeedDecorationMargins() = false
     override fun onCreateStyleLayout(parent: ViewGroup) = null
     override fun onBindStyleLayout(holder: FormViewHolder, item: BaseForm) = Unit
     override fun onCreateGroupTitle(parent: ViewGroup) = MaterialTextView(parent.context).apply {

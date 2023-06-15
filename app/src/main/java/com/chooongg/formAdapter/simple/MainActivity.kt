@@ -6,6 +6,9 @@ import android.util.Log
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.chooongg.formAdapter.simple.databinding.ActivityMainBinding
 
 
@@ -13,12 +16,17 @@ class MainActivity : AppCompatActivity() {
 
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
 
+    private val fragments = listOf(
+        BasicFragment()
+    )
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
         getAndroidScreenProperty()
+        binding.viewPager.adapter = FragmentAdapter(this, fragments)
     }
 
     private fun getAndroidScreenProperty() {
@@ -33,5 +41,13 @@ class MainActivity : AppCompatActivity() {
         val screenWidth = (width / density).toInt() //屏幕宽度(dp)
         val screenHeight = (height / density).toInt() //屏幕高度(dp)
         Log.e("123", "$screenWidth======$screenHeight")
+    }
+
+    private class FragmentAdapter(
+        activity: FragmentActivity,
+        private val fragments: List<Fragment>
+    ) : FragmentStateAdapter(activity) {
+        override fun getItemCount() = fragments.size
+        override fun createFragment(position: Int) = fragments[position]
     }
 }

@@ -12,16 +12,37 @@ class FormHelper {
 
     internal val adapter = ConcatAdapter()
 
-    fun addPart(style: Style = NoneStyle, block: PartData.() -> Unit): FormPartAdapter {
+    fun createPart(vararg part: FormPartAdapter) {
+        adapter.adapters.forEach { adapter.removeAdapter(it) }
+        part.forEach { adapter.addAdapter(it) }
+    }
+
+    fun plusPart(style: Style = NoneStyle, block: PartData.() -> Unit): FormPartAdapter {
         val adapter = FormPartAdapter(this, style).apply {
             create(block)
         }
-        addPart(adapter)
+        plusPart(adapter)
         return adapter
     }
 
-    fun addPart(part: FormPartAdapter) {
+    fun plusPart(part: FormPartAdapter) {
         adapter.addAdapter(part)
+    }
+
+    fun plusPart(
+        index: Int,
+        style: Style = NoneStyle,
+        block: PartData.() -> Unit
+    ): FormPartAdapter {
+        val adapter = FormPartAdapter(this, style).apply {
+            create(block)
+        }
+        plusPart(index, adapter)
+        return adapter
+    }
+
+    fun plusPart(index: Int, part: FormPartAdapter) {
+        adapter.addAdapter(index, part)
     }
 
     fun removePart(part: FormPartAdapter) {

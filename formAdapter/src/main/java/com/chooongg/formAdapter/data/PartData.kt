@@ -4,5 +4,66 @@ class PartData {
 
     val groups = mutableListOf<GroupData>()
 
+    /**
+     * 是否启用片段
+     */
+    var isEnablePart: Boolean = true
 
+    /**
+     * 片段名称
+     */
+    var partName: CharSequence? = null
+
+    /**
+     * 片段字段
+     */
+    var partField: String? = null
+
+    /**
+     * 是否是动态片段
+     */
+    val dynamicPart get() = dynamicPartCreateGroupBlock != null
+
+    internal var dynamicPartCreateGroupBlock: (GroupData.() -> Unit)? = null
+
+    internal var dynamicPartNameFormatBlock: ((name: CharSequence?, index: Int) -> CharSequence)? =
+        null
+
+    /**
+     * 动态片段最小组数量
+     */
+    @androidx.annotation.IntRange(from = 0)
+    var dynamicPartMinGroupCount: Int = 1
+
+    /**
+     * 动态片段最大组数量
+     */
+    @androidx.annotation.IntRange(from = 1)
+    var dynamicPartMaxGroupCount: Int = Int.MAX_VALUE
+
+    /**
+     * 动态片段添加组
+     */
+    fun dynamicPartCreateGroupListener(block: (GroupData.() -> Unit)?) {
+        dynamicPartCreateGroupBlock = block
+    }
+
+    /**
+     * 动态片段名称格式化
+     */
+    fun dynamicPartNameFormatListener(block: ((name: CharSequence?, index: Int) -> CharSequence)?) {
+        dynamicPartNameFormatBlock = block
+    }
+
+    /**
+     * 添加组
+     */
+    fun plusGroup(block: GroupData.() -> Unit) {
+        groups.add(GroupData().apply(block))
+    }
+
+    /**
+     * 清空组
+     */
+    fun clearGroups() = groups.clear()
 }

@@ -5,7 +5,7 @@ import com.chooongg.formAdapter.provider.FormTextProvider
 
 class FormText(
     name: CharSequence?, field: String?
-) : BaseForm(name, field, { FormTextProvider }) {
+) : BaseForm(name, field) {
 
     override fun getItemProvider(helper: FormHelper) = FormTextProvider
 

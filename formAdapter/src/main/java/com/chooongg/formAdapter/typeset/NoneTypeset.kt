@@ -12,5 +12,4 @@ object NoneTypeset : Typeset(FormManager.emsSize, FormEmsMode.NONE) {
 
     override fun onBindTypesetLayout(holder: FormViewHolder, item: BaseForm) = Unit
 
-
 }
