@@ -5,11 +5,11 @@ plugins {
 
 android {
     namespace 'com.chooongg.formAdapter'
-    compileSdk 34
+    compileSdk 33
 
     defaultConfig {
         minSdk 24
-        targetSdk 34
+        targetSdk 33
         consumerProguardFiles "consumer-rules.pro"
     }
 

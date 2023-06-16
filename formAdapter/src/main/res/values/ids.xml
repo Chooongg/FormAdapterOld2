@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <item name="formContent" type="id" />
+    <item name="formInternalStyleParent" type="id" />
+
+    <item name="formInternalTypesetParent" type="id" />
+
+    <item name="formInternalName" type="id" />
+    <item name="formInternalContent" type="id" />
+
 </resources>

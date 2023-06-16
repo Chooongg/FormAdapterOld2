@@ -8,9 +8,19 @@ import com.chooongg.formAdapter.style.NoneStyle
 import com.chooongg.formAdapter.style.Style
 import com.chooongg.formAdapter.typeset.Typeset
 
-class FormHelper {
+class FormHelper(isEditable: Boolean, block: (FormHelper.() -> Unit)?) {
 
     internal val adapter = ConcatAdapter()
+
+    var isEditable: Boolean = isEditable
+        set(value) {
+            field = value
+            updateForm()
+        }
+
+    init {
+        block?.invoke(this)
+    }
 
     fun createPart(vararg part: FormPartAdapter) {
         adapter.adapters.forEach { adapter.removeAdapter(it) }
@@ -18,10 +28,9 @@ class FormHelper {
     }
 
     fun plusPart(style: Style = NoneStyle, block: PartData.() -> Unit): FormPartAdapter {
-        val adapter = FormPartAdapter(this, style).apply {
-            create(block)
-        }
+        val adapter = FormPartAdapter(this, style)
         plusPart(adapter)
+        adapter.create(block)
         return adapter
     }
 
@@ -54,6 +63,10 @@ class FormHelper {
             if (it is FormPartAdapter) it.update()
         }
     }
+
+    fun partIndexOf(part: FormPartAdapter) = adapter.adapters.indexOf(part)
+
+    fun partSize() = adapter.adapters.size
 
     private val stylePool = ArraySet<Style>()
     private val typesetPool = ArraySet<Typeset>()

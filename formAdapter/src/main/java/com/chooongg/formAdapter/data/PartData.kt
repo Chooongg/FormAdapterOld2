@@ -30,6 +30,11 @@ class PartData {
         null
 
     /**
+     * 动态片段显示名称
+     */
+    var dynamicPartShowName = true
+
+    /**
      * 动态片段最小组数量
      */
     @androidx.annotation.IntRange(from = 0)
@@ -60,6 +65,20 @@ class PartData {
      */
     fun plusGroup(block: GroupData.() -> Unit) {
         groups.add(GroupData().apply(block))
+    }
+
+    /**
+     * 添加组
+     */
+    fun plusGroup(group: GroupData) {
+        groups.add(group)
+    }
+
+    /**
+     * 删除组
+     */
+    fun removeGroup(group: GroupData) {
+        groups.remove(group)
     }
 
     /**

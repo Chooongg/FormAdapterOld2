@@ -1,9 +1,11 @@
 package com.chooongg.formAdapter.typeset
 
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.annotation.GravityInt
 import androidx.annotation.Px
 import com.chooongg.formAdapter.FormViewHolder
+import com.chooongg.formAdapter.boundary.FormPaddingInfo
 import com.chooongg.formAdapter.enum.FormEmsMode
 import com.chooongg.formAdapter.item.BaseForm
 
@@ -15,9 +17,36 @@ abstract class Typeset(val ems: Int, val emsMode: FormEmsMode) {
     @Px
     open fun contentWidth(): Int = ViewGroup.LayoutParams.MATCH_PARENT
 
-    abstract fun onCreateTypesetLayout(parent: ViewGroup): ViewGroup?
+    abstract fun onCreateTypesetLayout(parent: ViewGroup, paddingInfo: FormPaddingInfo): ViewGroup?
 
-    abstract fun onBindTypesetLayout(holder: FormViewHolder, item: BaseForm)
+    abstract fun onBindTypesetLayout(
+        paddingInfo: FormPaddingInfo,
+        holder: FormViewHolder,
+        item: BaseForm
+    )
+
+    open fun setNameEms(textView: TextView) {
+        when (emsMode) {
+            FormEmsMode.NONE -> {
+                textView.minWidth = 0
+                textView.maxWidth = Int.MAX_VALUE
+            }
+
+            FormEmsMode.MIN -> {
+                textView.minEms = ems
+                textView.maxWidth = Int.MAX_VALUE
+            }
+
+            FormEmsMode.MAX -> {
+                textView.minWidth = 0
+                textView.maxEms = ems
+            }
+
+            FormEmsMode.FIXED -> {
+                textView.setEms(ems)
+            }
+        }
+    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

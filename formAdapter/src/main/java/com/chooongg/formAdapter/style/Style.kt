@@ -4,7 +4,9 @@ import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import com.chooongg.formAdapter.FormViewHolder
+import com.chooongg.formAdapter.R
 import com.chooongg.formAdapter.boundary.FormMarginInfo
+import com.chooongg.formAdapter.boundary.FormPaddingInfo
 import com.chooongg.formAdapter.item.BaseForm
 import com.chooongg.formAdapter.item.FormGroupTitle
 import com.chooongg.formAdapter.typeset.Typeset
@@ -16,14 +18,39 @@ abstract class Style(val defaultTypeset: Typeset) {
 
     private var _marginInfo: FormMarginInfo? = null
 
-    protected val marginInfo = _marginInfo!!
+    private var _paddingInfo: FormPaddingInfo? = null
 
-    internal fun createMarginInfo(context: Context) {
+    protected val marginInfo get() = _marginInfo!!
+
+    internal val paddingInfo get() = _paddingInfo!!
+
+    internal fun createMarginAndPaddingInfo(context: Context) {
         _marginInfo = onCreateMarginInfo(context)
+        _paddingInfo = onCreatePaddingInfo(context)
     }
 
+    /**
+     * 创建外边距信息
+     */
     protected open fun onCreateMarginInfo(context: Context): FormMarginInfo {
-        return FormMarginInfo(0, 0, 0, 0)
+        return FormMarginInfo(
+            context.resources.getDimensionPixelSize(R.dimen.formVerticalLocalMarginSize),
+            context.resources.getDimensionPixelSize(R.dimen.formVerticalGlobalMarginSize),
+            context.resources.getDimensionPixelSize(R.dimen.formHorizontalLocalMarginSize),
+            context.resources.getDimensionPixelSize(R.dimen.formHorizontalGlobalMarginSize)
+        )
+    }
+
+    /**
+     * 创建内边距信息
+     */
+    protected open fun onCreatePaddingInfo(context: Context): FormPaddingInfo {
+        return FormPaddingInfo(
+            context.resources.getDimensionPixelSize(R.dimen.formVerticalLocalPaddingSize),
+            context.resources.getDimensionPixelSize(R.dimen.formVerticalGlobalPaddingSize),
+            context.resources.getDimensionPixelSize(R.dimen.formHorizontalLocalPaddingSize),
+            context.resources.getDimensionPixelSize(R.dimen.formHorizontalGlobalPaddingSize)
+        )
     }
 
     /**

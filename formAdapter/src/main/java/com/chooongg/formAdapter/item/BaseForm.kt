@@ -3,6 +3,7 @@ package com.chooongg.formAdapter.item
 import androidx.annotation.DrawableRes
 import androidx.annotation.Px
 import com.chooongg.formAdapter.FormHelper
+import com.chooongg.formAdapter.boundary.Boundary
 import com.chooongg.formAdapter.enum.FormEnableMode
 import com.chooongg.formAdapter.enum.FormOutputMode
 import com.chooongg.formAdapter.enum.FormVisibilityMode
@@ -114,6 +115,27 @@ abstract class BaseForm(
     //<editor-fold desc="内部 internal">
 
     /**
+     * 边界信息
+     */
+    var marginBoundary: Boundary = Boundary()
+        internal set
+
+    var paddingBoundary: Boundary = Boundary()
+        internal set
+
+    /**
+     * 组索引
+     */
+    var groupIndex = -1
+        internal set
+
+    /**
+     * 组中的位置
+     */
+    var positionForGroup = -1
+        internal set
+
+    /**
      * 反重复代码
      */
     internal val antiRepeatCode = System.currentTimeMillis() + Random.nextLong(10000)
@@ -177,11 +199,11 @@ abstract class BaseForm(
     /**
      * 真实的可见性
      */
-    open fun isRealVisible(isEditable: Boolean): Boolean {
+    open fun isRealVisible(helper: FormHelper): Boolean {
         return when (visibilityMode) {
             FormVisibilityMode.ALWAYS -> true
-            FormVisibilityMode.ONLY_EDIT -> isEditable
-            FormVisibilityMode.ONLY_SEE -> !isEditable
+            FormVisibilityMode.ONLY_EDIT -> helper.isEditable
+            FormVisibilityMode.ONLY_SEE -> !helper.isEditable
             FormVisibilityMode.NEVER -> false
         }
     }
@@ -189,11 +211,11 @@ abstract class BaseForm(
     /**
      * 真实的可用性
      */
-    open fun isRealEnable(isEditable: Boolean): Boolean {
+    open fun isRealEnable(helper: FormHelper): Boolean {
         return when (enableMode) {
             FormEnableMode.ALWAYS -> true
-            FormEnableMode.ONLY_EDIT -> isEditable
-            FormEnableMode.ONLY_SEE -> !isEditable
+            FormEnableMode.ONLY_EDIT -> helper.isEditable
+            FormEnableMode.ONLY_SEE -> !helper.isEditable
             FormEnableMode.NEVER -> false
         }
     }
@@ -218,9 +240,9 @@ abstract class BaseForm(
     /**
      * 执行输出
      */
-    fun executeOutput(isEditable: Boolean, json: JSONObject) {
-        val isRealVisible = isRealVisible(isEditable)
-        val isRealEnable = isRealEnable(isEditable)
+    fun executeOutput(helper: FormHelper, json: JSONObject) {
+        val isRealVisible = isRealVisible(helper)
+        val isRealEnable = isRealEnable(helper)
         if (outputMode == FormOutputMode.VISIBLE && !isRealVisible) return
         if (outputMode == FormOutputMode.VISIBLE_AND_ENABLED && !isRealVisible && !isRealEnable) return
         if (outputMode == FormOutputMode.ENABLED && !isRealEnable) return

@@ -2,7 +2,6 @@ package com.chooongg.formAdapter
 
 import android.content.Context
 import android.util.AttributeSet
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import java.lang.ref.WeakReference
 
@@ -17,19 +16,23 @@ class FormView @JvmOverloads constructor(
     var helper: FormHelper?
         get() = _helper?.get()
         set(value) {
-            if (value == null){
+            if (value == null) {
                 _helper = null
-                adapter = null
-            }else{
+                super.setAdapter(null)
+            } else {
                 _helper = WeakReference(value)
-                adapter = _helper!!.get()?.adapter
+                super.setAdapter(value.adapter)
             }
         }
 
     init {
-        layoutManager = LinearLayoutManager(context)
+        layoutManager = FormLayoutManager(context)
+        val helperTemp = helper
+        if (helperTemp != null) setFormHelper(helperTemp)
     }
 
-    override fun setAdapter(adapter: Adapter<*>?) = Unit
-    override fun getAdapter(): Adapter<*>? = null
+    @Deprecated("Use helper instead", ReplaceWith("helper"))
+    override fun setAdapter(adapter: Adapter<*>?) {
+        super.setAdapter(adapter)
+    }
 }

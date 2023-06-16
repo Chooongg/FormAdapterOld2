@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="FormAdapter.TextAppearance.Name" parent="TextAppearance.Material3.BodyMedium" />
+
+    <style name="FormAdapter.TextAppearance.Content" parent="TextAppearance.Material3.BodyMedium" />
+
+</resources>

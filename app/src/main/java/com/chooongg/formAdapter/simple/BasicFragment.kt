@@ -23,9 +23,69 @@ class BasicFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        binding.formView.helper = FormHelper().apply {
+        binding.formView.helper = FormHelper(true) {
             plusPart {
                 plusGroup {
+                    addText("Text", "text") {
+                        content = "FormText"
+                    }
+                    addText("Text", "text") {
+                        content = "FormText"
+                    }
+                    addText("Text", "text") {
+                        content = "FormText"
+                    }
+                    addText("Text", "text") {
+                        content = "FormText"
+                    }
+                    addText("Text", "text") {
+                        content = "FormText"
+                    }
+                    addText("Text", "text") {
+                        content = "FormText"
+                    }
+                    addText("Text", "text") {
+                        content = "FormText"
+                    }
+                    addText("Text", "text") {
+                        content = "FormText"
+                    }
+                    addText("Text", "text") {
+                        content = "FormText"
+                    }
+                    addText("Text", "text") {
+                        content = "FormText"
+                    }
+                    addText("Text", "text") {
+                        content = "FormText"
+                    }
+                    addText("Text", "text") {
+                        content = "FormText"
+                    }
+                    addText("Text", "text") {
+                        content = "FormText"
+                    }
+                    addText("Text", "text") {
+                        content = "FormText"
+                    }
+                    addText("Text", "text") {
+                        content = "FormText"
+                    }
+                    addText("Text", "text") {
+                        content = "FormText"
+                    }
+                    addText("Text", "text") {
+                        content = "FormText"
+                    }
+                    addText("Text", "text") {
+                        content = "FormText"
+                    }
+                    addText("Text", "text") {
+                        content = "FormText"
+                    }
+                    addText("Text", "text") {
+                        content = "FormText"
+                    }
                     addText("Text", "text") {
                         content = "FormText"
                     }

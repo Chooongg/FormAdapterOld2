@@ -5,12 +5,12 @@ plugins {
 
 android {
     namespace 'com.chooongg.formAdapter.simple'
-    compileSdk 34
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.chooongg.formAdapter.simple"
         minSdk 24
-        targetSdk 34
+        targetSdk 33
         versionCode 1
         versionName "1.0"
         vectorDrawables { useSupportLibrary true }
@@ -41,4 +41,9 @@ dependencies {
     implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.1'
     implementation project(path: ':formAdapter')
+
+    implementation 'com.facebook.stetho:stetho:1.6.0'
+    debugImplementation 'com.facebook.soloader:soloader:0.10.5'
+    debugImplementation 'com.facebook.flipper:flipper:0.189.0'
+    releaseImplementation 'com.facebook.flipper:flipper-noop:0.189.0'
 }
