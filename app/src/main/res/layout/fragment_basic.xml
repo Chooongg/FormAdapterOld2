@@ -2,7 +2,6 @@
 <com.chooongg.formAdapter.FormView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/formView"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingHorizontal="@dimen/formHorizontalGlobalMarginSize">
+    android:layout_height="match_parent">
 
 </com.chooongg.formAdapter.FormView>

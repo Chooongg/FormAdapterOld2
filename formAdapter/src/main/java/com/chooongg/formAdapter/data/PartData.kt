@@ -10,11 +10,6 @@ class PartData {
     var isEnablePart: Boolean = true
 
     /**
-     * 片段名称
-     */
-    var partName: CharSequence? = null
-
-    /**
      * 片段字段
      */
     var partField: String? = null
@@ -23,6 +18,11 @@ class PartData {
      * 是否是动态片段
      */
     val dynamicPart get() = dynamicPartCreateGroupBlock != null
+
+    /**
+     * 片段名称
+     */
+    var dynamicPartName: CharSequence? = null
 
     internal var dynamicPartCreateGroupBlock: (GroupData.() -> Unit)? = null
 

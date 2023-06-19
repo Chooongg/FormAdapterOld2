@@ -8,11 +8,12 @@ import com.chooongg.formAdapter.R
 import com.chooongg.formAdapter.boundary.FormMarginInfo
 import com.chooongg.formAdapter.boundary.FormPaddingInfo
 import com.chooongg.formAdapter.item.BaseForm
-import com.chooongg.formAdapter.item.FormGroupTitle
+import com.chooongg.formAdapter.item.InternalFormGroupTitle
 import com.chooongg.formAdapter.typeset.Typeset
 
 /**
- * 表单分组样式
+ * 表单样式
+ * 必须实现 equals 和 hashCode 方法
  */
 abstract class Style(val defaultTypeset: Typeset) {
 
@@ -71,15 +72,18 @@ abstract class Style(val defaultTypeset: Typeset) {
     /**
      * 绑定分组标题
      */
-    abstract fun onBindGroupTitle(holder: FormViewHolder, item: FormGroupTitle)
+    abstract fun onBindGroupTitle(holder: FormViewHolder, item: InternalFormGroupTitle)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is Style) return false
+
+        if (defaultTypeset != other.defaultTypeset) return false
+
         return true
     }
 
     override fun hashCode(): Int {
-        return javaClass.hashCode()
+        return defaultTypeset.hashCode()
     }
 }

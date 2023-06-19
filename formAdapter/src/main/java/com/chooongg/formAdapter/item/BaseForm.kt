@@ -2,7 +2,7 @@ package com.chooongg.formAdapter.item
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.Px
-import com.chooongg.formAdapter.FormHelper
+import com.chooongg.formAdapter.FormAdapter
 import com.chooongg.formAdapter.boundary.Boundary
 import com.chooongg.formAdapter.enum.FormEnableMode
 import com.chooongg.formAdapter.enum.FormOutputMode
@@ -26,9 +26,9 @@ abstract class BaseForm(
     //<editor-fold desc="基础 Basic">
 
     /**
-     * 可根据helper中的信息动态配置视图代理，建议非必要除本身代理和 Text 代理外不要使用其他代理
+     * 可根据 adapter 中的信息动态配置视图代理，建议非必要除本身代理和 Text 代理外不要使用其他代理
      */
-    abstract fun getItemProvider(helper: FormHelper): BaseFormProvider
+    abstract fun getItemProvider(adapter: FormAdapter): BaseFormProvider
 
     /**
      * 提示
@@ -199,11 +199,11 @@ abstract class BaseForm(
     /**
      * 真实的可见性
      */
-    open fun isRealVisible(helper: FormHelper): Boolean {
+    open fun isRealVisible(adapter: FormAdapter): Boolean {
         return when (visibilityMode) {
             FormVisibilityMode.ALWAYS -> true
-            FormVisibilityMode.ONLY_EDIT -> helper.isEditable
-            FormVisibilityMode.ONLY_SEE -> !helper.isEditable
+            FormVisibilityMode.ONLY_EDIT -> adapter.isEditable
+            FormVisibilityMode.ONLY_SEE -> !adapter.isEditable
             FormVisibilityMode.NEVER -> false
         }
     }
@@ -211,11 +211,11 @@ abstract class BaseForm(
     /**
      * 真实的可用性
      */
-    open fun isRealEnable(helper: FormHelper): Boolean {
+    open fun isRealEnable(adapter: FormAdapter): Boolean {
         return when (enableMode) {
             FormEnableMode.ALWAYS -> true
-            FormEnableMode.ONLY_EDIT -> helper.isEditable
-            FormEnableMode.ONLY_SEE -> !helper.isEditable
+            FormEnableMode.ONLY_EDIT -> adapter.isEditable
+            FormEnableMode.ONLY_SEE -> !adapter.isEditable
             FormEnableMode.NEVER -> false
         }
     }
@@ -240,9 +240,9 @@ abstract class BaseForm(
     /**
      * 执行输出
      */
-    fun executeOutput(helper: FormHelper, json: JSONObject) {
-        val isRealVisible = isRealVisible(helper)
-        val isRealEnable = isRealEnable(helper)
+    fun executeOutput(adapter: FormAdapter, json: JSONObject) {
+        val isRealVisible = isRealVisible(adapter)
+        val isRealEnable = isRealEnable(adapter)
         if (outputMode == FormOutputMode.VISIBLE && !isRealVisible) return
         if (outputMode == FormOutputMode.VISIBLE_AND_ENABLED && !isRealVisible && !isRealEnable) return
         if (outputMode == FormOutputMode.ENABLED && !isRealEnable) return

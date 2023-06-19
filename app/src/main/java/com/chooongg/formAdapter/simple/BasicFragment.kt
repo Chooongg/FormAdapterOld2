@@ -5,9 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.chooongg.formAdapter.FormHelper
+import com.chooongg.formAdapter.FormAdapter
 import com.chooongg.formAdapter.data.addText
 import com.chooongg.formAdapter.simple.databinding.FragmentBasicBinding
+import com.chooongg.formAdapter.style.CardStyle
+import com.chooongg.formAdapter.style.MaterialCardElevatedStyle
 
 class BasicFragment : Fragment() {
 
@@ -23,60 +25,61 @@ class BasicFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        binding.formView.helper = FormHelper(true) {
+        binding.formView.adapter = FormAdapter(true) {
+            plusPart(CardStyle()) {
+                plusGroup {
+                    groupName = "Title"
+                    addText("Text", "text") {
+                        content = "FormText"
+                    }
+                    addText("Text", "text") {
+                        content = "FormText"
+                    }
+                    addText("Text", "text") {
+                        content = "FormText"
+                    }
+                    addText("Text", "text") {
+                        content = "FormText"
+                    }
+                }
+            }
+            plusPart(MaterialCardElevatedStyle()) {
+                plusGroup {
+                    groupName = "Title"
+                    addText("Text", "text") {
+                        content = "FormText"
+                    }
+                    addText("Text", "text") {
+                        content = "FormText"
+                    }
+                    addText("Text", "text") {
+                        content = "FormText"
+                    }
+                    addText("Text", "text") {
+                        content = "FormText"
+                    }
+                }
+            }
+            plusPart(MaterialCardElevatedStyle(40f)) {
+                plusGroup {
+                    groupName = "Title"
+                    addText("Text", "text") {
+                        content = "FormText"
+                    }
+                    addText("Text", "text") {
+                        content = "FormText"
+                    }
+                    addText("Text", "text") {
+                        content = "FormText"
+                    }
+                    addText("Text", "text") {
+                        content = "FormText"
+                    }
+                }
+            }
             plusPart {
                 plusGroup {
-                    addText("Text", "text") {
-                        content = "FormText"
-                    }
-                    addText("Text", "text") {
-                        content = "FormText"
-                    }
-                    addText("Text", "text") {
-                        content = "FormText"
-                    }
-                    addText("Text", "text") {
-                        content = "FormText"
-                    }
-                    addText("Text", "text") {
-                        content = "FormText"
-                    }
-                    addText("Text", "text") {
-                        content = "FormText"
-                    }
-                    addText("Text", "text") {
-                        content = "FormText"
-                    }
-                    addText("Text", "text") {
-                        content = "FormText"
-                    }
-                    addText("Text", "text") {
-                        content = "FormText"
-                    }
-                    addText("Text", "text") {
-                        content = "FormText"
-                    }
-                    addText("Text", "text") {
-                        content = "FormText"
-                    }
-                    addText("Text", "text") {
-                        content = "FormText"
-                    }
-                    addText("Text", "text") {
-                        content = "FormText"
-                    }
-                    addText("Text", "text") {
-                        content = "FormText"
-                    }
-                    addText("Text", "text") {
-                        content = "FormText"
-                    }
-                    addText("Text", "text") {
-                        content = "FormText"
-                    }
-                    addText("Text", "text") {
-                        content = "FormText"
-                    }
+                    groupName = "Title"
                     addText("Text", "text") {
                         content = "FormText"
                     }

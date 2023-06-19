@@ -10,7 +10,7 @@ import com.chooongg.formAdapter.boundary.Boundary
 import com.chooongg.formAdapter.data.GroupData
 import com.chooongg.formAdapter.data.PartData
 import com.chooongg.formAdapter.item.BaseForm
-import com.chooongg.formAdapter.item.FormGroupTitle
+import com.chooongg.formAdapter.item.InternalFormGroupTitle
 import com.chooongg.formAdapter.style.NoneStyle
 import com.chooongg.formAdapter.style.Style
 import kotlinx.coroutines.CoroutineScope
@@ -20,7 +20,7 @@ import kotlinx.coroutines.cancel
 import java.lang.ref.WeakReference
 
 class FormPartAdapter internal constructor(
-    val helper: FormHelper,
+    val formAdapter: FormAdapter,
     val style: Style = NoneStyle
 ) : RecyclerView.Adapter<FormViewHolder>() {
 
@@ -49,8 +49,8 @@ class FormPartAdapter internal constructor(
 
         }, AsyncDifferConfig.Builder(object : DiffUtil.ItemCallback<BaseForm>() {
             override fun areItemsTheSame(oldItem: BaseForm, newItem: BaseForm) = when {
-                oldItem is FormGroupTitle -> false
-                newItem is FormGroupTitle -> false
+                oldItem is InternalFormGroupTitle -> false
+                newItem is InternalFormGroupTitle -> false
                 else -> true
             }
 
@@ -76,7 +76,7 @@ class FormPartAdapter internal constructor(
             asyncDiffer.submitList(null)
             return
         }
-        val partIndex = helper.partIndexOf(this)
+        val partIndex = formAdapter.partIndexOf(this)
         val tempList = mutableListOf<MutableList<BaseForm>>()
         data.groups.forEach { if (it.items.isEmpty()) data.groups.remove(it) } // 去除空组
         if (data.dynamicPart) {
@@ -92,19 +92,19 @@ class FormPartAdapter internal constructor(
             val groupList = mutableListOf<BaseForm>()
             val groupName = if (data.dynamicPart) {
                 if (data.dynamicPartShowName) {
-                    data.dynamicPartNameFormatBlock?.invoke(data.partName, groupIndex)
-                        ?: "${data.partName ?: defaultPartName}${groupIndex + 1}"
+                    data.dynamicPartNameFormatBlock?.invoke(data.dynamicPartName, groupIndex)
+                        ?: "${data.dynamicPartName ?: defaultPartName}${groupIndex + 1}"
                 } else null
-            } else data.partName
+            } else group.groupName
             if (groupName != null) {
-                groupList.add(FormGroupTitle(groupName).apply {
+                groupList.add(InternalFormGroupTitle(groupName).apply {
 
                 })
             }
             group@ for (item in group.items) {
                 item.groupIndex = -1
                 item.positionForGroup = -1
-                if (!item.isRealVisible(helper)) {
+                if (!item.isRealVisible(formAdapter)) {
                     item.marginBoundary = Boundary()
                     item.paddingBoundary = Boundary()
                     continue@group
@@ -121,7 +121,7 @@ class FormPartAdapter internal constructor(
                 item.marginBoundary.topType =
                     if (partIndex == 0 && index == 0) Boundary.GLOBAL else Boundary.LOCAL
                 item.marginBoundary.bottomType =
-                    if (partIndex == helper.partSize() - 1 && index == groupList.size - 1) Boundary.GLOBAL else Boundary.LOCAL
+                    if (partIndex == formAdapter.partSize() - 1 && index == groupList.size - 1) Boundary.GLOBAL else Boundary.LOCAL
             }
             tempList.add(groupList)
         }
@@ -142,21 +142,22 @@ class FormPartAdapter internal constructor(
 
     override fun getItemViewType(position: Int): Int {
         val item = asyncDiffer.currentList[position]
-        return helper.getItemViewType(
-            style, item.typeset ?: style.defaultTypeset, item.getItemProvider(helper)
+        return formAdapter.getItemViewType(
+            style, item.typeset ?: style.defaultTypeset, item.getItemProvider(formAdapter)
         )
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FormViewHolder {
-        style.createMarginAndPaddingInfo(parent.context)
         val styleLayout = style.onCreateStyleLayout(parent)
-        val typeset = helper.getTypesetForItemViewType(viewType)
+        val typeset = formAdapter.getTypesetForItemViewType(viewType)
         val typesetLayout = typeset.onCreateTypesetLayout(styleLayout ?: parent, style.paddingInfo)
-        val itemView = helper.getItemProviderForItemViewType(viewType)
+        val itemView = formAdapter.getItemProviderForItemViewType(viewType)
             .onCreateItemView(this, typeset, typesetLayout ?: styleLayout ?: parent)
         if (typesetLayout != null) {
             styleLayout?.addView(typesetLayout)
             typesetLayout.addView(itemView)
+        } else {
+            styleLayout?.addView(itemView)
         }
         return FormViewHolder(styleLayout ?: typesetLayout ?: itemView)
     }
@@ -164,9 +165,9 @@ class FormPartAdapter internal constructor(
     override fun onBindViewHolder(holder: FormViewHolder, position: Int) {
         val item = asyncDiffer.currentList[position]
         style.onBindStyleLayout(holder, item)
-        val typeset = helper.getTypesetForItemViewType(holder.itemViewType)
+        val typeset = formAdapter.getTypesetForItemViewType(holder.itemViewType)
         typeset.onBindTypesetLayout(style.paddingInfo, holder, item)
-        helper.getItemProviderForItemViewType(holder.itemViewType)
+        formAdapter.getItemProviderForItemViewType(holder.itemViewType)
             .onBindItemView(this, typeset, holder, item)
     }
 
@@ -177,17 +178,18 @@ class FormPartAdapter internal constructor(
     ) {
         val item = asyncDiffer.currentList[position]
         style.onBindStyleLayout(holder, item)
-        val typeset = helper.getTypesetForItemViewType(holder.itemViewType)
+        val typeset = formAdapter.getTypesetForItemViewType(holder.itemViewType)
         typeset.onBindTypesetLayout(style.paddingInfo, holder, item)
-        helper.getItemProviderForItemViewType(holder.itemViewType)
+        formAdapter.getItemProviderForItemViewType(holder.itemViewType)
             .onBindItemView(this, typeset, holder, item, payloads)
     }
 
     override fun onViewRecycled(holder: FormViewHolder) {
-        helper.getItemProviderForItemViewType(holder.itemViewType).onItemRecycler(holder)
+        formAdapter.getItemProviderForItemViewType(holder.itemViewType).onItemRecycler(holder)
     }
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        style.createMarginAndPaddingInfo(recyclerView.context)
         _recyclerView = WeakReference(recyclerView)
         defaultPartName = recyclerView.resources.getString(R.string.formDefaultGroupName)
     }

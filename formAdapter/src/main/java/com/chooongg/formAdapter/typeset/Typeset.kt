@@ -9,6 +9,10 @@ import com.chooongg.formAdapter.boundary.FormPaddingInfo
 import com.chooongg.formAdapter.enum.FormEmsMode
 import com.chooongg.formAdapter.item.BaseForm
 
+/**
+ * 排版样式
+ * 必须实现 equals 和 hashCode 方法
+ */
 abstract class Typeset(val ems: Int, val emsMode: FormEmsMode) {
 
     @GravityInt
@@ -59,8 +63,7 @@ abstract class Typeset(val ems: Int, val emsMode: FormEmsMode) {
     }
 
     override fun hashCode(): Int {
-        var result = javaClass.hashCode()
-        result = 31 * result + ems
+        var result = ems
         result = 31 * result + emsMode.hashCode()
         return result
     }

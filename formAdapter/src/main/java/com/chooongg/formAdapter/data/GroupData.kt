@@ -6,6 +6,8 @@ class GroupData {
 
     val items = mutableListOf<BaseForm>()
 
+    var groupName:CharSequence? = null
+
     /**
      * 添加表单项
      */

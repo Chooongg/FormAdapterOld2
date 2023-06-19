@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import com.chooongg.formAdapter.FormPartAdapter
 import com.chooongg.formAdapter.FormViewHolder
 import com.chooongg.formAdapter.item.BaseForm
-import com.chooongg.formAdapter.item.FormGroupTitle
+import com.chooongg.formAdapter.item.InternalFormGroupTitle
 import com.chooongg.formAdapter.typeset.Typeset
 
 object FormGroupTitleProvider : BaseFormProvider() {
@@ -22,6 +22,6 @@ object FormGroupTitleProvider : BaseFormProvider() {
         holder: FormViewHolder,
         item: BaseForm
     ) {
-        if (item is FormGroupTitle) adapter.style.onBindGroupTitle(holder, item)
+        if (item is InternalFormGroupTitle) adapter.style.onBindGroupTitle(holder, item)
     }
 }

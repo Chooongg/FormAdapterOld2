@@ -1,8 +1,8 @@
 package com.chooongg.formAdapter
 
 import android.content.Context
-import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
 
 class FormLayoutManager(context: Context) : GridLayoutManager(context, 100) {
@@ -15,15 +15,18 @@ class FormLayoutManager(context: Context) : GridLayoutManager(context, 100) {
                 return if (recyclerView == null) {
                     100
                 } else {
-                    val adapter = recyclerView!!.adapter
-                    val item = if (adapter is ConcatAdapter) {
-                        val pair = adapter.getWrappedAdapterAndPosition(position)
-                        if (pair.first is FormPartAdapter) {
-                            (pair.first as FormPartAdapter).getItem(position)
-                        } else null
-                    } else if (adapter is FormPartAdapter) {
-                        adapter.getItem(position)
-                    } else null
+                    val item = when (val adapter = recyclerView!!.adapter) {
+                        is FormAdapter -> {
+                            val pair = adapter.getWrappedAdapterAndPosition(position)
+                            pair.first.getItem(pair.second)
+                        }
+
+                        is FormPartAdapter -> {
+                            adapter.getItem(position)
+                        }
+
+                        else -> null
+                    }
                     if (item != null) {
                         100
                     } else 100
@@ -31,6 +34,22 @@ class FormLayoutManager(context: Context) : GridLayoutManager(context, 100) {
             }
         }
     }
+
+    override fun smoothScrollToPosition(
+        recyclerView: RecyclerView,
+        state: RecyclerView.State,
+        position: Int
+    ) {
+        val smoothScroller = CenterSmoothScroller(recyclerView.context)
+        smoothScroller.targetPosition = position
+        startSmoothScroll(smoothScroller)
+    }
+
+    override fun getPaddingLeft() =
+        recyclerView?.resources?.getDimensionPixelSize(R.dimen.formHorizontalGlobalMarginSize) ?: 0
+
+    override fun getPaddingRight() =
+        recyclerView?.resources?.getDimensionPixelSize(R.dimen.formHorizontalGlobalMarginSize) ?: 0
 
     override fun getPaddingStart() =
         recyclerView?.resources?.getDimensionPixelSize(R.dimen.formHorizontalGlobalMarginSize) ?: 0
@@ -43,6 +62,18 @@ class FormLayoutManager(context: Context) : GridLayoutManager(context, 100) {
 
     override fun getPaddingBottom() =
         recyclerView?.resources?.getDimensionPixelSize(R.dimen.formVerticalGlobalMarginSize) ?: 0
+
+    private class CenterSmoothScroller(context: Context) : LinearSmoothScroller(context) {
+        override fun calculateDtToFit(
+            viewStart: Int,
+            viewEnd: Int,
+            boxStart: Int,
+            boxEnd: Int,
+            snapPreference: Int
+        ): Int {
+            return (boxStart + (boxEnd - boxStart) / 2) - (viewStart + (viewEnd - viewStart) / 2)
+        }
+    }
 
     override fun onAttachedToWindow(view: RecyclerView) {
         super.onAttachedToWindow(view)
