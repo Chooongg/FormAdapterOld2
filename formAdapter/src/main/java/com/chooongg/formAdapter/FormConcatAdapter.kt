@@ -1,12 +1,12 @@
 package com.chooongg.formAdapter
 
-import android.util.Log
 import android.view.ViewGroup
 import androidx.collection.ArraySet
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import com.chooongg.formAdapter.item.BaseForm
 import com.chooongg.formAdapter.provider.BaseFormProvider
 import com.chooongg.formAdapter.style.Style
 import com.chooongg.formAdapter.typeset.Typeset
@@ -61,6 +61,12 @@ open class FormConcatAdapter constructor(isEditable: Boolean) : RecyclerView.Ada
     fun getWrappedAdapterAndPosition(globalPosition: Int): Pair<FormPartAdapter, Int> {
         concatAdapter.getWrappedAdapterAndPosition(globalPosition).let {
             return Pair(it.first as FormPartAdapter, it.second)
+        }
+    }
+
+    fun getItem(globalPosition: Int): BaseForm {
+        getWrappedAdapterAndPosition(globalPosition).let {
+            return it.first.getItem(it.second)
         }
     }
 
@@ -138,34 +144,43 @@ open class FormConcatAdapter constructor(isEditable: Boolean) : RecyclerView.Ada
     private val itemProviderPool = ArrayList<BaseFormProvider>()
     private val itemTypePool = ArraySet<Triple<Int, Int, Int>>()
 
+    private val typePool = ArrayList<FormTypeInfo>()
+
     internal fun getItemViewType(style: Style, typeset: Typeset, provider: BaseFormProvider): Int {
-        if (!stylePool.contains(style)) stylePool.add(style)
-        val styleIndex = stylePool.indexOf(style)
-
-        if (!typesetPool.contains(typeset)) typesetPool.add(typeset)
-        val typesetIndex = typesetPool.indexOf(typeset)
-
-        if (!itemProviderPool.contains(provider)) itemProviderPool.add(provider)
-        val providerIndex = itemProviderPool.indexOf(provider)
-
-        val type = Triple(styleIndex, typesetIndex, providerIndex)
-        Log.e(
-            "ItemViewType",
-            "${type}\n${style.javaClass.simpleName}   ${typeset.javaClass.simpleName}   ${provider.javaClass.simpleName}"
-        )
-        itemTypePool.add(type)
-        return itemTypePool.indexOf(type)
+        val info = FormTypeInfo(style, typeset, provider)
+        if (!typePool.contains(info)) {
+            typePool.add(info)
+        }
+//        if (!stylePool.contains(style)) stylePool.add(style)
+//        val styleIndex = stylePool.indexOf(style)
+//        if (!typesetPool.contains(typeset)) typesetPool.add(typeset)
+//        val typesetIndex = typesetPool.indexOf(typeset)
+//        if (!itemProviderPool.contains(provider)) itemProviderPool.add(provider)
+//        val providerIndex = itemProviderPool.indexOf(provider)
+//        val type = Triple(styleIndex, typesetIndex, providerIndex)
+//        itemTypePool.add(type)
+//        Log.d(
+//            "FormAdapterItemType",
+//            "$type style:${style.javaClass.simpleName} typeset:${typeset.javaClass.simpleName} provider:${provider.javaClass.simpleName}"
+//        )
+        return typePool.indexOf(info)
     }
 
     internal fun getTypesetForItemViewType(viewType: Int): Typeset {
-        val triple = itemTypePool.valueAt(viewType) ?: throw RuntimeException("No such viewType")
-        return typesetPool[triple.second]
+        return typePool[viewType].typeset
+//        val triple = itemTypePool.valueAt(viewType) ?: throw RuntimeException("No such viewType")
+//        return typesetPool[triple.second]
     }
 
     internal fun getItemProviderForItemViewType(viewType: Int): BaseFormProvider {
-        val triple = itemTypePool.valueAt(viewType) ?: throw RuntimeException("No such viewType")
-        return itemProviderPool[triple.third]
+        return typePool[viewType].itemProvider
+//        val triple = itemTypePool.valueAt(viewType) ?: throw RuntimeException("No such viewType")
+//        return itemProviderPool[triple.third]
     }
 
     //</editor-fold>
+
+    fun clear() {
+        concatAdapter.adapters.forEach { concatAdapter.removeAdapter(it) }
+    }
 }

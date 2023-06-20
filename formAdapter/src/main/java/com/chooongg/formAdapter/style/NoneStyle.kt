@@ -18,9 +18,7 @@ object NoneStyle : Style(HorizontalTypeset()) {
     }
 
     override fun onCreateStyleLayout(parent: ViewGroup) = null
-    override fun onBindStyleLayout(holder: FormViewHolder, item: BaseForm) {
-
-    }
+    override fun onBindStyleLayout(holder: FormViewHolder, item: BaseForm) = Unit
 
     override fun onCreateGroupTitle(parent: ViewGroup) = MaterialTextView(parent.context).apply {
         id = R.id.formInternalContent
@@ -31,10 +29,10 @@ object NoneStyle : Style(HorizontalTypeset()) {
         with(holder.getView<MaterialTextView>(R.id.formInternalContent)) {
             text = item.name
             updatePaddingRelative(
-                paddingInfo.horizontalLocal,
-                paddingInfo.verticalLocal,
-                paddingInfo.horizontalLocal,
-                paddingInfo.verticalLocal
+                paddingInfo.horizontalGlobal,
+                paddingInfo.verticalGlobal,
+                paddingInfo.horizontalGlobal,
+                paddingInfo.verticalGlobal
             )
         }
     }

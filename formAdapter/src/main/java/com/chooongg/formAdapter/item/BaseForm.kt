@@ -101,11 +101,6 @@ abstract class BaseForm(
     //<editor-fold desc="排版 Typeset">
 
     /**
-     * 是否需要排版
-     */
-    open var isNeedToTypeset = true
-
-    /**
      * 自定义排版样式
      */
     open var typeset: Typeset? = null

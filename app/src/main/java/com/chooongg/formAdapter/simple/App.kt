@@ -1,6 +1,8 @@
 package com.chooongg.formAdapter.simple
 
 import android.app.Application
+import android.view.Gravity
+import com.chooongg.formAdapter.FormManager
 import com.facebook.flipper.android.AndroidFlipperClient
 import com.facebook.flipper.android.utils.FlipperUtils
 import com.facebook.flipper.plugins.inspector.DescriptorMapping
@@ -19,5 +21,6 @@ class App : Application() {
             client.addPlugin(InspectorFlipperPlugin(this, DescriptorMapping.withDefaults()))
             client.start()
         }
+        FormManager.contentGravity = Gravity.END
     }
 }

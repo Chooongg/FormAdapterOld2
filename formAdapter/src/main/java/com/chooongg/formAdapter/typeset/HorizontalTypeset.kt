@@ -1,6 +1,7 @@
 package com.chooongg.formAdapter.typeset
 
 import android.graphics.drawable.ColorDrawable
+import android.view.Gravity
 import android.view.ViewGroup
 import androidx.appcompat.widget.LinearLayoutCompat
 import com.chooongg.formAdapter.FormManager
@@ -13,9 +14,8 @@ import com.chooongg.formAdapter.item.BaseForm
 import com.google.android.material.textview.MaterialTextView
 
 class HorizontalTypeset(
-    ems: Int = FormManager.emsSize,
-    emsMode: FormEmsMode = FormEmsMode.FIXED
-) : Typeset(ems, emsMode) {
+    ems: Int = FormManager.emsSize
+) : Typeset(ems) {
 
     override fun onCreateTypesetLayout(parent: ViewGroup, paddingInfo: FormPaddingInfo) =
         LinearLayoutCompat(parent.context).apply {
@@ -49,27 +49,32 @@ class HorizontalTypeset(
         with(holder.getView<LinearLayoutCompat>(R.id.formInternalTypesetParent)) {
             setPaddingRelative(
                 when (item.marginBoundary.startType) {
-                    Boundary.LOCAL-> paddingInfo.horizontalLocal
-                    Boundary.GLOBAL-> paddingInfo.horizontalGlobal
+                    Boundary.LOCAL -> paddingInfo.horizontalLocal
+                    Boundary.GLOBAL -> paddingInfo.horizontalGlobal
                     else -> 0
                 }, when (item.marginBoundary.topType) {
-                    Boundary.LOCAL-> paddingInfo.verticalLocal
-                    Boundary.GLOBAL-> paddingInfo.verticalGlobal
+                    Boundary.LOCAL -> paddingInfo.verticalLocal
+                    Boundary.GLOBAL -> paddingInfo.verticalGlobal
                     else -> 0
                 }, when (item.marginBoundary.endType) {
-                    Boundary.LOCAL-> paddingInfo.horizontalLocal
-                    Boundary.GLOBAL-> paddingInfo.horizontalGlobal
+                    Boundary.LOCAL -> paddingInfo.horizontalLocal
+                    Boundary.GLOBAL -> paddingInfo.horizontalGlobal
                     else -> 0
                 }, when (item.marginBoundary.bottomType) {
-                    Boundary.LOCAL-> paddingInfo.verticalLocal
-                    Boundary.GLOBAL-> paddingInfo.verticalGlobal
+                    Boundary.LOCAL -> paddingInfo.verticalLocal
+                    Boundary.GLOBAL -> paddingInfo.verticalGlobal
                     else -> 0
                 }
             )
         }
         with(holder.getView<MaterialTextView>(R.id.formInternalName)) {
             text = item.name
-            setNameEms(this)
+            if (contentGravity() and Gravity.END == Gravity.END) {
+                minWidth = 0
+                maxEms = ems
+            } else {
+                setEms(ems)
+            }
         }
     }
 
@@ -78,5 +83,9 @@ class HorizontalTypeset(
         if (other !is HorizontalTypeset) return false
         if (!super.equals(other)) return false
         return true
+    }
+
+    override fun hashCode(): Int {
+        return super.hashCode()
     }
 }

@@ -1,14 +1,12 @@
 package com.chooongg.formAdapter.typeset
 
 import android.view.ViewGroup
-import com.chooongg.formAdapter.FormManager
 import com.chooongg.formAdapter.FormViewHolder
 import com.chooongg.formAdapter.boundary.Boundary
 import com.chooongg.formAdapter.boundary.FormPaddingInfo
-import com.chooongg.formAdapter.enum.FormEmsMode
 import com.chooongg.formAdapter.item.BaseForm
 
-object NoneTypeset : Typeset(FormManager.emsSize, FormEmsMode.NONE) {
+object NoneTypeset : Typeset(0) {
 
     override fun onCreateTypesetLayout(parent: ViewGroup, paddingInfo: FormPaddingInfo) = null
 

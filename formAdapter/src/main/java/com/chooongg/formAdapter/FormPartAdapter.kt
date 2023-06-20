@@ -90,17 +90,7 @@ class FormPartAdapter internal constructor(
         }
         data.groups.forEachIndexed { groupIndex, group ->
             val groupList = mutableListOf<BaseForm>()
-            val groupName = if (data.dynamicPart) {
-                if (data.dynamicPartShowName) {
-                    data.dynamicPartNameFormatBlock?.invoke(data.dynamicPartName, groupIndex)
-                        ?: "${data.dynamicPartName ?: defaultPartName}${groupIndex + 1}"
-                } else null
-            } else group.groupName
-            if (groupName != null) {
-                groupList.add(InternalFormGroupTitle(groupName).apply {
-
-                })
-            }
+            group.getGroupTitleItem(data, groupIndex)?.also { groupList.add(it) }
             group@ for (item in group.items) {
                 item.groupIndex = -1
                 item.positionForGroup = -1
@@ -189,9 +179,9 @@ class FormPartAdapter internal constructor(
     }
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        defaultPartName = recyclerView.resources.getString(R.string.formDefaultGroupName)
         style.createMarginAndPaddingInfo(recyclerView.context)
         _recyclerView = WeakReference(recyclerView)
-        defaultPartName = recyclerView.resources.getString(R.string.formDefaultGroupName)
     }
 
     override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {

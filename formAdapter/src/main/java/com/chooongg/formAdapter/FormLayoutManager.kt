@@ -4,32 +4,35 @@ import android.content.Context
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
+import com.chooongg.formAdapter.item.InternalFormGroupTitle
+import kotlin.math.min
 
-class FormLayoutManager(context: Context) : GridLayoutManager(context, 100) {
+class FormLayoutManager(context: Context) : GridLayoutManager(context, 2520) {
 
     private var recyclerView: RecyclerView? = null
+
+    var maxItemWidth: Int = FormManager.maxItemWidth
+        set(value) {
+            field = value
+            if (recyclerView != null) {
+                spanSize = min(10, recyclerView!!.measuredWidth / value)
+            }
+        }
+
+    private var spanSize = 1
 
     init {
         spanSizeLookup = object : SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
-                return if (recyclerView == null) {
-                    100
-                } else {
-                    val item = when (val adapter = recyclerView!!.adapter) {
-                        is FormAdapter -> {
-                            val pair = adapter.getWrappedAdapterAndPosition(position)
-                            pair.first.getItem(pair.second)
-                        }
-
-                        is FormPartAdapter -> {
-                            adapter.getItem(position)
-                        }
-
-                        else -> null
+                val adapter = recyclerView?.adapter as? FormAdapter ?: return 2520
+                val pair = adapter.getWrappedAdapterAndPosition(position)
+                val item = pair.first.getItem(pair.second)
+                return when (item) {
+                    null -> 2520
+                    is InternalFormGroupTitle -> 2520
+                    else -> {
+                        2520 / spanSize
                     }
-                    if (item != null) {
-                        100
-                    } else 100
                 }
             }
         }
@@ -63,16 +66,14 @@ class FormLayoutManager(context: Context) : GridLayoutManager(context, 100) {
     override fun getPaddingBottom() =
         recyclerView?.resources?.getDimensionPixelSize(R.dimen.formVerticalGlobalMarginSize) ?: 0
 
-    private class CenterSmoothScroller(context: Context) : LinearSmoothScroller(context) {
-        override fun calculateDtToFit(
-            viewStart: Int,
-            viewEnd: Int,
-            boxStart: Int,
-            boxEnd: Int,
-            snapPreference: Int
-        ): Int {
-            return (boxStart + (boxEnd - boxStart) / 2) - (viewStart + (viewEnd - viewStart) / 2)
-        }
+    override fun onMeasure(
+        recycler: RecyclerView.Recycler,
+        state: RecyclerView.State,
+        widthSpec: Int,
+        heightSpec: Int
+    ) {
+        super.onMeasure(recycler, state, widthSpec, heightSpec)
+        spanSize = min(10, recyclerView!!.measuredWidth / maxItemWidth)
     }
 
     override fun onAttachedToWindow(view: RecyclerView) {
@@ -83,5 +84,17 @@ class FormLayoutManager(context: Context) : GridLayoutManager(context, 100) {
     override fun onDetachedFromWindow(view: RecyclerView, recycler: RecyclerView.Recycler) {
         super.onDetachedFromWindow(view, recycler)
         recyclerView = null
+    }
+
+    private class CenterSmoothScroller(context: Context) : LinearSmoothScroller(context) {
+        override fun calculateDtToFit(
+            viewStart: Int,
+            viewEnd: Int,
+            boxStart: Int,
+            boxEnd: Int,
+            snapPreference: Int
+        ): Int {
+            return (boxStart + (boxEnd - boxStart) / 2) - (viewStart + (viewEnd - viewStart) / 2)
+        }
     }
 }

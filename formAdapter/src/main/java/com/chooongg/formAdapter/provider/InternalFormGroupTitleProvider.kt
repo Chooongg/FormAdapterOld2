@@ -8,7 +8,7 @@ import com.chooongg.formAdapter.item.BaseForm
 import com.chooongg.formAdapter.item.InternalFormGroupTitle
 import com.chooongg.formAdapter.typeset.Typeset
 
-object FormGroupTitleProvider : BaseFormProvider() {
+object InternalFormGroupTitleProvider : BaseFormProvider() {
 
     override fun onCreateItemView(
         adapter: FormPartAdapter,
