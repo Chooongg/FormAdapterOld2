@@ -11,7 +11,7 @@ import com.chooongg.formAdapter.item.InternalFormGroupTitle
 import com.chooongg.formAdapter.typeset.HorizontalTypeset
 import com.google.android.material.textview.MaterialTextView
 
-object NoneStyle : Style(HorizontalTypeset()) {
+object NoneStyle : Style(HorizontalTypeset) {
 
     override fun onCreateMarginInfo(context: Context): FormMarginInfo {
         return FormMarginInfo(0, 0, 0, 0)

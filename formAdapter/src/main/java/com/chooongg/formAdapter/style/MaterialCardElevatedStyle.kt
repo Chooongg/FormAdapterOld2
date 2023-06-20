@@ -13,7 +13,7 @@ import com.google.android.material.textview.MaterialTextView
 
 class MaterialCardElevatedStyle(
     val elevation: Float? = null,
-    defaultTypeset: Typeset = HorizontalTypeset()
+    defaultTypeset: Typeset = HorizontalTypeset
 ) : Style(defaultTypeset) {
 
     override fun onCreateStyleLayout(parent: ViewGroup) = MaterialCardView(

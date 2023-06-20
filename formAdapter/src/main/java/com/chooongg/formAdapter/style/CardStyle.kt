@@ -8,13 +8,9 @@ import com.chooongg.formAdapter.R
 import com.chooongg.formAdapter.item.BaseForm
 import com.chooongg.formAdapter.item.InternalFormGroupTitle
 import com.chooongg.formAdapter.typeset.HorizontalTypeset
-import com.chooongg.formAdapter.typeset.Typeset
 import com.google.android.material.textview.MaterialTextView
 
-class CardStyle(
-    val elevation: Float? = null,
-    defaultTypeset: Typeset = HorizontalTypeset()
-) : Style(defaultTypeset) {
+class CardStyle : Style(HorizontalTypeset) {
 
     override fun onCreateStyleLayout(parent: ViewGroup) = CardView(parent.context).apply {
         id = R.id.formInternalStyleParent
@@ -46,14 +42,10 @@ class CardStyle(
         if (other !is CardStyle) return false
         if (!super.equals(other)) return false
 
-        if (elevation != other.elevation) return false
-
         return true
     }
 
     override fun hashCode(): Int {
-        var result = super.hashCode()
-        result = 31 * result + (elevation?.hashCode() ?: 0)
-        return result
+        return super.hashCode()
     }
 }

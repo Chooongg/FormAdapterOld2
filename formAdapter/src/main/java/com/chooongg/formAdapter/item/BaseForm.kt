@@ -1,12 +1,9 @@
 package com.chooongg.formAdapter.item
 
-import androidx.annotation.DrawableRes
-import androidx.annotation.Px
 import com.chooongg.formAdapter.FormAdapter
 import com.chooongg.formAdapter.boundary.Boundary
-import com.chooongg.formAdapter.enum.FormEnableMode
+import com.chooongg.formAdapter.data.AbstractMenuFormData
 import com.chooongg.formAdapter.enum.FormOutputMode
-import com.chooongg.formAdapter.enum.FormVisibilityMode
 import com.chooongg.formAdapter.provider.BaseFormProvider
 import com.chooongg.formAdapter.typeset.Typeset
 import org.json.JSONObject
@@ -16,12 +13,12 @@ abstract class BaseForm(
     /**
      * 名称
      */
-    var name: CharSequence?,
+    name: CharSequence?,
     /**
      * 字段
      */
     val field: String?,
-) {
+) : AbstractMenuFormData(name) {
 
     //<editor-fold desc="基础 Basic">
 
@@ -46,16 +43,6 @@ abstract class BaseForm(
     open var isRequired: Boolean = false
 
     /**
-     * 可见模式
-     */
-    open var visibilityMode: FormVisibilityMode = FormVisibilityMode.ALWAYS
-
-    /**
-     * 启用模式
-     */
-    open var enableMode: FormEnableMode = FormEnableMode.ONLY_EDIT
-
-    /**
      * 输出模式
      */
     open var outputMode: FormOutputMode = FormOutputMode.ALWAYS
@@ -68,33 +55,6 @@ abstract class BaseForm(
     //</editor-fold>
 
     //<editor-fold desc="菜单 Menu">
-
-    /**
-     * 菜单文本
-     */
-    open var menuText: CharSequence? = null
-
-    /**
-     * 菜单图标
-     */
-    @DrawableRes
-    open var menuIconRes: Int? = null
-
-    /**
-     * 菜单图标大小
-     */
-    @Px
-    open var menuIconSize: Int? = null
-
-    /**
-     * 菜单可见模式
-     */
-    open var menuVisibilityMode: FormVisibilityMode = FormVisibilityMode.ALWAYS
-
-    /**
-     * 菜单启用模式
-     */
-    open var menuEnableMode: FormEnableMode = FormEnableMode.ONLY_EDIT
 
     //</editor-fold>
 
@@ -189,40 +149,6 @@ abstract class BaseForm(
      */
     fun customOutput(block: ((json: JSONObject) -> Unit)?) {
         customOutputBlock = block
-    }
-
-    /**
-     * 真实的可见性
-     */
-    open fun isRealVisible(adapter: FormAdapter): Boolean {
-        return when (visibilityMode) {
-            FormVisibilityMode.ALWAYS -> true
-            FormVisibilityMode.ONLY_EDIT -> adapter.isEditable
-            FormVisibilityMode.ONLY_SEE -> !adapter.isEditable
-            FormVisibilityMode.NEVER -> false
-        }
-    }
-
-    /**
-     * 真实的可用性
-     */
-    open fun isRealEnable(adapter: FormAdapter): Boolean {
-        return when (enableMode) {
-            FormEnableMode.ALWAYS -> true
-            FormEnableMode.ONLY_EDIT -> adapter.isEditable
-            FormEnableMode.ONLY_SEE -> !adapter.isEditable
-            FormEnableMode.NEVER -> false
-        }
-    }
-
-    open fun isRealMenuVisible(isEditable: Boolean): Boolean {
-        if (menuText == null && menuIconRes == null) return false
-        return when (menuVisibilityMode) {
-            FormVisibilityMode.ALWAYS -> true
-            FormVisibilityMode.ONLY_EDIT -> isEditable
-            FormVisibilityMode.ONLY_SEE -> !isEditable
-            FormVisibilityMode.NEVER -> false
-        }
     }
 
     /**

@@ -13,9 +13,7 @@ import com.chooongg.formAdapter.enum.FormEmsMode
 import com.chooongg.formAdapter.item.BaseForm
 import com.google.android.material.textview.MaterialTextView
 
-class HorizontalTypeset(
-    ems: Int = FormManager.emsSize
-) : Typeset(ems) {
+object HorizontalTypeset : Typeset(FormManager.emsSize) {
 
     override fun onCreateTypesetLayout(parent: ViewGroup, paddingInfo: FormPaddingInfo) =
         LinearLayoutCompat(parent.context).apply {
