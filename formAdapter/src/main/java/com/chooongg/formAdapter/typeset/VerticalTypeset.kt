@@ -4,20 +4,20 @@ import android.graphics.drawable.ColorDrawable
 import android.view.Gravity
 import android.view.ViewGroup
 import androidx.appcompat.widget.LinearLayoutCompat
-import com.chooongg.formAdapter.FormManager
 import com.chooongg.formAdapter.FormViewHolder
 import com.chooongg.formAdapter.R
-import com.chooongg.formAdapter.boundary.Boundary
 import com.chooongg.formAdapter.boundary.FormPaddingInfo
-import com.chooongg.formAdapter.enum.FormEmsMode
 import com.chooongg.formAdapter.item.BaseForm
 import com.google.android.material.textview.MaterialTextView
 
-object HorizontalTypeset : Typeset(FormManager.emsSize) {
+object VerticalTypeset : Typeset() {
+
+    override fun contentGravity() = Gravity.NO_GRAVITY
 
     override fun onCreateTypesetLayout(parent: ViewGroup, paddingInfo: FormPaddingInfo) =
         LinearLayoutCompat(parent.context).apply {
             id = R.id.formInternalTypesetParent
+            orientation = LinearLayoutCompat.VERTICAL
             clipChildren = false
             clipToPadding = false
             showDividers = LinearLayoutCompat.SHOW_DIVIDER_MIDDLE
@@ -33,7 +33,7 @@ object HorizontalTypeset : Typeset(FormManager.emsSize) {
                 id = R.id.formInternalName
                 setTextAppearance(R.style.FormAdapter_TextAppearance_Name)
                 layoutParams = LinearLayoutCompat.LayoutParams(
-                    LinearLayoutCompat.LayoutParams.WRAP_CONTENT,
+                    LinearLayoutCompat.LayoutParams.MATCH_PARENT,
                     LinearLayoutCompat.LayoutParams.WRAP_CONTENT
                 )
             })
@@ -49,21 +49,6 @@ object HorizontalTypeset : Typeset(FormManager.emsSize) {
         }
         with(holder.getView<MaterialTextView>(R.id.formInternalName)) {
             text = item.name
-            if (contentGravity() and Gravity.END == Gravity.END) {
-                minWidth = 0
-                maxEms = ems
-            } else setEms(ems)
         }
-    }
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is HorizontalTypeset) return false
-        if (!super.equals(other)) return false
-        return true
-    }
-
-    override fun hashCode(): Int {
-        return super.hashCode()
     }
 }

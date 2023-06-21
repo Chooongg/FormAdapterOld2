@@ -10,85 +10,13 @@ import androidx.lifecycle.ViewModel
 import com.chooongg.formAdapter.FormAdapter
 import com.chooongg.formAdapter.data.addText
 import com.chooongg.formAdapter.simple.databinding.FragmentBasicBinding
-import com.chooongg.formAdapter.style.CardStyle
-import com.chooongg.formAdapter.style.MaterialCardElevatedStyle
+import com.chooongg.formAdapter.style.MaterialCardFilledStyle
 
 class BasicFragment : Fragment() {
 
     private lateinit var binding: FragmentBasicBinding
 
     private val viewModel: BasicViewModel by viewModels()
-
-    val adapter = FormAdapter(true) {
-        plusPart(CardStyle()) {
-            plusGroup {
-                groupName = "Title"
-                addText("Text", "text") {
-                    content = "FormText"
-                }
-                addText("Text", "text") {
-                    content = "FormText"
-                }
-                addText("Text", "text") {
-                    content = "FormText"
-                }
-                addText("Text", "text") {
-                    content = "FormText"
-                }
-            }
-        }
-        plusPart(MaterialCardElevatedStyle()) {
-            plusGroup {
-                groupName = "Title"
-                addText("Text", "text") {
-                    content = "FormText"
-                }
-                addText("Text", "text") {
-                    content = "FormText"
-                }
-                addText("Text", "text") {
-                    content = "FormText"
-                }
-                addText("Text", "text") {
-                    content = "FormText"
-                }
-            }
-        }
-        plusPart(MaterialCardElevatedStyle(40f)) {
-            plusGroup {
-                groupName = "Title"
-                addText("Text", "text") {
-                    content = "FormText"
-                }
-                addText("Text", "text") {
-                    content = "FormText"
-                }
-                addText("Text", "text") {
-                    content = "FormText"
-                }
-                addText("Text", "text") {
-                    content = "FormText"
-                }
-            }
-        }
-        plusPart {
-            plusGroup {
-                groupName = "Title"
-                addText("Text", "text") {
-                    content = "FormText"
-                }
-                addText("Text", "text") {
-                    content = "FormText"
-                }
-                addText("Text", "text") {
-                    content = "FormText"
-                }
-                addText("Text", "text") {
-                    content = "FormText"
-                }
-            }
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -100,10 +28,30 @@ class BasicFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        binding.formView.adapter = adapter
+        binding.formView.adapter = viewModel.adapter
     }
 
     class BasicViewModel : ViewModel() {
-
+        val adapter = FormAdapter(true) {
+            (0..6).forEach {
+                plusPart(MaterialCardFilledStyle()) {
+                    plusGroup {
+                        groupName = "Title"
+                        addText("Text", "text") {
+                            content = "FormText"
+                        }
+                        addText("Text", "text") {
+                            content = "FormText"
+                        }
+                        addText("Text", "text") {
+                            content = "FormText"
+                        }
+                        addText("Text", "text") {
+                            content = "FormText"
+                        }
+                    }
+                }
+            }
+        }
     }
 }

@@ -21,6 +21,6 @@ class App : Application() {
             client.addPlugin(InspectorFlipperPlugin(this, DescriptorMapping.withDefaults()))
             client.start()
         }
-        FormManager.contentGravity = Gravity.END
+//        FormManager.contentGravity = Gravity.END
     }
 }

@@ -2,8 +2,9 @@ package com.chooongg.formAdapter.data
 
 import com.chooongg.formAdapter.item.BaseForm
 import com.chooongg.formAdapter.item.InternalFormGroupTitle
+import com.chooongg.formAdapter.item.SingleLineForm
 
-class GroupData {
+open class GroupData {
 
     val items = mutableListOf<BaseForm>()
 
@@ -15,6 +16,25 @@ class GroupData {
      * 添加表单项
      */
     fun add(item: BaseForm) = items.add(item)
+
+    /**
+     * 添加单行表单项
+     */
+    fun addSingleLine(block: SingleLineCreator.() -> Unit) {
+        val creator = SingleLineCreator().apply(block)
+        items.add(SingleLineForm().apply {
+            isShowOnEdge = creator.isShowOnEdge
+            creator.items.forEach {
+                if (it is SingleLineForm) throw IllegalArgumentException("GroupForm can not be added to SingleLine")
+                it.isSingleLineItem = true
+                it.typeset = creator.typeset
+                it.enableMode = creator.enableMode
+                it.visibilityMode = creator.visibilityMode
+                it.isShowOnEdge = creator.isShowOnEdge
+            }
+            items = ArrayList(creator.items)
+        })
+    }
 
     /**
      * 清空表单项

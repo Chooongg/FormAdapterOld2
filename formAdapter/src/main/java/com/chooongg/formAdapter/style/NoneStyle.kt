@@ -29,10 +29,7 @@ object NoneStyle : Style(HorizontalTypeset) {
         with(holder.getView<MaterialTextView>(R.id.formInternalContent)) {
             text = item.name
             updatePaddingRelative(
-                paddingInfo.horizontalGlobal,
-                paddingInfo.verticalGlobal,
-                paddingInfo.horizontalGlobal,
-                paddingInfo.verticalGlobal
+                0, paddingInfo.verticalLocal, 0, paddingInfo.verticalLocal
             )
         }
     }

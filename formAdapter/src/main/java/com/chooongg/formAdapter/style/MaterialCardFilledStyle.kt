@@ -1,5 +1,6 @@
 package com.chooongg.formAdapter.style
 
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.MarginLayoutParams
@@ -16,13 +17,13 @@ import com.google.android.material.card.MaterialCardView
 import com.google.android.material.shape.ShapeAppearanceModel
 import com.google.android.material.textview.MaterialTextView
 
-class MaterialCardElevatedStyle(
+class MaterialCardFilledStyle(
     val elevation: Float? = null,
     defaultTypeset: Typeset = HorizontalTypeset
 ) : Style(defaultTypeset) {
 
     override fun onCreateStyleLayout(parent: ViewGroup) = MaterialCardView(
-        parent.context, null, com.google.android.material.R.attr.materialCardViewElevatedStyle
+        parent.context, null, com.google.android.material.R.attr.materialCardViewFilledStyle
     ).apply {
         id = R.id.formInternalStyleParent
         tag = shapeAppearanceModel.toBuilder().build()
@@ -33,6 +34,7 @@ class MaterialCardElevatedStyle(
     }
 
     override fun onBindStyleLayout(holder: FormViewHolder, item: BaseForm) {
+        Log.e("Form", "onBindStyleLayout: ${holder.absoluteAdapterPosition}")
         holder.getView<MaterialCardView>(R.id.formInternalStyleParent).let {
             if (elevation != null) it.cardElevation = elevation
             val originalShape = it.tag as? ShapeAppearanceModel ?: return
@@ -97,7 +99,7 @@ class MaterialCardElevatedStyle(
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other !is MaterialCardElevatedStyle) return false
+        if (other !is MaterialCardFilledStyle) return false
         if (!super.equals(other)) return false
 
         if (elevation != other.elevation) return false

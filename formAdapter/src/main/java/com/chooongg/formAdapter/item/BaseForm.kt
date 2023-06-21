@@ -67,7 +67,16 @@ abstract class BaseForm(
 
     //</editor-fold>
 
-    //<editor-fold desc="内部 internal">
+    //<editor-fold desc="单行配置 SingleLine">
+
+    /**
+     * 单行权重
+     */
+    var singleLineWeight = 1f
+
+    //</editor-fold>
+
+    //<editor-fold desc="内部 Internal">
 
     /**
      * 边界信息
@@ -75,13 +84,33 @@ abstract class BaseForm(
     var marginBoundary: Boundary = Boundary()
         internal set
 
+    /**
+     * 填充信息
+     */
     var paddingBoundary: Boundary = Boundary()
         internal set
 
     /**
-     * 组索引
+     * 全局位置
+     */
+    var globalPosition: Int = -1
+
+    /**
+     * 组数量
+     */
+    var groupCount = -1
+        internal set
+
+    /**
+     * 当前组组索引
      */
     var groupIndex = -1
+        internal set
+
+    /**
+     * 组中的项数量
+     */
+    var itemCountForGroup = -1
         internal set
 
     /**
@@ -89,6 +118,20 @@ abstract class BaseForm(
      */
     var positionForGroup = -1
         internal set
+
+    /**
+     * 是否属于单行项目
+     */
+    var isSingleLineItem = false
+        internal set
+
+    var singleLineCount = -1
+        internal set
+
+    var singleLineIndex = -1
+        internal set
+
+    internal var singleLineItemSpan = 2520
 
     /**
      * 反重复代码

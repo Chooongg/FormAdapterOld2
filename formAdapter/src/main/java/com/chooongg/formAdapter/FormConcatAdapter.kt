@@ -1,7 +1,6 @@
 package com.chooongg.formAdapter
 
 import android.view.ViewGroup
-import androidx.collection.ArraySet
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
@@ -27,9 +26,6 @@ open class FormConcatAdapter constructor(isEditable: Boolean) : RecyclerView.Ada
 
     internal var _recyclerView: WeakReference<RecyclerView>? = null
 
-    internal var paddingVertical: Int = 0
-    internal var paddingHorizontal: Int = 0
-
     fun plusPart(adapter: FormPartAdapter) {
         concatAdapter.addAdapter(adapter)
     }
@@ -48,6 +44,26 @@ open class FormConcatAdapter constructor(isEditable: Boolean) : RecyclerView.Ada
 
     fun updateForm() {
         adapters.forEach { it.update() }
+    }
+
+    fun scrollToPosition(globalPosition: Int) {
+        _recyclerView?.get()?.smoothScrollToPosition(globalPosition)
+    }
+
+    fun scrollToItem(item: BaseForm) {
+        if (item.globalPosition > 0) scrollToPosition(item.globalPosition)
+    }
+
+    fun findOfField(
+        field: String,
+        notifyChange: Boolean = true,
+        block: (BaseForm) -> Unit
+    ): Boolean {
+        adapters.forEach {
+            val isExist = it.findOfField(field, notifyChange, block)
+            if (isExist) return true
+        }
+        return false
     }
 
     fun findRelativeAdapterPositionIn(
@@ -70,7 +86,7 @@ open class FormConcatAdapter constructor(isEditable: Boolean) : RecyclerView.Ada
         }
     }
 
-    //<editor-fold desc="覆写">
+    //<editor-fold desc="ConcatAdapter 覆写">
 
     override fun getItemViewType(position: Int): Int {
         return concatAdapter.getItemViewType(position)
@@ -137,12 +153,7 @@ open class FormConcatAdapter constructor(isEditable: Boolean) : RecyclerView.Ada
 
     //</editor-fold>
 
-    //<editor-fold desc="ItemViewType缓存池">
-
-    private val stylePool = ArrayList<Style>()
-    private val typesetPool = ArrayList<Typeset>()
-    private val itemProviderPool = ArrayList<BaseFormProvider>()
-    private val itemTypePool = ArraySet<Triple<Int, Int, Int>>()
+    //<editor-fold desc="ItemViewType 缓存池">
 
     private val typePool = ArrayList<FormTypeInfo>()
 
@@ -151,36 +162,24 @@ open class FormConcatAdapter constructor(isEditable: Boolean) : RecyclerView.Ada
         if (!typePool.contains(info)) {
             typePool.add(info)
         }
-//        if (!stylePool.contains(style)) stylePool.add(style)
-//        val styleIndex = stylePool.indexOf(style)
-//        if (!typesetPool.contains(typeset)) typesetPool.add(typeset)
-//        val typesetIndex = typesetPool.indexOf(typeset)
-//        if (!itemProviderPool.contains(provider)) itemProviderPool.add(provider)
-//        val providerIndex = itemProviderPool.indexOf(provider)
-//        val type = Triple(styleIndex, typesetIndex, providerIndex)
-//        itemTypePool.add(type)
-//        Log.d(
-//            "FormAdapterItemType",
-//            "$type style:${style.javaClass.simpleName} typeset:${typeset.javaClass.simpleName} provider:${provider.javaClass.simpleName}"
-//        )
         return typePool.indexOf(info)
     }
 
     internal fun getTypesetForItemViewType(viewType: Int): Typeset {
         return typePool[viewType].typeset
-//        val triple = itemTypePool.valueAt(viewType) ?: throw RuntimeException("No such viewType")
-//        return typesetPool[triple.second]
     }
 
     internal fun getItemProviderForItemViewType(viewType: Int): BaseFormProvider {
         return typePool[viewType].itemProvider
-//        val triple = itemTypePool.valueAt(viewType) ?: throw RuntimeException("No such viewType")
-//        return itemProviderPool[triple.third]
     }
 
     //</editor-fold>
 
     fun clear() {
         concatAdapter.adapters.forEach { concatAdapter.removeAdapter(it) }
+        _recyclerView?.get()?.also {
+            it.recycledViewPool.clear()
+            typePool.clear()
+        }
     }
 }
