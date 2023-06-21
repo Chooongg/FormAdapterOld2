@@ -56,11 +56,11 @@ open class FormConcatAdapter constructor(isEditable: Boolean) : RecyclerView.Ada
 
     fun findOfField(
         field: String,
-        notifyChange: Boolean = true,
+        update: Boolean = true,
         block: (BaseForm) -> Unit
     ): Boolean {
         adapters.forEach {
-            val isExist = it.findOfField(field, notifyChange, block)
+            val isExist = it.findOfField(field, update, block)
             if (isExist) return true
         }
         return false

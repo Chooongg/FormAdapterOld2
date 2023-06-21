@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
 import com.chooongg.formAdapter.boundary.Boundary
 import com.chooongg.formAdapter.item.InternalFormGroupTitle
+import com.google.android.flexbox.FlexboxLayoutManager
 import kotlin.math.max
 import kotlin.math.min
 
@@ -29,30 +30,34 @@ class FormLayoutManager(context: Context) : GridLayoutManager(context, 2520) {
 
     init {
         spanSizeLookup = object : SpanSizeLookup() {
+            init {
+                isSpanIndexCacheEnabled = true
+                isSpanGroupIndexCacheEnabled = true
+            }
+
             override fun getSpanSize(position: Int): Int {
                 Log.e("Form", "getSpanSize: $position")
-                val adapter = recyclerView?.adapter as? FormAdapter ?: return 2520
+                val adapter = recyclerView?.adapter as? FormAdapter ?: return spanCount
                 val pair = adapter.getWrappedAdapterAndPosition(position)
                 val partIndex = adapter.partIndexOf(pair.first)
                 val partAdapter = pair.first
                 val item = pair.first.getItem(pair.second)
-                val itemSpan = when (item) {
-                    null -> 2520
-                    is InternalFormGroupTitle -> 2520
-                    else -> {
-                        if (item.isSingleLineItem) {
-                            item.itemSpan
-                        } else 2520 / normalSpanSize
-                    }
+                item.itemSpan = if (item == null) {
+                    spanCount
+                } else if (item.isSingleLineItem) {
+                    item.itemSpan
+                } else if (item.isMustSingleColumn) {
+                    spanCount
+                } else {
+                    spanCount / normalSpanSize
                 }
-                item.marginBoundary.topType =
-                    if (item.positionForGroup <= normalSpanSize - 1) {
-                        if (partIndex == 0 && item.groupIndex == 0) Boundary.GLOBAL else Boundary.LOCAL
-                    } else if (item.isSingleLineItem) {
-                        partAdapter.getItem(pair.second - item.singleLineIndex).marginBoundary.topType
-                    } else {
-                        Boundary.NONE
-                    }
+                item.marginBoundary.topType = if (item.positionForGroup <= normalSpanSize - 1) {
+                    if (partIndex == 0 && item.groupIndex == 0) Boundary.GLOBAL else Boundary.LOCAL
+                } else if (item.isSingleLineItem) {
+                    partAdapter.getItem(pair.second - item.singleLineIndex).marginBoundary.topType
+                } else {
+                    Boundary.NONE
+                }
                 item.marginBoundary.bottomType =
                     if (item.itemCountForGroup - item.positionForGroup <= normalSpanSize) {
                         if (partIndex == adapter.partSize() - 1 && item.groupIndex == item.groupCount - 1) Boundary.GLOBAL else Boundary.LOCAL
@@ -61,7 +66,7 @@ class FormLayoutManager(context: Context) : GridLayoutManager(context, 2520) {
                     } else {
                         Boundary.NONE
                     }
-                return itemSpan
+                return item.itemSpan
             }
 
             override fun getSpanGroupIndex(adapterPosition: Int, spanCount: Int): Int {
@@ -70,8 +75,8 @@ class FormLayoutManager(context: Context) : GridLayoutManager(context, 2520) {
             }
 
             override fun getSpanIndex(position: Int, spanCount: Int): Int {
-                Log.e("Form", "getSpanIndex: $position")
                 val index = super.getSpanIndex(position, spanCount)
+                Log.e("Form", "getSpanIndex: $position   return: $index")
                 val adapter = recyclerView?.adapter as? FormAdapter ?: return index
                 val pair = adapter.getWrappedAdapterAndPosition(position)
                 val partAdapter = pair.first
@@ -96,6 +101,24 @@ class FormLayoutManager(context: Context) : GridLayoutManager(context, 2520) {
                     Boundary.NONE
                 }
                 return index
+            }
+        }
+    }
+
+    override fun onLayoutChildren(recycler: RecyclerView.Recycler, state: RecyclerView.State) {
+        if (!state.isPreLayout) calculateBoundary()
+        super.onLayoutChildren(recycler, state)
+    }
+
+    private fun calculateBoundary() {
+        Log.e("Form", "calculateBoundary")
+        val formAdapter = recyclerView?.adapter as? FormAdapter ?: return
+        var globalPosition = -1
+        formAdapter.adapters.forEach { adapter ->
+            adapter.getItemList().forEach { item ->
+                globalPosition++
+                item.globalPosition = globalPosition
+
             }
         }
     }

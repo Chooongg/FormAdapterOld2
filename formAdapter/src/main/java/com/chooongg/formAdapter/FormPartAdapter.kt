@@ -20,8 +20,7 @@ import kotlinx.coroutines.cancel
 import java.lang.ref.WeakReference
 
 class FormPartAdapter internal constructor(
-    val formAdapter: FormAdapter,
-    val style: Style = NoneStyle
+    val formAdapter: FormAdapter, val style: Style = NoneStyle
 ) : RecyclerView.Adapter<FormViewHolder>() {
 
     var adapterScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
@@ -33,30 +32,28 @@ class FormPartAdapter internal constructor(
 
     private lateinit var defaultPartName: String
 
-    private val asyncDiffer =
-        AsyncListDiffer(object : ListUpdateCallback {
-            override fun onChanged(position: Int, count: Int, payload: Any?) =
-                notifyItemChanged(position, payload)
+    private val asyncDiffer = AsyncListDiffer(object : ListUpdateCallback {
+        override fun onChanged(position: Int, count: Int, payload: Any?) =
+            notifyItemChanged(position, payload)
 
-            override fun onRemoved(position: Int, count: Int) =
-                notifyItemRangeRemoved(position, count)
+        override fun onRemoved(position: Int, count: Int) = notifyItemRangeRemoved(position, count)
 
-            override fun onInserted(position: Int, count: Int) =
-                notifyItemRangeInserted(position, count)
+        override fun onInserted(position: Int, count: Int) =
+            notifyItemRangeInserted(position, count)
 
-            override fun onMoved(fromPosition: Int, toPosition: Int) =
-                notifyItemMoved(fromPosition, toPosition)
+        override fun onMoved(fromPosition: Int, toPosition: Int) =
+            notifyItemMoved(fromPosition, toPosition)
 
-        }, AsyncDifferConfig.Builder(object : DiffUtil.ItemCallback<BaseForm>() {
-            override fun areItemsTheSame(oldItem: BaseForm, newItem: BaseForm) = when {
-                oldItem is InternalFormGroupTitle -> false
-                newItem is InternalFormGroupTitle -> false
-                else -> true
-            }
+    }, AsyncDifferConfig.Builder(object : DiffUtil.ItemCallback<BaseForm>() {
+        override fun areItemsTheSame(oldItem: BaseForm, newItem: BaseForm) = when {
+            oldItem is InternalFormGroupTitle -> false
+            newItem is InternalFormGroupTitle -> false
+            else -> true
+        }
 
-            override fun areContentsTheSame(oldItem: BaseForm, newItem: BaseForm) =
-                oldItem.antiRepeatCode == newItem.antiRepeatCode
-        }).build())
+        override fun areContentsTheSame(oldItem: BaseForm, newItem: BaseForm) =
+            oldItem.antiRepeatCode == newItem.antiRepeatCode
+    }).build())
 
     var data = PartData()
 
@@ -131,8 +128,7 @@ class FormPartAdapter internal constructor(
                 item.positionForGroup = position
             }
         }
-        asyncDiffer.submitList(ArrayList<BaseForm>().apply
-        { tempList.forEach { addAll(it) } })
+        asyncDiffer.submitList(ArrayList<BaseForm>().apply { tempList.forEach { addAll(it) } })
     }
 
     private fun disassemblySingleLine(singleLines: ArrayList<BaseForm>) {
@@ -159,9 +155,7 @@ class FormPartAdapter internal constructor(
     }
 
     fun findOfField(
-        field: String,
-        notifyChange: Boolean = true,
-        block: (BaseForm) -> Unit
+        field: String, update: Boolean = true, block: (BaseForm) -> Unit
     ): Boolean {
         data.groups.forEach { group ->
             group.items.forEach {
@@ -174,12 +168,14 @@ class FormPartAdapter internal constructor(
         asyncDiffer.currentList.forEachIndexed { index, item ->
             if (item.field == field) {
                 block(item)
-                if (notifyChange) notifyItemChanged(index)
+                if (update) update()
                 return true
             }
         }
         return false
     }
+
+    fun getItemList() = asyncDiffer.currentList
 
     override fun getItemCount(): Int {
         return asyncDiffer.currentList.size
@@ -219,9 +215,7 @@ class FormPartAdapter internal constructor(
     }
 
     override fun onBindViewHolder(
-        holder: FormViewHolder,
-        position: Int,
-        payloads: MutableList<Any>
+        holder: FormViewHolder, position: Int, payloads: MutableList<Any>
     ) {
         val item = asyncDiffer.currentList[position]
         style.onBindStyleLayout(holder, item)
