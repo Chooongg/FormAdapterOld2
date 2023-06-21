@@ -141,6 +141,15 @@ open class FormConcatAdapter constructor(isEditable: Boolean) : RecyclerView.Ada
         if (recyclerView.layoutManager !is FormLayoutManager) {
             recyclerView.layoutManager = FormLayoutManager(recyclerView.context)
         }
+//        var isHasFormItemDecoration = false
+//        for (i in 0 until recyclerView.itemDecorationCount){
+//            if (recyclerView.getItemDecorationAt(i) is FormItemDecoration){
+//                isHasFormItemDecoration = true
+//            }
+//        }
+//        if (!isHasFormItemDecoration){
+//            recyclerView.addItemDecoration(FormItemDecoration())
+//        }
         concatAdapter.onAttachedToRecyclerView(recyclerView)
         recyclerView.addOnScrollListener(onScrollListener)
     }

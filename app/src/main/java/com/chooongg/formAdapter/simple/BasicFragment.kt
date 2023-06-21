@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel
 import com.chooongg.formAdapter.FormAdapter
 import com.chooongg.formAdapter.data.addText
 import com.chooongg.formAdapter.simple.databinding.FragmentBasicBinding
+import com.chooongg.formAdapter.style.MaterialCardElevatedStyle
 import com.chooongg.formAdapter.style.MaterialCardFilledStyle
 
 class BasicFragment : Fragment() {
@@ -49,6 +50,29 @@ class BasicFragment : Fragment() {
                         addText("Text", "text") {
                             content = "FormText"
                         }
+                        addText("Text", "text") {
+                            content = "FormText"
+                        }
+                    }
+                }
+            }
+            plusPart(MaterialCardElevatedStyle()) {
+                plusGroup {
+                    groupName = "Title"
+                    addText("Text", "text") {
+                        content = "FormText"
+                    }
+                    addText("Text", "text") {
+                        content = "FormText"
+                    }
+                    addText("Text", "text") {
+                        content = "FormText"
+                    }
+                    addText("Text", "text") {
+                        content = "FormText"
+                    }
+                    addText("Text", "text") {
+                        content = "FormText"
                     }
                 }
             }

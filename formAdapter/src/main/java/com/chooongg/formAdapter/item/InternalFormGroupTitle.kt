@@ -9,6 +9,8 @@ class InternalFormGroupTitle internal constructor(
     name: CharSequence?
 ) : BaseForm(name, null) {
 
+    override var isMustSingleColumn = true
+
     override var typeset: Typeset? = NoneTypeset
 
     override fun getItemProvider(adapter: FormAdapter) = InternalFormGroupTitleProvider

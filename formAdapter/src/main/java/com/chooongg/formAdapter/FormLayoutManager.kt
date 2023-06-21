@@ -41,12 +41,12 @@ class FormLayoutManager(context: Context) : GridLayoutManager(context, 2520) {
                     is InternalFormGroupTitle -> 2520
                     else -> {
                         if (item.isSingleLineItem) {
-                            item.singleLineItemSpan
+                            item.itemSpan
                         } else 2520 / normalSpanSize
                     }
                 }
                 item.marginBoundary.topType =
-                    if (item.positionForGroup == 0) {
+                    if (item.positionForGroup <= normalSpanSize - 1) {
                         if (partIndex == 0 && item.groupIndex == 0) Boundary.GLOBAL else Boundary.LOCAL
                     } else if (item.isSingleLineItem) {
                         partAdapter.getItem(pair.second - item.singleLineIndex).marginBoundary.topType
@@ -54,7 +54,7 @@ class FormLayoutManager(context: Context) : GridLayoutManager(context, 2520) {
                         Boundary.NONE
                     }
                 item.marginBoundary.bottomType =
-                    if (item.positionForGroup == item.itemCountForGroup - 1) {
+                    if (item.itemCountForGroup - item.positionForGroup <= normalSpanSize) {
                         if (partIndex == adapter.partSize() - 1 && item.groupIndex == item.groupCount - 1) Boundary.GLOBAL else Boundary.LOCAL
                     } else if (item.isSingleLineItem) {
                         partAdapter.getItem(pair.second + item.singleLineCount - item.singleLineIndex - 1).marginBoundary.bottomType
@@ -81,31 +81,27 @@ class FormLayoutManager(context: Context) : GridLayoutManager(context, 2520) {
                     is InternalFormGroupTitle -> 2520
                     else -> {
                         if (item.isSingleLineItem) {
-                            item.singleLineItemSpan
+                            item.itemSpan
                         } else 2520 / normalSpanSize
                     }
                 }
-                item.marginBoundary.startType =
-                    if (index == 0) {
-                        Boundary.GLOBAL
-                    } else {
-                        Boundary.NONE
-                    }
-                item.marginBoundary.endType =
-                    if (index + itemSpan == spanCount) {
-                        Boundary.GLOBAL
-                    } else {
-                        Boundary.NONE
-                    }
+                item.marginBoundary.startType = if (index == 0) {
+                    Boundary.GLOBAL
+                } else {
+                    Boundary.NONE
+                }
+                item.marginBoundary.endType = if (index + itemSpan == spanCount) {
+                    Boundary.GLOBAL
+                } else {
+                    Boundary.NONE
+                }
                 return index
             }
         }
     }
 
     override fun smoothScrollToPosition(
-        recyclerView: RecyclerView,
-        state: RecyclerView.State,
-        position: Int
+        recyclerView: RecyclerView, state: RecyclerView.State, position: Int
     ) {
         val smoothScroller = CenterSmoothScroller(recyclerView.context)
         smoothScroller.targetPosition = position
@@ -117,29 +113,15 @@ class FormLayoutManager(context: Context) : GridLayoutManager(context, 2520) {
         paddingHorizontal = horizontal
     }
 
-    override fun getPaddingLeft() =
-        if (paddingHorizontal <= 0) super.getPaddingLeft() else paddingHorizontal
-
-    override fun getPaddingRight() =
-        if (paddingHorizontal <= 0) super.getPaddingRight() else paddingHorizontal
-
-    override fun getPaddingStart() =
-        if (paddingHorizontal <= 0) super.getPaddingStart() else paddingHorizontal
-
-    override fun getPaddingEnd() =
-        if (paddingHorizontal <= 0) super.getPaddingEnd() else paddingHorizontal
-
-    override fun getPaddingTop() =
-        if (paddingVertical <= 0) super.getPaddingTop() else paddingVertical
-
-    override fun getPaddingBottom() =
-        if (paddingVertical <= 0) super.getPaddingBottom() else paddingVertical
+    override fun getPaddingLeft() = super.getPaddingLeft() + paddingHorizontal
+    override fun getPaddingRight() = super.getPaddingRight() + paddingHorizontal
+    override fun getPaddingStart() = super.getPaddingStart() + paddingHorizontal
+    override fun getPaddingEnd() = super.getPaddingEnd() + paddingHorizontal
+    override fun getPaddingTop() = super.getPaddingTop() + paddingVertical
+    override fun getPaddingBottom() = super.getPaddingBottom() + paddingVertical
 
     override fun onMeasure(
-        recycler: RecyclerView.Recycler,
-        state: RecyclerView.State,
-        widthSpec: Int,
-        heightSpec: Int
+        recycler: RecyclerView.Recycler, state: RecyclerView.State, widthSpec: Int, heightSpec: Int
     ) {
         super.onMeasure(recycler, state, widthSpec, heightSpec)
         normalSpanSize = max(1, min(10, recyclerView!!.measuredWidth / maxItemWidth))
@@ -157,11 +139,7 @@ class FormLayoutManager(context: Context) : GridLayoutManager(context, 2520) {
 
     private class CenterSmoothScroller(context: Context) : LinearSmoothScroller(context) {
         override fun calculateDtToFit(
-            viewStart: Int,
-            viewEnd: Int,
-            boxStart: Int,
-            boxEnd: Int,
-            snapPreference: Int
+            viewStart: Int, viewEnd: Int, boxStart: Int, boxEnd: Int, snapPreference: Int
         ): Int {
             return (boxStart + (boxEnd - boxStart) / 2) - (viewStart + (viewEnd - viewStart) / 2)
         }

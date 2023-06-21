@@ -142,16 +142,16 @@ class FormPartAdapter internal constructor(
             it.singleLineIndex = index
             maxWeight += it.singleLineWeight
         }
-        if (singleLines.size == 1) singleLines[0].singleLineItemSpan = 2520
+        if (singleLines.size == 1) singleLines[0].itemSpan = 2520
         else {
             var spanCount = 0
             singleLines.forEach {
-                it.singleLineItemSpan = (2520 / maxWeight * it.singleLineWeight).toInt()
-                spanCount += it.singleLineItemSpan
+                it.itemSpan = (2520 / maxWeight * it.singleLineWeight).toInt()
+                spanCount += it.itemSpan
             }
             var index = 0
             while (spanCount < 2520) {
-                singleLines[index].singleLineItemSpan++
+                singleLines[index].itemSpan++
                 if (index + 1 == singleLines.size) index = 0 else index++
                 spanCount++
             }

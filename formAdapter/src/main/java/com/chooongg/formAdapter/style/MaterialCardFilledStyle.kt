@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.view.ViewGroup.MarginLayoutParams
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updatePaddingRelative
+import androidx.recyclerview.widget.GridLayoutManager
 import com.chooongg.formAdapter.FormViewHolder
 import com.chooongg.formAdapter.R
 import com.chooongg.formAdapter.boundary.Boundary
@@ -27,7 +28,7 @@ class MaterialCardFilledStyle(
     ).apply {
         id = R.id.formInternalStyleParent
         tag = shapeAppearanceModel.toBuilder().build()
-        layoutParams = MarginLayoutParams(
+        layoutParams = GridLayoutManager.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
@@ -67,7 +68,7 @@ class MaterialCardFilledStyle(
                 } else builder.setBottomRightCornerSize(0f)
             }
             it.shapeAppearanceModel = builder.build()
-            it.updateLayoutParams<MarginLayoutParams> {
+            it.updateLayoutParams<GridLayoutManager.LayoutParams> {
                 topMargin = when (item.marginBoundary.topType) {
                     Boundary.LOCAL -> marginInfo.verticalLocal
                     else -> 0

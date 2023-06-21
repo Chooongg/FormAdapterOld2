@@ -40,7 +40,7 @@ abstract class BaseForm(
     /**
      * 是否必填
      */
-    open var isRequired: Boolean = false
+    open var isMust: Boolean = false
 
     /**
      * 输出模式
@@ -120,18 +120,28 @@ abstract class BaseForm(
         internal set
 
     /**
+     * 项目跨度
+     */
+    internal var itemSpan = 2520
+
+    /**
      * 是否属于单行项目
      */
     var isSingleLineItem = false
         internal set
 
+    /**
+     * 单行项目数
+     */
     var singleLineCount = -1
         internal set
 
+    /**
+     * 单行索引
+     */
     var singleLineIndex = -1
         internal set
 
-    internal var singleLineItemSpan = 2520
 
     /**
      * 反重复代码
@@ -198,7 +208,7 @@ abstract class BaseForm(
      * 检查数据正确性
      */
     open fun checkDataCorrectness(): Boolean {
-        return if (isRequired) content != null else true
+        return if (isMust) content != null else true
     }
 
     /**
