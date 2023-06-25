@@ -32,7 +32,7 @@ object FormTextProvider : BaseFormProvider() {
     ) {
         holder.getView<MaterialTextView>(R.id.formInternalContent).apply {
             text = item.getContentText()
-            gravity = typeset.contentGravity()
+            gravity = getContentGravity(adapter, typeset)
             updateLayoutParams<ViewGroup.LayoutParams> {
                 width = typeset.contentWidth()
             }

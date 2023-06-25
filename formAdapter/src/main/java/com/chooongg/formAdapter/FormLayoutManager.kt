@@ -6,8 +6,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
 import com.chooongg.formAdapter.boundary.Boundary
-import com.chooongg.formAdapter.item.InternalFormGroupTitle
-import com.google.android.flexbox.FlexboxLayoutManager
 import kotlin.math.max
 import kotlin.math.min
 
@@ -19,88 +17,33 @@ class FormLayoutManager(context: Context) : GridLayoutManager(context, 2520) {
         set(value) {
             field = value
             if (recyclerView != null) {
-                normalSpanSize = max(1, min(10, recyclerView!!.measuredWidth / maxItemWidth))
+                normalColumnCount = max(1, min(10, recyclerView!!.measuredWidth / maxItemWidth))
             }
         }
 
-    private var normalSpanSize = 1
+    internal var normalColumnCount = 1
+        set(value) {
+            field = value
+            (recyclerView?.adapter as? FormAdapter)?.normalColumnCount = normalColumnCount
+        }
 
     private var paddingVertical: Int = 0
     private var paddingHorizontal: Int = 0
 
     init {
         spanSizeLookup = object : SpanSizeLookup() {
-            init {
-                isSpanIndexCacheEnabled = true
-                isSpanGroupIndexCacheEnabled = true
-            }
-
             override fun getSpanSize(position: Int): Int {
-                Log.e("Form", "getSpanSize: $position")
                 val adapter = recyclerView?.adapter as? FormAdapter ?: return spanCount
                 val pair = adapter.getWrappedAdapterAndPosition(position)
-                val partIndex = adapter.partIndexOf(pair.first)
-                val partAdapter = pair.first
                 val item = pair.first.getItem(pair.second)
-                item.itemSpan = if (item == null) {
-                    spanCount
-                } else if (item.isSingleLineItem) {
-                    item.itemSpan
-                } else if (item.isMustSingleColumn) {
-                    spanCount
-                } else {
-                    spanCount / normalSpanSize
-                }
-                item.marginBoundary.topType = if (item.positionForGroup <= normalSpanSize - 1) {
-                    if (partIndex == 0 && item.groupIndex == 0) Boundary.GLOBAL else Boundary.LOCAL
-                } else if (item.isSingleLineItem) {
-                    partAdapter.getItem(pair.second - item.singleLineIndex).marginBoundary.topType
-                } else {
-                    Boundary.NONE
-                }
-                item.marginBoundary.bottomType =
-                    if (item.itemCountForGroup - item.positionForGroup <= normalSpanSize) {
-                        if (partIndex == adapter.partSize() - 1 && item.groupIndex == item.groupCount - 1) Boundary.GLOBAL else Boundary.LOCAL
-                    } else if (item.isSingleLineItem) {
-                        partAdapter.getItem(pair.second + item.singleLineCount - item.singleLineIndex - 1).marginBoundary.bottomType
-                    } else {
-                        Boundary.NONE
-                    }
+                item.globalPosition = position
                 return item.itemSpan
             }
 
-            override fun getSpanGroupIndex(adapterPosition: Int, spanCount: Int): Int {
-                Log.e("Form", "getSpanGroupIndex: $adapterPosition")
-                return super.getSpanGroupIndex(adapterPosition, spanCount)
-            }
-
             override fun getSpanIndex(position: Int, spanCount: Int): Int {
-                val index = super.getSpanIndex(position, spanCount)
-                Log.e("Form", "getSpanIndex: $position   return: $index")
-                val adapter = recyclerView?.adapter as? FormAdapter ?: return index
+                val adapter = recyclerView?.adapter as? FormAdapter ?: return 0
                 val pair = adapter.getWrappedAdapterAndPosition(position)
-                val partAdapter = pair.first
-                val item = partAdapter.getItem(pair.second)
-                val itemSpan = when (item) {
-                    null -> 2520
-                    is InternalFormGroupTitle -> 2520
-                    else -> {
-                        if (item.isSingleLineItem) {
-                            item.itemSpan
-                        } else 2520 / normalSpanSize
-                    }
-                }
-                item.marginBoundary.startType = if (index == 0) {
-                    Boundary.GLOBAL
-                } else {
-                    Boundary.NONE
-                }
-                item.marginBoundary.endType = if (index + itemSpan == spanCount) {
-                    Boundary.GLOBAL
-                } else {
-                    Boundary.NONE
-                }
-                return index
+                return pair.first.getItem(pair.second).spanIndex
             }
         }
     }
@@ -113,12 +56,80 @@ class FormLayoutManager(context: Context) : GridLayoutManager(context, 2520) {
     private fun calculateBoundary() {
         Log.e("Form", "calculateBoundary")
         val formAdapter = recyclerView?.adapter as? FormAdapter ?: return
-        var globalPosition = -1
-        formAdapter.adapters.forEach { adapter ->
-            adapter.getItemList().forEach { item ->
-                globalPosition++
-                item.globalPosition = globalPosition
-
+        var spanIndex = 0
+        formAdapter.partAdapters.forEachIndexed { partIndex, adapter ->
+            adapter.getItemList().forEachIndexed { index, item ->
+                item.itemSpan = if (item.isSingleLineItem) {
+                    item.itemSpan
+                } else if (item.isMustSingleColumn) {
+                    spanCount
+                } else {
+                    val span = spanCount / normalColumnCount
+                    if (index >= adapter.getItemList().lastIndex && spanIndex + span < spanCount) {
+                        spanCount - spanIndex
+                    } else span
+                }
+                item.spanIndex = spanIndex
+                if (spanIndex == 0) {
+                    item.marginBoundary.startType = Boundary.GLOBAL
+                    item.paddingBoundary.startType = Boundary.GLOBAL
+                } else {
+                    item.marginBoundary.startType = Boundary.NONE
+                    item.paddingBoundary.startType = Boundary.LOCAL
+                }
+                spanIndex += item.itemSpan
+                if (spanIndex == spanCount) {
+                    item.marginBoundary.endType = Boundary.GLOBAL
+                    item.paddingBoundary.endType = Boundary.GLOBAL
+                    spanIndex = 0
+                } else {
+                    item.marginBoundary.endType = Boundary.NONE
+                    item.paddingBoundary.endType = Boundary.LOCAL
+                }
+                if (item.positionForGroup == 0) {
+                    if (partIndex == 0 && index == 0) {
+                        item.marginBoundary.topType = Boundary.GLOBAL
+                        item.paddingBoundary.topType = Boundary.GLOBAL
+                    } else {
+                        item.marginBoundary.topType = Boundary.LOCAL
+                        item.paddingBoundary.topType = Boundary.GLOBAL
+                    }
+                } else if (item.spanIndex != 0) {
+                    var lastIndex = index - 1
+                    while (adapter.getItemList()[lastIndex].spanIndex != 0) {
+                        lastIndex--
+                    }
+                    item.marginBoundary.topType =
+                        adapter.getItemList()[lastIndex].marginBoundary.topType
+                    item.paddingBoundary.topType =
+                        adapter.getItemList()[lastIndex].paddingBoundary.topType
+                } else {
+                    item.marginBoundary.topType = Boundary.NONE
+                    item.paddingBoundary.topType = Boundary.LOCAL
+                }
+            }
+            adapter.getItemList().reversed().forEachIndexed { index, item ->
+                if (item.itemCountForGroup - item.positionForGroup == 1) {
+                    if (partIndex == formAdapter.partSize() - 1 && index == 0) {
+                        item.marginBoundary.bottomType = Boundary.GLOBAL
+                        item.paddingBoundary.bottomType = Boundary.GLOBAL
+                    } else {
+                        item.marginBoundary.bottomType = Boundary.LOCAL
+                        item.paddingBoundary.bottomType = Boundary.GLOBAL
+                    }
+                } else if (item.spanIndex + item.itemSpan != spanCount) {
+                    var beginIndex = index - 1
+                    while (adapter.getItemList()[beginIndex].spanIndex + adapter.getItemList()[beginIndex].itemSpan != spanCount) {
+                        beginIndex++
+                    }
+                    item.marginBoundary.bottomType =
+                        adapter.getItemList()[beginIndex].marginBoundary.bottomType
+                    item.paddingBoundary.bottomType =
+                        adapter.getItemList()[beginIndex].paddingBoundary.bottomType
+                } else {
+                    item.marginBoundary.bottomType = Boundary.NONE
+                    item.paddingBoundary.bottomType = Boundary.LOCAL
+                }
             }
         }
     }
@@ -147,7 +158,7 @@ class FormLayoutManager(context: Context) : GridLayoutManager(context, 2520) {
         recycler: RecyclerView.Recycler, state: RecyclerView.State, widthSpec: Int, heightSpec: Int
     ) {
         super.onMeasure(recycler, state, widthSpec, heightSpec)
-        normalSpanSize = max(1, min(10, recyclerView!!.measuredWidth / maxItemWidth))
+        normalColumnCount = max(1, min(10, recyclerView!!.measuredWidth / maxItemWidth))
     }
 
     override fun onAttachedToWindow(view: RecyclerView) {

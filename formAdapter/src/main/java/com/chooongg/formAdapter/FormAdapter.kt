@@ -17,14 +17,18 @@ class FormAdapter(isEditable: Boolean, block: (FormAdapter.() -> Unit)?) :
 
     fun plusPart(style: Style = NoneStyle, block: PartData.() -> Unit) =
         FormPartAdapter(this, style).apply {
-            create(block)
             plusPart(this)
+            create(block)
+            val lastPart = adapters.size - 2
+            if (lastPart >= 0) partAdapters[lastPart].update()
         }
 
     fun plusPart(index: Int, style: Style = NoneStyle, block: PartData.() -> Unit) =
         FormPartAdapter(this, style).apply {
-            create(block)
             plusPart(index, this)
+            create(block)
+            if (index - 1 >= 0) partAdapters[index - 1].update()
+            if (index + 1 < adapters.size) partAdapters[index + 1].update()
         }
 
     fun clearFocus() {

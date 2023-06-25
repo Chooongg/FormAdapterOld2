@@ -2,6 +2,7 @@ package com.chooongg.formAdapter.provider
 
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.GravityInt
 import com.chooongg.formAdapter.FormPartAdapter
 import com.chooongg.formAdapter.FormViewHolder
 import com.chooongg.formAdapter.item.BaseForm
@@ -34,6 +35,18 @@ abstract class BaseFormProvider {
     ) = onBindItemView(adapter, typeset, holder, item)
 
     open fun onItemRecycler(holder: FormViewHolder) = Unit
+
+    /**
+     * 获取内容的对齐方式
+     */
+    @GravityInt
+    open fun getContentGravity(adapter: FormPartAdapter, typeset: Typeset): Int {
+        return if (adapter.formAdapter.normalColumnCount > 1) {
+            typeset.multiColumnContentGravity()
+        } else {
+            typeset.contentGravity()
+        }
+    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

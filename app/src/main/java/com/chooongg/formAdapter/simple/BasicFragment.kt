@@ -61,7 +61,7 @@ class BasicFragment : Fragment() {
     class BasicViewModel : ViewModel() {
         val adapter = FormAdapter(true) {
             (0..6).forEach {
-                plusPart(MaterialCardFilledStyle()) {
+                plusPart(MaterialCardElevatedStyle()) {
                     plusGroup {
 //                        groupName = "Title"
                         addText("Text", "text") {
@@ -82,7 +82,7 @@ class BasicFragment : Fragment() {
                     }
                 }
             }
-            plusPart(MaterialCardElevatedStyle()) {
+            plusPart(MaterialCardFilledStyle()) {
                 plusGroup {
                     groupName = "Title"
                     addText("Text", "text") {

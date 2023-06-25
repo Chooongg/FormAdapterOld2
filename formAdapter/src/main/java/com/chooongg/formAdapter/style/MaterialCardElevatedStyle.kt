@@ -1,5 +1,7 @@
 package com.chooongg.formAdapter.style
 
+import android.graphics.Color
+import android.os.Build
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.MarginLayoutParams
@@ -31,6 +33,10 @@ class MaterialCardElevatedStyle(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            outlineSpotShadowColor = Color.TRANSPARENT
+            outlineAmbientShadowColor = Color.TRANSPARENT
+        }
     }
 
     override fun onBindStyleLayout(holder: FormViewHolder, item: BaseForm) {

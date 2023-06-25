@@ -5,12 +5,12 @@ plugins {
 
 android {
     namespace 'com.chooongg.formAdapter.simple'
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.chooongg.formAdapter.simple"
         minSdk 24
-        targetSdk 33
+        targetSdk 34
         versionCode 1
         versionName "1.0"
         vectorDrawables { useSupportLibrary true }
@@ -40,7 +40,7 @@ dependencies {
     implementation 'androidx.activity:activity-ktx:1.7.2'
     implementation 'androidx.fragment:fragment-ktx:1.6.0'
     implementation 'androidx.appcompat:appcompat:1.7.0-alpha02'
-    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'com.google.android.material:material:1.10.0-alpha04'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.1'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1'
     implementation project(path: ':formAdapter')

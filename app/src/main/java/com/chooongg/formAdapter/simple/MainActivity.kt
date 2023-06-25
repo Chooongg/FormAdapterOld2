@@ -5,11 +5,14 @@ import android.util.DisplayMetrics
 import android.util.Log
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.chooongg.formAdapter.simple.databinding.ActivityMainBinding
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 
 class MainActivity : AppCompatActivity() {
@@ -25,8 +28,24 @@ class MainActivity : AppCompatActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
+        ViewCompat.setOnApplyWindowInsetsListener(binding.viewPager) { v, insets ->
+            val inset =
+                insets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout())
+            if (binding.navigationView is BottomNavigationView) {
+                v.setPadding(inset.left, 0, inset.right, 0)
+            } else {
+                val isRtl = ViewCompat.getLayoutDirection(v) == ViewCompat.LAYOUT_DIRECTION_RTL
+                if (isRtl) {
+                    v.setPadding(inset.left, 0, 0, inset.bottom)
+                } else {
+                    v.setPadding(0, 0, inset.right, inset.bottom)
+                }
+            }
+            insets
+        }
         getAndroidScreenProperty()
         binding.viewPager.adapter = FragmentAdapter(this, fragments)
+        binding.appbarLayout.liftOnScrollTargetViewId = R.id.formView
     }
 
     private fun getAndroidScreenProperty() {

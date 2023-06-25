@@ -22,9 +22,45 @@ open class FormConcatAdapter constructor(isEditable: Boolean) : RecyclerView.Ada
             updateForm()
         }
 
-    val adapters = concatAdapter.adapters.map { it as FormPartAdapter }
+    var normalColumnCount = 1
+        internal set
+
+    val adapters get() = concatAdapter.adapters
+
+    val partAdapters get() = adapters.map { it as FormPartAdapter }
 
     internal var _recyclerView: WeakReference<RecyclerView>? = null
+
+    private val dataObserver = object : RecyclerView.AdapterDataObserver() {
+
+        override fun onItemRangeChanged(positionStart: Int, itemCount: Int) {
+            this@FormConcatAdapter.notifyItemRangeChanged(positionStart, itemCount)
+        }
+
+        override fun onItemRangeChanged(positionStart: Int, itemCount: Int, payload: Any?) {
+            this@FormConcatAdapter.notifyItemRangeChanged(positionStart, itemCount, payload)
+        }
+
+        override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+            this@FormConcatAdapter.notifyItemRangeInserted(positionStart, itemCount)
+        }
+
+        override fun onItemRangeRemoved(positionStart: Int, itemCount: Int) {
+            this@FormConcatAdapter.notifyItemRangeRemoved(positionStart, itemCount)
+        }
+
+        override fun onItemRangeMoved(fromPosition: Int, toPosition: Int, itemCount: Int) {
+            this@FormConcatAdapter.notifyItemMoved(fromPosition, toPosition)
+        }
+
+        override fun onStateRestorationPolicyChanged() {
+            this@FormConcatAdapter.stateRestorationPolicy = concatAdapter.stateRestorationPolicy
+        }
+    }
+
+    init {
+        concatAdapter.registerAdapterDataObserver(dataObserver)
+    }
 
     fun plusPart(adapter: FormPartAdapter) {
         concatAdapter.addAdapter(adapter)
@@ -38,12 +74,12 @@ open class FormConcatAdapter constructor(isEditable: Boolean) : RecyclerView.Ada
         concatAdapter.removeAdapter(adapter)
     }
 
-    fun partIndexOf(part: FormPartAdapter) = concatAdapter.adapters.indexOf(part)
+    fun partIndexOf(part: FormPartAdapter) = adapters.indexOf(part)
 
     fun partSize() = concatAdapter.adapters.size
 
     fun updateForm() {
-        adapters.forEach { it.update() }
+        partAdapters.forEach { it.update() }
     }
 
     fun scrollToPosition(globalPosition: Int) {
@@ -59,7 +95,7 @@ open class FormConcatAdapter constructor(isEditable: Boolean) : RecyclerView.Ada
         update: Boolean = true,
         block: (BaseForm) -> Unit
     ): Boolean {
-        adapters.forEach {
+        partAdapters.forEach {
             val isExist = it.findOfField(field, update, block)
             if (isExist) return true
         }
@@ -139,7 +175,9 @@ open class FormConcatAdapter constructor(isEditable: Boolean) : RecyclerView.Ada
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         _recyclerView = WeakReference(recyclerView)
         if (recyclerView.layoutManager !is FormLayoutManager) {
-            recyclerView.layoutManager = FormLayoutManager(recyclerView.context)
+            val layoutManager = FormLayoutManager(recyclerView.context)
+            recyclerView.layoutManager = layoutManager
+            normalColumnCount = layoutManager.normalColumnCount
         }
 //        var isHasFormItemDecoration = false
 //        for (i in 0 until recyclerView.itemDecorationCount){

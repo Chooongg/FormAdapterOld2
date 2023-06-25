@@ -124,6 +124,8 @@ abstract class BaseForm(
      */
     internal var itemSpan = 2520
 
+    internal var spanIndex = 0
+
     /**
      * 是否属于单行项目
      */

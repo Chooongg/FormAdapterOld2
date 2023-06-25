@@ -5,11 +5,11 @@ plugins {
 
 android {
     namespace 'com.chooongg.formAdapter'
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         minSdk 24
-        targetSdk 33
+        targetSdk 34
         consumerProguardFiles "consumer-rules.pro"
     }
 
@@ -32,7 +32,7 @@ dependencies {
     api 'androidx.recyclerview:recyclerview:1.3.1-rc01'
     implementation 'androidx.core:core-ktx:1.10.1'
     implementation 'androidx.appcompat:appcompat:1.7.0-alpha02'
-    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'com.google.android.material:material:1.10.0-alpha04'
     implementation 'com.google.android.flexbox:flexbox:3.0.0'
     implementation 'com.airbnb.android:lottie:6.0.0'
 }

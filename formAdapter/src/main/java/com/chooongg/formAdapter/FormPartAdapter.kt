@@ -73,7 +73,6 @@ class FormPartAdapter internal constructor(
             asyncDiffer.submitList(null)
             return
         }
-        val partIndex = formAdapter.partIndexOf(this)
         val tempList = mutableListOf<MutableList<BaseForm>>()
         data.groups.forEach { if (it.items.isEmpty()) data.groups.remove(it) } // 去除空组
         if (data.dynamicPart) {
@@ -177,9 +176,7 @@ class FormPartAdapter internal constructor(
 
     fun getItemList() = asyncDiffer.currentList
 
-    override fun getItemCount(): Int {
-        return asyncDiffer.currentList.size
-    }
+    override fun getItemCount() = asyncDiffer.currentList.size
 
     fun getItem(position: Int) = asyncDiffer.currentList[position]
 
@@ -209,7 +206,7 @@ class FormPartAdapter internal constructor(
         val item = asyncDiffer.currentList[position]
         style.onBindStyleLayout(holder, item)
         val typeset = formAdapter.getTypesetForItemViewType(holder.itemViewType)
-        typeset.onBindTypesetLayout(style.paddingInfo, holder, item)
+        typeset.onBindTypesetLayout(this, holder, item)
         formAdapter.getItemProviderForItemViewType(holder.itemViewType)
             .onBindItemView(this, typeset, holder, item)
     }
@@ -220,7 +217,7 @@ class FormPartAdapter internal constructor(
         val item = asyncDiffer.currentList[position]
         style.onBindStyleLayout(holder, item)
         val typeset = formAdapter.getTypesetForItemViewType(holder.itemViewType)
-        typeset.onBindTypesetLayout(style.paddingInfo, holder, item)
+        typeset.onBindTypesetLayout(this, holder, item)
         formAdapter.getItemProviderForItemViewType(holder.itemViewType)
             .onBindItemView(this, typeset, holder, item, payloads)
     }
