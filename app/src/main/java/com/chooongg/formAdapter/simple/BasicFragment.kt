@@ -8,8 +8,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
 import com.chooongg.formAdapter.FormAdapter
+import com.chooongg.formAdapter.data.addSelector
 import com.chooongg.formAdapter.data.addText
-import com.chooongg.formAdapter.enum.FormVisibilityMode
+import com.chooongg.formAdapter.option.Option
 import com.chooongg.formAdapter.simple.databinding.FragmentBasicBinding
 import com.chooongg.formAdapter.style.MaterialCardElevatedStyle
 import com.chooongg.formAdapter.style.MaterialCardFilledStyle
@@ -32,15 +33,8 @@ class BasicFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.formView.adapter = viewModel.adapter
         binding.btnRefresh.setOnClickListener {
-//            viewModel.adapter.findOfField("text"){
-//                it.visibilityMode = FormVisibilityMode.NEVER
-//            }
-            viewModel.adapter.plusPart(0){
+            viewModel.adapter.plusPart(0) {
                 plusGroup {
-//                        groupName = "Title"
-                    addText("Text", "text") {
-                        content = "FormText"
-                    }
                     addText("Text", "text") {
                         content = "FormText"
                     }
@@ -59,11 +53,21 @@ class BasicFragment : Fragment() {
     }
 
     class BasicViewModel : ViewModel() {
-        val adapter = FormAdapter(true) {
+        val adapter = FormAdapter(false) {
             (0..6).forEach {
                 plusPart(MaterialCardElevatedStyle()) {
                     plusGroup {
-//                        groupName = "Title"
+                        name = "Title"
+                        addSelector("Selector", "selector") {
+                            localOptions(
+                                listOf(
+                                    Option("选项1"),
+                                    Option("选项2"),
+                                    Option("选项3"),
+                                    Option("选项4")
+                                )
+                            )
+                        }
                         addText("Text", "text") {
                             content = "FormText"
                         }
@@ -84,7 +88,7 @@ class BasicFragment : Fragment() {
             }
             plusPart(MaterialCardFilledStyle()) {
                 plusGroup {
-                    groupName = "Title"
+                    name = "Title"
                     addText("Text", "text") {
                         content = "FormText"
                     }

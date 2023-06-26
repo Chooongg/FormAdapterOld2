@@ -1,6 +1,7 @@
 package com.chooongg.formAdapter.provider
 
 import android.view.ViewGroup
+import android.view.ViewGroup.MarginLayoutParams
 import androidx.core.view.updateLayoutParams
 import com.chooongg.formAdapter.FormPartAdapter
 import com.chooongg.formAdapter.FormViewHolder
@@ -18,9 +19,8 @@ object FormTextProvider : BaseFormProvider() {
     ) = MaterialTextView(parent.context).apply {
         id = R.id.formInternalContent
         setTextAppearance(R.style.FormAdapter_TextAppearance_Content)
-        layoutParams = ViewGroup.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT
+        layoutParams = MarginLayoutParams(
+            MarginLayoutParams.MATCH_PARENT, MarginLayoutParams.WRAP_CONTENT
         )
     }
 
@@ -32,6 +32,7 @@ object FormTextProvider : BaseFormProvider() {
     ) {
         holder.getView<MaterialTextView>(R.id.formInternalContent).apply {
             text = item.getContentText()
+            hint = item.hint ?: resources.getString(R.string.fromDefaultNone)
             gravity = getContentGravity(adapter, typeset)
             updateLayoutParams<ViewGroup.LayoutParams> {
                 width = typeset.contentWidth()

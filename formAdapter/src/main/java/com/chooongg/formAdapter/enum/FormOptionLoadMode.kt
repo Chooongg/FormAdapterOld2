@@ -15,6 +15,16 @@ enum class FormOptionLoadMode {
     EMPTY,
 
     /**
+     * 打开并且为空时
+     */
+    OPEN_AND_EMPTY,
+
+    /**
+     * 每次打开时
+     */
+    OPEN,
+
+    /**
      * 总是
      */
     ALWAYS,

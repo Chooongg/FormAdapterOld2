@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.chooongg.formAdapter.data.GroupData
 import com.chooongg.formAdapter.data.PartData
 import com.chooongg.formAdapter.item.BaseForm
-import com.chooongg.formAdapter.item.InternalFormGroupTitle
 import com.chooongg.formAdapter.item.SingleLineForm
 import com.chooongg.formAdapter.style.NoneStyle
 import com.chooongg.formAdapter.style.Style
@@ -45,11 +44,8 @@ class FormPartAdapter internal constructor(
             notifyItemMoved(fromPosition, toPosition)
 
     }, AsyncDifferConfig.Builder(object : DiffUtil.ItemCallback<BaseForm>() {
-        override fun areItemsTheSame(oldItem: BaseForm, newItem: BaseForm) = when {
-            oldItem is InternalFormGroupTitle -> false
-            newItem is InternalFormGroupTitle -> false
-            else -> true
-        }
+        override fun areItemsTheSame(oldItem: BaseForm, newItem: BaseForm) =
+            oldItem.javaClass == newItem.javaClass
 
         override fun areContentsTheSame(oldItem: BaseForm, newItem: BaseForm) =
             oldItem.antiRepeatCode == newItem.antiRepeatCode
@@ -74,7 +70,7 @@ class FormPartAdapter internal constructor(
             return
         }
         val tempList = mutableListOf<MutableList<BaseForm>>()
-        data.groups.forEach { if (it.items.isEmpty()) data.groups.remove(it) } // 去除空组
+        data.groups.forEach { if (it.getItems().isEmpty()) data.groups.remove(it) } // 去除空组
         if (data.dynamicPart) {
             if (data.groups.size < data.dynamicPartMinGroupCount) {
                 if (data.dynamicPartCreateGroupBlock != null) {
@@ -87,7 +83,7 @@ class FormPartAdapter internal constructor(
         data.groups.forEachIndexed { groupIndex, group ->
             val groupList = mutableListOf<BaseForm>()
             group.getGroupTitleItem(data, groupIndex)?.also { groupList.add(it) }
-            group@ for (item in group.items) {
+            group@ for (item in group.getItems()) {
                 if (item is SingleLineForm) {
                     val singleLines = ArrayList<BaseForm>()
                     singleLine@ for (it in item.items) {
@@ -157,7 +153,7 @@ class FormPartAdapter internal constructor(
         field: String, update: Boolean = true, block: (BaseForm) -> Unit
     ): Boolean {
         data.groups.forEach { group ->
-            group.items.forEach {
+            group.getItems().forEach {
                 if (it.field == field) {
                     block(it)
                     return true

@@ -1,6 +1,7 @@
 package com.chooongg.formAdapter.item
 
 import com.chooongg.formAdapter.FormAdapter
+import com.chooongg.formAdapter.FormPartAdapter
 import com.chooongg.formAdapter.boundary.Boundary
 import com.chooongg.formAdapter.data.AbstractMenuFormData
 import com.chooongg.formAdapter.enum.FormOutputMode
@@ -9,6 +10,9 @@ import com.chooongg.formAdapter.typeset.Typeset
 import org.json.JSONObject
 import kotlin.random.Random
 
+/**
+ * 表单 Item 基类
+ */
 abstract class BaseForm(
     /**
      * 名称
@@ -51,6 +55,11 @@ abstract class BaseForm(
      * 是否在组边缘展示
      */
     open var isShowOnEdge = true
+
+    /**
+     * 是否强制单列, 多列模块下无效
+     */
+    open var isMustSingleColumn:Boolean = false
 
     //</editor-fold>
 

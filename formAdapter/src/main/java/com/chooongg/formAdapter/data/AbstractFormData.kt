@@ -10,10 +10,8 @@ abstract class AbstractFormData(
     /**
      * 名称
      */
-    var name: CharSequence?
+    open var name: CharSequence?
 ) {
-
-    open var isMustSingleColumn:Boolean = false
 
     /**
      * 可见模式
