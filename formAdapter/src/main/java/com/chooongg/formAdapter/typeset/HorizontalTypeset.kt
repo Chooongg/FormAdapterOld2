@@ -1,6 +1,5 @@
 package com.chooongg.formAdapter.typeset
 
-import android.graphics.drawable.ColorDrawable
 import android.view.Gravity
 import android.view.ViewGroup
 import androidx.appcompat.widget.LinearLayoutCompat
@@ -20,11 +19,6 @@ object HorizontalTypeset : Typeset(FormManager.emsSize) {
             id = R.id.formInternalTypesetParent
             clipChildren = false
             clipToPadding = false
-            showDividers = LinearLayoutCompat.SHOW_DIVIDER_MIDDLE
-            dividerDrawable = object : ColorDrawable() {
-                override fun getIntrinsicWidth() = paddingInfo.horizontalLocal
-                override fun getIntrinsicHeight() = 0
-            }
             layoutParams = ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
@@ -32,6 +26,12 @@ object HorizontalTypeset : Typeset(FormManager.emsSize) {
             addView(MaterialTextView(context).apply {
                 id = R.id.formInternalName
                 setTextAppearance(R.style.FormAdapter_TextAppearance_Name)
+                setPadding(
+                    paddingInfo.horizontalLocal,
+                    paddingInfo.verticalLocal,
+                    paddingInfo.horizontalLocal,
+                    paddingInfo.verticalLocal
+                )
                 layoutParams = LinearLayoutCompat.LayoutParams(
                     LinearLayoutCompat.LayoutParams.WRAP_CONTENT,
                     LinearLayoutCompat.LayoutParams.WRAP_CONTENT
@@ -47,23 +47,19 @@ object HorizontalTypeset : Typeset(FormManager.emsSize) {
         with(holder.getView<LinearLayoutCompat>(R.id.formInternalTypesetParent)) {
             setPaddingRelative(
                 when (item.paddingBoundary.startType) {
-                    Boundary.GLOBAL -> adapter.style.paddingInfo.horizontalGlobal
-                    Boundary.LOCAL -> adapter.style.paddingInfo.horizontalGlobal
+                    Boundary.GLOBAL -> adapter.style.paddingInfo.horizontalGlobal - adapter.style.paddingInfo.horizontalGlobal
                     else -> 0
                 },
                 when (item.paddingBoundary.topType) {
-                    Boundary.GLOBAL -> adapter.style.paddingInfo.verticalGlobal
-                    Boundary.LOCAL -> adapter.style.paddingInfo.verticalLocal
+                    Boundary.GLOBAL -> adapter.style.paddingInfo.verticalGlobal - adapter.style.paddingInfo.verticalLocal
                     else -> 0
                 },
                 when (item.paddingBoundary.endType) {
-                    Boundary.GLOBAL -> adapter.style.paddingInfo.horizontalGlobal
-                    Boundary.LOCAL -> adapter.style.paddingInfo.horizontalGlobal
+                    Boundary.GLOBAL -> adapter.style.paddingInfo.horizontalGlobal - adapter.style.paddingInfo.horizontalGlobal
                     else -> 0
                 },
                 when (item.paddingBoundary.bottomType) {
-                    Boundary.GLOBAL -> adapter.style.paddingInfo.verticalGlobal
-                    Boundary.LOCAL -> adapter.style.paddingInfo.verticalLocal
+                    Boundary.GLOBAL -> adapter.style.paddingInfo.verticalGlobal - adapter.style.paddingInfo.verticalLocal
                     else -> 0
                 }
             )

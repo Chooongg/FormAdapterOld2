@@ -11,6 +11,8 @@ class InternalFormGroupTitle internal constructor(
 
     override var isMustSingleColumn = true
 
+    var isDynamicPart = false
+
     override var typeset: Typeset? = NoneTypeset
 
     override fun getItemProvider(adapter: FormAdapter) = InternalFormGroupTitleProvider

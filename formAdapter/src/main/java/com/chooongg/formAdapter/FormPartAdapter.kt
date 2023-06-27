@@ -72,8 +72,8 @@ class FormPartAdapter internal constructor(
         val tempList = mutableListOf<MutableList<BaseForm>>()
         data.groups.forEach { if (it.getItems().isEmpty()) data.groups.remove(it) } // 去除空组
         if (data.dynamicPart) {
-            if (data.groups.size < data.dynamicPartMinGroupCount) {
-                if (data.dynamicPartCreateGroupBlock != null) {
+            if (data.dynamicPartCreateGroupBlock != null) {
+                while (data.groups.size < data.dynamicPartMinGroupCount) {
                     val groupData = GroupData()
                     data.dynamicPartCreateGroupBlock!!.invoke(groupData)
                     data.groups.add(groupData)

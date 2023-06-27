@@ -1,7 +1,11 @@
 package com.chooongg.formAdapter.provider
 
+import android.annotation.SuppressLint
+import android.content.res.ColorStateList
 import android.view.ViewGroup
 import android.view.ViewGroup.MarginLayoutParams
+import androidx.core.content.res.use
+import androidx.core.view.updateLayoutParams
 import com.chooongg.formAdapter.FormPartAdapter
 import com.chooongg.formAdapter.FormViewHolder
 import com.chooongg.formAdapter.R
@@ -18,17 +22,29 @@ object FormSelectorProvider : BaseFormProvider() {
         typeset: Typeset,
         parent: ViewGroup
     ) = MaterialButton(
-        parent.context,
-        null,
-        com.google.android.material.R.style.Widget_Material3_Button_TextButton
+        parent.context, null, com.google.android.material.R.attr.borderlessButtonStyle
     ).apply {
         id = R.id.formInternalContent
+        minimumHeight = 0
+        minimumWidth = 0
+        minHeight = 0
+        minWidth = 0
+        iconTint = ColorStateList.valueOf(hintTextColors.defaultColor)
+        iconGravity = MaterialButton.ICON_GRAVITY_END
+        setIconResource(R.drawable.ic_form_arrow_down)
+        setTextAppearance(R.style.FormAdapter_TextAppearance_Content)
+        setPadding(
+            adapter.style.paddingInfo.horizontalLocal,
+            adapter.style.paddingInfo.verticalLocal,
+            adapter.style.paddingInfo.horizontalLocal,
+            adapter.style.paddingInfo.verticalLocal
+        )
         layoutParams = MarginLayoutParams(
             MarginLayoutParams.MATCH_PARENT, MarginLayoutParams.WRAP_CONTENT
         )
-
     }
 
+    @SuppressLint("ResourceType")
     override fun onBindItemView(
         adapter: FormPartAdapter,
         typeset: Typeset,
@@ -39,11 +55,31 @@ object FormSelectorProvider : BaseFormProvider() {
             holder.itemView.context,
             CircularProgressIndicatorSpec(holder.itemView.context, null)
         )
-        holder.getView<MaterialButton>(R.id.formInternalContent).also {
-            it.icon = drawable
-            drawable.start()
+        with(holder.getView<MaterialButton>(R.id.formInternalContent)) {
+            text = item.getContentText()
+            hint = item.hint ?: resources.getString(R.string.fromDefaultHintNone)
+            gravity = getContentGravity(adapter, typeset)
+            iconSize = if (item.menuIconSize == null) {
+//                context.obtainStyledAttributes(
+//                    R.style.FormAdapter_TextAppearance_Content,
+//                    intArrayOf(
+//                        com.google.android.material.R.attr.lineHeight
+//                    )
+//                ).use {
+//                    val lineHeight = it.getDimensionPixelSize(0, -1)
+//                    if (lineHeight < 0) {
+//                        textSize.toInt()
+//                    } else
+//                }
+                context.resources.getDimensionPixelSize(R.dimen.formMenuIconSize)
+//                textSize.toInt() + (insetTop + insetBottom) / 2
+            } else item.menuIconSize!!
+            updateLayoutParams<ViewGroup.LayoutParams> {
+                width = typeset.contentWidth()
+            }
+//            icon = drawable
+//            drawable.start()
         }
-        drawable.stop()
     }
 
     override fun onItemRecycler(holder: FormViewHolder) {

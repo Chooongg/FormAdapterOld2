@@ -35,14 +35,14 @@ open class GroupData : AbstractMenuFormData(null), FormCreator {
         part: PartData,
         index: Int
     ): InternalFormGroupTitle? {
-        val groupName = if (part.dynamicPart) {
-            if (part.dynamicPartShowName) {
-                part.dynamicPartNameFormatBlock?.invoke(part.dynamicPartName, index)
-                    ?: "${part.dynamicPartName ?: ""}${index + 1}"
-            } else null
-        } else name
-        groupTitleItem = if (groupName != null) {
+        groupTitleItem = if ((part.dynamicPart && part.dynamicPartShowName) || name != null) {
+            val groupName = if (part.dynamicPart) {
+                if (part.dynamicPartShowName) {
+                    part.dynamicPartNameFormatBlock?.invoke(part.dynamicPartName, index)
+                } else null
+            } else name
             (groupTitleItem ?: InternalFormGroupTitle(groupName)).also {
+                it.isDynamicPart = part.dynamicPart
                 it.name = groupName
                 it.menuIconRes = menuIconRes
                 it.menuText = menuText

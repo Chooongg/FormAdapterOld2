@@ -27,7 +27,14 @@ object NoneStyle : Style(HorizontalTypeset) {
 
     override fun onBindGroupTitle(holder: FormViewHolder, item: InternalFormGroupTitle) {
         with(holder.getView<MaterialTextView>(R.id.formInternalContent)) {
-            text = item.name
+            text = if (item.name != null) {
+                item.name
+            } else {
+                val defaultName = holder.itemView.resources.getString(R.string.formDefaultGroupName)
+                if (item.isDynamicPart) {
+                    "$defaultName ${item.groupIndex + 1}"
+                } else defaultName
+            }
             updatePaddingRelative(
                 0, paddingInfo.verticalLocal, 0, paddingInfo.verticalLocal
             )

@@ -19,6 +19,12 @@ object FormTextProvider : BaseFormProvider() {
     ) = MaterialTextView(parent.context).apply {
         id = R.id.formInternalContent
         setTextAppearance(R.style.FormAdapter_TextAppearance_Content)
+        setPadding(
+            adapter.style.paddingInfo.horizontalLocal,
+            adapter.style.paddingInfo.verticalLocal,
+            adapter.style.paddingInfo.horizontalLocal,
+            adapter.style.paddingInfo.verticalLocal
+        )
         layoutParams = MarginLayoutParams(
             MarginLayoutParams.MATCH_PARENT, MarginLayoutParams.WRAP_CONTENT
         )
@@ -32,7 +38,7 @@ object FormTextProvider : BaseFormProvider() {
     ) {
         holder.getView<MaterialTextView>(R.id.formInternalContent).apply {
             text = item.getContentText()
-            hint = item.hint ?: resources.getString(R.string.fromDefaultNone)
+            hint = item.hint ?: resources.getString(R.string.fromDefaultHintNone)
             gravity = getContentGravity(adapter, typeset)
             updateLayoutParams<ViewGroup.LayoutParams> {
                 width = typeset.contentWidth()

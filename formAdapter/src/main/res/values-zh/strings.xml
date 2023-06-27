@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="formDefaultGroupName">组</string>
-    <string name="fromDefaultNone">空</string>
+    <string name="fromDefaultHintNone">空</string>
+    <string name="formDefaultHintSelect">请选择</string>
+    <string name="formDefaultHintInput">请输入</string>
 </resources>

@@ -2,6 +2,8 @@
 <resources>
     <dimen name="formTextSize">14sp</dimen>
 
+    <dimen name="formMenuIconSize">19sp</dimen>
+
     <dimen name="formVerticalLocalMarginSize">8dp</dimen>
     <dimen name="formVerticalGlobalMarginSize">16dp</dimen>
     <dimen name="formHorizontalLocalMarginSize">8dp</dimen>

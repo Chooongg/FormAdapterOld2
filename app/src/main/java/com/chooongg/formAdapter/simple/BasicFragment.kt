@@ -34,7 +34,8 @@ class BasicFragment : Fragment() {
         binding.formView.adapter = viewModel.adapter
         binding.btnRefresh.setOnClickListener {
             viewModel.adapter.plusPart(0) {
-                plusGroup {
+                dynamicPartMinGroupCount = 3
+                dynamicPartCreateGroupListener {
                     addText("Text", "text") {
                         content = "FormText"
                     }
@@ -53,12 +54,13 @@ class BasicFragment : Fragment() {
     }
 
     class BasicViewModel : ViewModel() {
-        val adapter = FormAdapter(false) {
-            (0..6).forEach {
+        val adapter = FormAdapter(true) {
+            (0..6).forEach { _ ->
                 plusPart(MaterialCardElevatedStyle()) {
                     plusGroup {
-                        name = "Title"
+//                        name = "Title"
                         addSelector("Selector", "selector") {
+                            content = "FormSelector"
                             localOptions(
                                 listOf(
                                     Option("选项1"),

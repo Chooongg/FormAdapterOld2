@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="formDefaultGroupName">Group</string>
-    <string name="fromDefaultNone">None</string>
+    <string name="fromDefaultHintNone">None</string>
+    <string name="formDefaultHintSelect">Please select</string>
+    <string name="formDefaultHintInput">Please enter</string>
 </resources>

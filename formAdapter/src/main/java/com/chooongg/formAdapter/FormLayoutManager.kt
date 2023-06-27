@@ -75,7 +75,8 @@ class FormLayoutManager(context: Context) : GridLayoutManager(context, 2520) {
                     item.paddingBoundary.startType = Boundary.GLOBAL
                 } else {
                     item.marginBoundary.startType = Boundary.NONE
-                    item.paddingBoundary.startType = Boundary.LOCAL
+                    item.paddingBoundary.startType =
+                        if (item.isSingleLineItem) FormManager.singleLineDividerType else FormManager.horizontalDividerType
                 }
                 spanIndex += item.itemSpan
                 if (spanIndex == spanCount) {
@@ -84,7 +85,8 @@ class FormLayoutManager(context: Context) : GridLayoutManager(context, 2520) {
                     spanIndex = 0
                 } else {
                     item.marginBoundary.endType = Boundary.NONE
-                    item.paddingBoundary.endType = Boundary.LOCAL
+                    item.paddingBoundary.endType =
+                        if (item.isSingleLineItem) FormManager.singleLineDividerType else FormManager.horizontalDividerType
                 }
                 if (item.positionForGroup == 0) {
                     if (partIndex == 0 && index == 0) {
@@ -108,9 +110,10 @@ class FormLayoutManager(context: Context) : GridLayoutManager(context, 2520) {
                     item.paddingBoundary.topType = Boundary.LOCAL
                 }
             }
-            adapter.getItemList().reversed().forEachIndexed { index, item ->
+            for (index in adapter.getItemList().lastIndex downTo 0) {
+                val item = adapter.getItemList()[index]
                 if (item.itemCountForGroup - item.positionForGroup == 1) {
-                    if (partIndex == formAdapter.partSize() - 1 && index == 0) {
+                    if (partIndex == formAdapter.partSize() - 1 && index == adapter.getItemList().lastIndex) {
                         item.marginBoundary.bottomType = Boundary.GLOBAL
                         item.paddingBoundary.bottomType = Boundary.GLOBAL
                     } else {
@@ -118,7 +121,7 @@ class FormLayoutManager(context: Context) : GridLayoutManager(context, 2520) {
                         item.paddingBoundary.bottomType = Boundary.GLOBAL
                     }
                 } else if (item.spanIndex + item.itemSpan != spanCount) {
-                    var beginIndex = index - 1
+                    var beginIndex = index + 1
                     while (adapter.getItemList()[beginIndex].spanIndex + adapter.getItemList()[beginIndex].itemSpan != spanCount) {
                         beginIndex++
                     }
