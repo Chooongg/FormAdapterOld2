@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.res.ColorStateList
 import android.view.ViewGroup
 import android.view.ViewGroup.MarginLayoutParams
-import androidx.core.content.res.use
 import androidx.core.view.updateLayoutParams
 import com.chooongg.formAdapter.FormPartAdapter
 import com.chooongg.formAdapter.FormViewHolder
@@ -58,22 +57,9 @@ object FormSelectorProvider : BaseFormProvider() {
         with(holder.getView<MaterialButton>(R.id.formInternalContent)) {
             text = item.getContentText()
             hint = item.hint ?: resources.getString(R.string.fromDefaultHintNone)
-            gravity = getContentGravity(adapter, typeset)
-            iconSize = if (item.menuIconSize == null) {
-//                context.obtainStyledAttributes(
-//                    R.style.FormAdapter_TextAppearance_Content,
-//                    intArrayOf(
-//                        com.google.android.material.R.attr.lineHeight
-//                    )
-//                ).use {
-//                    val lineHeight = it.getDimensionPixelSize(0, -1)
-//                    if (lineHeight < 0) {
-//                        textSize.toInt()
-//                    } else
-//                }
-                context.resources.getDimensionPixelSize(R.dimen.formMenuIconSize)
-//                textSize.toInt() + (insetTop + insetBottom) / 2
-            } else item.menuIconSize!!
+            gravity = getContentGravity(adapter, typeset, item)
+            iconSize = item.menuIconSize
+                ?: context.resources.getDimensionPixelSize(R.dimen.formMenuIconSize)
             updateLayoutParams<ViewGroup.LayoutParams> {
                 width = typeset.contentWidth()
             }

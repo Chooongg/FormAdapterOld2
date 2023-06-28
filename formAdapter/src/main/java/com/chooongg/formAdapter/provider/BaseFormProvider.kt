@@ -40,12 +40,10 @@ abstract class BaseFormProvider {
      * 获取内容的对齐方式
      */
     @GravityInt
-    open fun getContentGravity(adapter: FormPartAdapter, typeset: Typeset): Int {
-        return if (adapter.formAdapter.normalColumnCount > 1) {
-            typeset.multiColumnContentGravity()
-        } else {
+    open fun getContentGravity(adapter: FormPartAdapter, typeset: Typeset, item: BaseForm): Int {
+        return if (item.isMustSingleColumn || adapter.formAdapter.normalColumnCount <= 1) {
             typeset.contentGravity()
-        }
+        } else typeset.multiColumnContentGravity()
     }
 
     override fun equals(other: Any?): Boolean {

@@ -5,7 +5,6 @@ import android.view.ViewGroup.MarginLayoutParams
 import androidx.cardview.widget.CardView
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updatePaddingRelative
-import com.chooongg.formAdapter.FormManager
 import com.chooongg.formAdapter.FormViewHolder
 import com.chooongg.formAdapter.R
 import com.chooongg.formAdapter.boundary.Boundary
@@ -13,13 +12,14 @@ import com.chooongg.formAdapter.item.BaseForm
 import com.chooongg.formAdapter.item.InternalFormGroupTitle
 import com.chooongg.formAdapter.typeset.HorizontalTypeset
 import com.chooongg.formAdapter.typeset.Typeset
+import com.chooongg.utils.ext.dp2px
 import com.google.android.material.textview.MaterialTextView
 
 class CardStyle(defaultTypeset: Typeset = HorizontalTypeset) : Style(defaultTypeset) {
 
     override fun onCreateStyleLayout(parent: ViewGroup) = CardView(parent.context).apply {
         id = R.id.formInternalStyleParent
-        radius = FormManager.dp2px(8f).toFloat()
+        radius = dp2px(8f).toFloat()
         layoutParams = MarginLayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.WRAP_CONTENT

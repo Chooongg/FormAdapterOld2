@@ -1,5 +1,7 @@
 package com.chooongg.formAdapter
 
+import android.view.inputmethod.InputMethodManager
+import androidx.core.content.getSystemService
 import com.chooongg.formAdapter.data.PartData
 import com.chooongg.formAdapter.style.NoneStyle
 import com.chooongg.formAdapter.style.Style
@@ -32,6 +34,13 @@ class FormAdapter(isEditable: Boolean, block: (FormAdapter.() -> Unit)?) :
         }
 
     fun clearFocus() {
-        _recyclerView?.get()?.focusedChild?.clearFocus()
+        _recyclerView?.get()?.also {
+            val focusedChild = it.focusedChild
+            if (focusedChild != null) {
+                it.context.getSystemService<InputMethodManager>()
+                    ?.hideSoftInputFromWindow(focusedChild.windowToken, 0)
+                focusedChild.clearFocus()
+            }
+        }
     }
 }

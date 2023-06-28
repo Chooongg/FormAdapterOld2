@@ -3,6 +3,11 @@ package com.chooongg.formAdapter
 import android.content.Context
 import android.content.res.Resources
 import android.util.AttributeSet
+import android.view.inputmethod.InputMethodManager
+import androidx.core.content.getSystemService
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.recyclerview.widget.RecyclerView
 
 class FormView @JvmOverloads constructor(
@@ -21,6 +26,15 @@ class FormView @JvmOverloads constructor(
         paddingHorizontal =
             a.getDimensionPixelSize(R.styleable.FormView_formPaddingHorizontal, dp2px(16f))
         a.recycle()
+        addOnScrollListener(object : OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                if (newState == SCROLL_STATE_DRAGGING && focusedChild != null) {
+                    context.getSystemService<InputMethodManager>()
+                        ?.hideSoftInputFromWindow(focusedChild.windowToken, 0)
+                    focusedChild.clearFocus()
+                }
+            }
+        })
     }
 
     fun setPadding(paddingVertical: Int, paddingHorizontal: Int) {
@@ -31,7 +45,7 @@ class FormView @JvmOverloads constructor(
         }
     }
 
-    override fun setLayoutManager(layout: LayoutManager?) {
+    override fun setLayoutManager(layout: RecyclerView.LayoutManager?) {
         if (layout is FormLayoutManager) {
             layout.setPadding(paddingVertical, paddingHorizontal)
         }

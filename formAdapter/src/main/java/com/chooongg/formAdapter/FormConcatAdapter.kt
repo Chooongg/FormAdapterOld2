@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import com.chooongg.formAdapter.format.FormNameFormat
 import com.chooongg.formAdapter.item.BaseForm
 import com.chooongg.formAdapter.provider.BaseFormProvider
 import com.chooongg.formAdapter.style.Style
@@ -24,6 +25,8 @@ open class FormConcatAdapter constructor(isEditable: Boolean) : RecyclerView.Ada
 
     var normalColumnCount = 1
         internal set
+
+    var nameFormat: FormNameFormat = FormManager.nameFormat
 
     val adapters get() = concatAdapter.adapters
 

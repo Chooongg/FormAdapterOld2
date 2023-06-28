@@ -1,5 +1,8 @@
 package com.chooongg.formAdapter.typeset
 
+import android.graphics.text.LineBreaker
+import android.os.Build
+import android.text.Layout
 import android.view.Gravity
 import android.view.ViewGroup
 import androidx.appcompat.widget.LinearLayoutCompat
@@ -47,7 +50,7 @@ object HorizontalTypeset : Typeset(FormManager.emsSize) {
         with(holder.getView<LinearLayoutCompat>(R.id.formInternalTypesetParent)) {
             setPaddingRelative(
                 when (item.paddingBoundary.startType) {
-                    Boundary.GLOBAL -> adapter.style.paddingInfo.horizontalGlobal - adapter.style.paddingInfo.horizontalGlobal
+                    Boundary.GLOBAL -> adapter.style.paddingInfo.horizontalGlobal - adapter.style.paddingInfo.horizontalLocal
                     else -> 0
                 },
                 when (item.paddingBoundary.topType) {
@@ -55,7 +58,7 @@ object HorizontalTypeset : Typeset(FormManager.emsSize) {
                     else -> 0
                 },
                 when (item.paddingBoundary.endType) {
-                    Boundary.GLOBAL -> adapter.style.paddingInfo.horizontalGlobal - adapter.style.paddingInfo.horizontalGlobal
+                    Boundary.GLOBAL -> adapter.style.paddingInfo.horizontalGlobal - adapter.style.paddingInfo.horizontalLocal
                     else -> 0
                 },
                 when (item.paddingBoundary.bottomType) {
@@ -65,14 +68,14 @@ object HorizontalTypeset : Typeset(FormManager.emsSize) {
             )
         }
         with(holder.getView<MaterialTextView>(R.id.formInternalName)) {
-            text = item.name
-            if (adapter.formAdapter.normalColumnCount > 1) {
-                if (multiColumnContentGravity() and Gravity.END == Gravity.END) {
+            text = adapter.formAdapter.nameFormat.format(context, item.name, item.isMust)
+            if (item.isMustSingleColumn || adapter.formAdapter.normalColumnCount <= 1) {
+                if (contentGravity() and Gravity.END == Gravity.END) {
                     minWidth = 0
                     maxEms = ems
                 } else setEms(ems)
             } else {
-                if (contentGravity() and Gravity.END == Gravity.END) {
+                if (multiColumnContentGravity() and Gravity.END == Gravity.END) {
                     minWidth = 0
                     maxEms = ems
                 } else setEms(ems)
