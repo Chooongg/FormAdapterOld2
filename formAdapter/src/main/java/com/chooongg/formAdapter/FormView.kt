@@ -3,12 +3,9 @@ package com.chooongg.formAdapter
 import android.content.Context
 import android.content.res.Resources
 import android.util.AttributeSet
-import android.view.inputmethod.InputMethodManager
-import androidx.core.content.getSystemService
-import androidx.core.view.WindowCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.WindowInsetsControllerCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.chooongg.utils.ext.getActivity
+import com.chooongg.utils.ext.hideIME
 
 class FormView @JvmOverloads constructor(
     context: Context,
@@ -29,9 +26,8 @@ class FormView @JvmOverloads constructor(
         addOnScrollListener(object : OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 if (newState == SCROLL_STATE_DRAGGING && focusedChild != null) {
-                    context.getSystemService<InputMethodManager>()
-                        ?.hideSoftInputFromWindow(focusedChild.windowToken, 0)
                     focusedChild.clearFocus()
+                    context.getActivity()?.hideIME()
                 }
             }
         })

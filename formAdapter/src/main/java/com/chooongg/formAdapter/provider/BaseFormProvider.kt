@@ -41,7 +41,9 @@ abstract class BaseFormProvider {
      */
     @GravityInt
     open fun getContentGravity(adapter: FormPartAdapter, typeset: Typeset, item: BaseForm): Int {
-        return if (item.isMustSingleColumn || adapter.formAdapter.normalColumnCount <= 1) {
+        return if (item.contentGravity != null) {
+            item.contentGravity!!
+        } else if (item.isMustSingleColumn || adapter.formAdapter.normalColumnCount <= 1) {
             typeset.contentGravity()
         } else typeset.multiColumnContentGravity()
     }

@@ -5,6 +5,8 @@ import androidx.core.content.getSystemService
 import com.chooongg.formAdapter.data.PartData
 import com.chooongg.formAdapter.style.NoneStyle
 import com.chooongg.formAdapter.style.Style
+import com.chooongg.utils.ext.getActivity
+import com.chooongg.utils.ext.hideIME
 
 class FormAdapter(isEditable: Boolean, block: (FormAdapter.() -> Unit)?) :
     FormConcatAdapter(isEditable) {
@@ -37,9 +39,8 @@ class FormAdapter(isEditable: Boolean, block: (FormAdapter.() -> Unit)?) :
         _recyclerView?.get()?.also {
             val focusedChild = it.focusedChild
             if (focusedChild != null) {
-                it.context.getSystemService<InputMethodManager>()
-                    ?.hideSoftInputFromWindow(focusedChild.windowToken, 0)
                 focusedChild.clearFocus()
+                it.context.getActivity()?.hideIME()
             }
         }
     }

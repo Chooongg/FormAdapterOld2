@@ -1,8 +1,7 @@
 package com.chooongg.formAdapter.simple
 
-import android.content.res.ColorStateList
-import android.graphics.Color
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -63,11 +62,11 @@ class BasicFragment : Fragment() {
             (0..6).forEach { _ ->
                 plusPart(MaterialCardElevatedStyle()) {
                     plusGroup {
-//                        name = "Title"
+                        name = "Title"
                         addInput("Input", "input") {
-                            typeset = VerticalTypeset
                             maxLines = 1
-//                            backgroundMode = TextInputLayout.BOX_BACKGROUND_FILLED
+                            enableAnimationHint = true
+                            contentGravity = Gravity.NO_GRAVITY
                         }
                         addSelector("Selector", "selector") {
                             isMust = true

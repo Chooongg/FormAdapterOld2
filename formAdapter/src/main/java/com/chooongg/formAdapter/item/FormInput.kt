@@ -5,12 +5,17 @@ import android.content.res.ColorStateList
 import com.chooongg.formAdapter.FormAdapter
 import com.chooongg.formAdapter.provider.FormInputProvider
 import com.chooongg.formAdapter.provider.FormTextProvider
+import com.chooongg.formAdapter.typeset.NoneTypeset
 import com.google.android.material.textfield.TextInputLayout
 import com.google.android.material.textfield.TextInputLayout.BoxBackgroundMode
 
 class FormInput(name: CharSequence?, field: String?) : BaseForm(name, field) {
 
-    var enableAnimationHint: Boolean = true
+    var enableAnimationHint: Boolean = false
+        set(value) {
+            field = value
+            typeset = if (value) NoneTypeset else null
+        }
 
     var backgroundColor: (Context.() -> ColorStateList)? = null
 

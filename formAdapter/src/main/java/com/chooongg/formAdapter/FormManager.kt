@@ -1,9 +1,9 @@
 package com.chooongg.formAdapter
 
-import android.content.res.Resources
 import com.chooongg.formAdapter.boundary.Boundary
 import com.chooongg.formAdapter.format.DefaultNameFormat
 import com.chooongg.formAdapter.format.FormNameFormat
+import com.chooongg.utils.ext.dp2px
 
 object FormManager {
 
@@ -16,6 +16,4 @@ object FormManager {
 
     var nameFormat: FormNameFormat = DefaultNameFormat
 
-    fun dp2px(dp: Float) =
-        (dp * Resources.getSystem().displayMetrics.density + 0.5f).toInt()
 }

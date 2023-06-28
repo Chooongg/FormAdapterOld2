@@ -45,7 +45,7 @@ object FormInputProvider : BaseFormProvider() {
             )
         }
         addView(editText)
-        isHintEnabled = false
+//        isHintEnabled = false
         setBoxBackgroundColorStateList(ColorStateList.valueOf(Color.TRANSPARENT))
 //        boxBackgroundMode = TextInputLayout.BOX_BACKGROUND_OUTLINE
 //        boxStrokeWidthFocused = 0
@@ -66,14 +66,25 @@ object FormInputProvider : BaseFormProvider() {
     ) {
         with(holder.getView<TextInputLayout>(R.id.formInternalContent)) {
             updateInputLayoutStyle(adapter, this, item)
-            isHintEnabled = (item as? FormInput)?.enableAnimationHint ?: false
+            if ((item as? FormInput)?.enableAnimationHint == true) {
+                isHintEnabled = true
+                hint = item.hint ?: resources.getString(R.string.formDefaultHintInput)
+            } else {
+                isHintEnabled = false
+                hint = null
+            }
+
             suffixText = (item as? FormInput)?.suffixText
             prefixText = (item as? FormInput)?.prefixText
             placeholderText = (item as? FormInput)?.placeholderText
         }
         with(holder.getView<TextInputEditText>(R.id.formInternalContentChild)) {
             if (tag is TextWatcher) removeTextChangedListener(tag as TextWatcher)
-            hint = item.hint ?: resources.getString(R.string.formDefaultHintInput)
+            setText(item.getContentText())
+            hint = if ((item as? FormInput)?.enableAnimationHint != true) {
+                item.hint ?: resources.getString(R.string.formDefaultHintInput)
+            } else null
+
             gravity = getContentGravity(adapter, typeset, item)
             minLines = (item as? FormInput)?.minLines ?: 0
             maxLines = (item as? FormInput)?.maxLines ?: Int.MAX_VALUE

@@ -1,7 +1,7 @@
 package com.chooongg.formAdapter.item
 
+import androidx.annotation.GravityInt
 import com.chooongg.formAdapter.FormAdapter
-import com.chooongg.formAdapter.FormPartAdapter
 import com.chooongg.formAdapter.boundary.Boundary
 import com.chooongg.formAdapter.data.AbstractMenuFormData
 import com.chooongg.formAdapter.enum.FormOutputMode
@@ -59,7 +59,7 @@ abstract class BaseForm(
     /**
      * 是否强制单列, 多列模块下无效
      */
-    open var isMustSingleColumn:Boolean = false
+    open var isMustSingleColumn: Boolean = false
 
     //</editor-fold>
 
@@ -73,6 +73,12 @@ abstract class BaseForm(
      * 自定义排版样式
      */
     open var typeset: Typeset? = null
+
+    /**
+     * 内容重力
+     */
+    @GravityInt
+    open var contentGravity: Int? = null
 
     //</editor-fold>
 
