@@ -6,11 +6,11 @@ import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import androidx.core.content.res.use
 
-object DefaultNameFormat : FormNameFormat() {
+object DefaultNameFormat : FormNameFormat {
     override fun format(context: Context, name: CharSequence?, isMust: Boolean): CharSequence? {
         if (!isMust) return name
         if (name.isNullOrEmpty()) return null
-        return SpannableString("⋆ $name").apply {
+        return SpannableString("⋆$name").apply {
             val foregroundColorSpan = ForegroundColorSpan(
                 context.obtainStyledAttributes(
                     intArrayOf(com.google.android.material.R.attr.colorError)

@@ -36,7 +36,10 @@ object NoneStyle : Style(HorizontalTypeset) {
                 } else defaultName
             }
             updatePaddingRelative(
-                0, paddingInfo.verticalLocal, 0, paddingInfo.verticalLocal
+                paddingInfo.horizontalLocal,
+                paddingInfo.verticalLocal,
+                paddingInfo.horizontalLocal,
+                paddingInfo.verticalLocal
             )
         }
     }

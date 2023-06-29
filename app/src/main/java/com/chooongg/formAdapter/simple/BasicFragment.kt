@@ -9,15 +9,18 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
 import com.chooongg.formAdapter.FormAdapter
-import com.chooongg.formAdapter.data.addInput
-import com.chooongg.formAdapter.data.addSelector
-import com.chooongg.formAdapter.data.addText
+import com.chooongg.formAdapter.addButton
+import com.chooongg.formAdapter.addDivider
+import com.chooongg.formAdapter.addInput
+import com.chooongg.formAdapter.addSelector
+import com.chooongg.formAdapter.addText
+import com.chooongg.formAdapter.enum.FormEnableMode
+import com.chooongg.formAdapter.item.FormButton
 import com.chooongg.formAdapter.option.Option
 import com.chooongg.formAdapter.simple.databinding.FragmentBasicBinding
 import com.chooongg.formAdapter.style.MaterialCardElevatedStyle
 import com.chooongg.formAdapter.style.MaterialCardFilledStyle
 import com.chooongg.formAdapter.typeset.VerticalTypeset
-import com.google.android.material.textfield.TextInputLayout
 
 class BasicFragment : Fragment() {
 
@@ -59,13 +62,41 @@ class BasicFragment : Fragment() {
 
     class BasicViewModel : ViewModel() {
         val adapter = FormAdapter(true) {
+            plusPart {
+                plusGroup {
+                    addText("FormAdapter") {
+                        content = "Android FormAdapter"
+                    }
+                    addButton("IsEditable", "isEditable") {
+                        enableMode = FormEnableMode.ALWAYS
+                    }
+                    addButton("Button", "button") {
+                        buttonStyle = FormButton.ButtonStyle.ELEVATED
+                        contentGravity = Gravity.START
+                    }
+                    addButton("Button", "button") {
+                        buttonStyle = FormButton.ButtonStyle.OUTLINED
+                        contentGravity = Gravity.END
+                    }
+                    addButton("Button", "button") {
+                        buttonStyle = FormButton.ButtonStyle.TEXT
+                        contentGravity = Gravity.CENTER
+                    }
+                    addButton("Button", "button") {
+                        buttonStyle = FormButton.ButtonStyle.TONAL
+                        contentGravity = Gravity.CENTER_HORIZONTAL
+                    }
+                    addButton("Button", "button") {
+                        buttonStyle = FormButton.ButtonStyle.UN_ELEVATED
+                    }
+                }
+            }
             (0..6).forEach { _ ->
                 plusPart(MaterialCardElevatedStyle()) {
                     plusGroup {
                         name = "Title"
                         addInput("Input", "input") {
                             maxLines = 1
-                            enableAnimationHint = true
                             contentGravity = Gravity.NO_GRAVITY
                         }
                         addSelector("Selector", "selector") {
@@ -80,8 +111,14 @@ class BasicFragment : Fragment() {
                                 )
                             )
                         }
+                        addButton("Button", "button") {
+
+                        }
                         addText("Text", "text") {
                             content = "FormText"
+                        }
+                        addDivider() {
+                            matchParentWidth = true
                         }
                         addText("Text", "text") {
                             content = "FormText"

@@ -9,6 +9,7 @@ import com.chooongg.formAdapter.FormPartAdapter
 import com.chooongg.formAdapter.FormViewHolder
 import com.chooongg.formAdapter.R
 import com.chooongg.formAdapter.item.BaseForm
+import com.chooongg.formAdapter.item.FormSelector
 import com.chooongg.formAdapter.typeset.Typeset
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.progressindicator.CircularProgressIndicatorSpec
@@ -55,11 +56,13 @@ object FormSelectorProvider : BaseFormProvider() {
             CircularProgressIndicatorSpec(holder.itemView.context, null)
         )
         with(holder.getView<MaterialButton>(R.id.formInternalContent)) {
+            isEnabled = item.isRealMenuEnable(adapter.formAdapter)
             text = item.getContentText()
             hint = item.hint ?: resources.getString(R.string.fromDefaultHintNone)
             gravity = getContentGravity(adapter, typeset, item)
-            iconSize = item.menuIconSize
-                ?: context.resources.getDimensionPixelSize(R.dimen.formMenuIconSize)
+            val itemSelector = item as? FormSelector
+            iconSize = itemSelector?.iconSize
+                ?: context.resources.getDimensionPixelSize(R.dimen.formIconSize)
             updateLayoutParams<ViewGroup.LayoutParams> {
                 width = typeset.contentWidth()
             }

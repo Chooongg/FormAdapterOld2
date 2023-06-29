@@ -11,12 +11,6 @@ import com.google.android.material.textfield.TextInputLayout.BoxBackgroundMode
 
 class FormInput(name: CharSequence?, field: String?) : BaseForm(name, field) {
 
-    var enableAnimationHint: Boolean = false
-        set(value) {
-            field = value
-            typeset = if (value) NoneTypeset else null
-        }
-
     var backgroundColor: (Context.() -> ColorStateList)? = null
 
     @BoxBackgroundMode

@@ -74,10 +74,12 @@ class MaterialCardElevatedStyle(
             it.shapeAppearanceModel = builder.build()
             it.updateLayoutParams<GridLayoutManager.LayoutParams> {
                 topMargin = when (item.marginBoundary.topType) {
+                    Boundary.GLOBAL -> marginInfo.verticalGlobal
                     Boundary.LOCAL -> marginInfo.verticalLocal
                     else -> 0
                 }
                 bottomMargin = when (item.marginBoundary.bottomType) {
+                    Boundary.GLOBAL -> marginInfo.verticalGlobal
                     Boundary.LOCAL -> marginInfo.verticalLocal
                     else -> 0
                 }

@@ -2,6 +2,7 @@ package com.chooongg.formAdapter.item
 
 import androidx.annotation.GravityInt
 import com.chooongg.formAdapter.FormAdapter
+import com.chooongg.formAdapter.FormLinkageBlock
 import com.chooongg.formAdapter.boundary.Boundary
 import com.chooongg.formAdapter.data.AbstractMenuFormData
 import com.chooongg.formAdapter.enum.FormOutputMode
@@ -60,6 +61,7 @@ abstract class BaseForm(
      * 是否强制单列, 多列模块下无效
      */
     open var isMustSingleColumn: Boolean = false
+
 
     //</editor-fold>
 
@@ -139,7 +141,15 @@ abstract class BaseForm(
      */
     internal var itemSpan = 2520
 
+    /**
+     * 项目跨度索引
+     */
     internal var spanIndex = 0
+
+    /**
+     * 下一项为单列
+     */
+    internal var nextItemIsSingleColumn = false
 
     /**
      * 是否属于单行项目
@@ -169,6 +179,15 @@ abstract class BaseForm(
      * 扩展字段和内容
      */
     private var extensionFieldAndContent: HashMap<String, Any?>? = null
+
+    //</editor-fold>
+
+    //<editor-fold desc="接口 interface">
+
+    /**
+     * 联动接口
+     */
+    internal var linkageBlock: FormLinkageBlock? = null
 
     /**
      * 自定义输出接口
@@ -213,6 +232,13 @@ abstract class BaseForm(
     fun removeExtensionContent(key: String) = extensionFieldAndContent?.remove(key)
 
     //</editor-fold>
+
+    /**
+     * 设置联动接口
+     */
+    fun linkage(block: FormLinkageBlock?) {
+        linkageBlock = block
+    }
 
     /**
      * 设置自定义输出监听

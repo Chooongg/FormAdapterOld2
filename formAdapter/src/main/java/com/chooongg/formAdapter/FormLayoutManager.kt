@@ -27,8 +27,8 @@ class FormLayoutManager(context: Context) : GridLayoutManager(context, 2520) {
             (recyclerView?.adapter as? FormAdapter)?.normalColumnCount = normalColumnCount
         }
 
-    private var paddingVertical: Int = 0
-    private var paddingHorizontal: Int = 0
+    private var paddingStart: Int = 0
+    private var paddingEnd: Int = 0
 
     init {
         spanSizeLookup = object : SpanSizeLookup() {
@@ -65,7 +65,7 @@ class FormLayoutManager(context: Context) : GridLayoutManager(context, 2520) {
                     spanCount
                 } else {
                     val span = spanCount / normalColumnCount
-                    if (index >= adapter.getItemList().lastIndex && spanIndex + span < spanCount) {
+                    if (item.nextItemIsSingleColumn || (index >= adapter.getItemList().lastIndex && spanIndex + span < spanCount)) {
                         spanCount - spanIndex
                     } else span
                 }
@@ -145,17 +145,18 @@ class FormLayoutManager(context: Context) : GridLayoutManager(context, 2520) {
         startSmoothScroll(smoothScroller)
     }
 
-    fun setPadding(vertical: Int, horizontal: Int) {
-        paddingVertical = vertical
-        paddingHorizontal = horizontal
+    fun setPadding(start: Int, end: Int) {
+        paddingStart = start
+        paddingEnd = end
     }
 
-    override fun getPaddingLeft() = super.getPaddingLeft() + paddingHorizontal
-    override fun getPaddingRight() = super.getPaddingRight() + paddingHorizontal
-    override fun getPaddingStart() = super.getPaddingStart() + paddingHorizontal
-    override fun getPaddingEnd() = super.getPaddingEnd() + paddingHorizontal
-    override fun getPaddingTop() = super.getPaddingTop() + paddingVertical
-    override fun getPaddingBottom() = super.getPaddingBottom() + paddingVertical
+    override fun getPaddingStart() = super.getPaddingStart() + paddingEnd
+    override fun getPaddingEnd() = super.getPaddingEnd() + paddingEnd
+    override fun getPaddingLeft() =
+        super.getPaddingLeft() + if (isLayoutRTL) paddingEnd else paddingStart
+
+    override fun getPaddingRight() =
+        super.getPaddingRight() + if (isLayoutRTL) paddingStart else paddingEnd
 
     override fun onMeasure(
         recycler: RecyclerView.Recycler, state: RecyclerView.State, widthSpec: Int, heightSpec: Int

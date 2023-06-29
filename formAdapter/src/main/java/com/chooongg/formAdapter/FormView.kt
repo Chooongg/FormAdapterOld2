@@ -6,6 +6,7 @@ import android.util.AttributeSet
 import androidx.recyclerview.widget.RecyclerView
 import com.chooongg.utils.ext.getActivity
 import com.chooongg.utils.ext.hideIME
+import com.chooongg.utils.ext.resDimensionPixelSize
 
 class FormView @JvmOverloads constructor(
     context: Context,
@@ -13,15 +14,21 @@ class FormView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : RecyclerView(context, attrs, defStyleAttr) {
 
-    private var paddingVertical: Int = 0
-    private var paddingHorizontal: Int = 0
+    private var formPaddingStart: Int = 0
+    private var formPaddingEnd: Int = 0
 
     init {
         val a = context.obtainStyledAttributes(attrs, R.styleable.FormView)
-        paddingVertical =
-            a.getDimensionPixelSize(R.styleable.FormView_formPaddingVertical, dp2px(16f))
-        paddingHorizontal =
-            a.getDimensionPixelSize(R.styleable.FormView_formPaddingHorizontal, dp2px(16f))
+        formPaddingStart =
+            a.getDimensionPixelSize(
+                R.styleable.FormView_formPaddingStart,
+                resDimensionPixelSize(R.dimen.formHorizontalGlobalMarginSize)
+            )
+        formPaddingEnd =
+            a.getDimensionPixelSize(
+                R.styleable.FormView_formPaddingEnd,
+                resDimensionPixelSize(R.dimen.formHorizontalGlobalMarginSize)
+            )
         a.recycle()
         addOnScrollListener(object : OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
@@ -34,8 +41,8 @@ class FormView @JvmOverloads constructor(
     }
 
     fun setPadding(paddingVertical: Int, paddingHorizontal: Int) {
-        this.paddingVertical = paddingVertical
-        this.paddingHorizontal = paddingHorizontal
+        this.formPaddingStart = paddingVertical
+        this.formPaddingEnd = paddingHorizontal
         (layoutManager as? FormLayoutManager)?.also {
             it.setPadding(paddingVertical, paddingHorizontal)
         }
@@ -43,7 +50,7 @@ class FormView @JvmOverloads constructor(
 
     override fun setLayoutManager(layout: RecyclerView.LayoutManager?) {
         if (layout is FormLayoutManager) {
-            layout.setPadding(paddingVertical, paddingHorizontal)
+            layout.setPadding(formPaddingStart, formPaddingEnd)
         }
         super.setLayoutManager(layout)
     }

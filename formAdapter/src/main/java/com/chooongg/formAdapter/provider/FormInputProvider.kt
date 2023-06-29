@@ -45,11 +45,8 @@ object FormInputProvider : BaseFormProvider() {
             )
         }
         addView(editText)
-//        isHintEnabled = false
+        isHintEnabled = false
         setBoxBackgroundColorStateList(ColorStateList.valueOf(Color.TRANSPARENT))
-//        boxBackgroundMode = TextInputLayout.BOX_BACKGROUND_OUTLINE
-//        boxStrokeWidthFocused = 0
-//        boxStrokeWidth = 0
         setPrefixTextAppearance(R.style.FormAdapter_TextAppearance_Content)
         setSuffixTextAppearance(R.style.FormAdapter_TextAppearance_Content)
         setEndIconTintList(editText.hintTextColors)
@@ -66,28 +63,20 @@ object FormInputProvider : BaseFormProvider() {
     ) {
         with(holder.getView<TextInputLayout>(R.id.formInternalContent)) {
             updateInputLayoutStyle(adapter, this, item)
-            if ((item as? FormInput)?.enableAnimationHint == true) {
-                isHintEnabled = true
-                hint = item.hint ?: resources.getString(R.string.formDefaultHintInput)
-            } else {
-                isHintEnabled = false
-                hint = null
-            }
-
-            suffixText = (item as? FormInput)?.suffixText
-            prefixText = (item as? FormInput)?.prefixText
-            placeholderText = (item as? FormInput)?.placeholderText
+            isEnabled = item.isRealMenuEnable(adapter.formAdapter)
+            val itemInput = item as? FormInput
+            suffixText = itemInput?.suffixText
+            prefixText = itemInput?.prefixText
+            placeholderText = itemInput?.placeholderText
         }
         with(holder.getView<TextInputEditText>(R.id.formInternalContentChild)) {
             if (tag is TextWatcher) removeTextChangedListener(tag as TextWatcher)
             setText(item.getContentText())
-            hint = if ((item as? FormInput)?.enableAnimationHint != true) {
-                item.hint ?: resources.getString(R.string.formDefaultHintInput)
-            } else null
-
+            hint = item.hint ?: resources.getString(R.string.formDefaultHintInput)
             gravity = getContentGravity(adapter, typeset, item)
-            minLines = (item as? FormInput)?.minLines ?: 0
-            maxLines = (item as? FormInput)?.maxLines ?: Int.MAX_VALUE
+            val itemInput = item as? FormInput
+            minLines = itemInput?.minLines ?: 0
+            maxLines = itemInput?.maxLines ?: Int.MAX_VALUE
             isSingleLine = maxLines <= 1
             val watcher = doAfterTextChanged { editable ->
                 item.content = editable

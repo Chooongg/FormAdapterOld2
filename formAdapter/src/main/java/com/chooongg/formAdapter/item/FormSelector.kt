@@ -7,6 +7,8 @@ import com.chooongg.formAdapter.provider.FormTextProvider
 
 class FormSelector(name: CharSequence?, field: String?) : BaseOptionForm(name, field) {
 
+    var iconSize: Int? = null
+
     override fun hasOpenOperation() = true
 
     override fun getItemProvider(adapter: FormAdapter) =

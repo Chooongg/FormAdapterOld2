@@ -92,6 +92,7 @@ class FormPartAdapter internal constructor(
                         it.groupIndex = -1
                         it.itemCountForGroup = -1
                         it.positionForGroup = -1
+                        it.nextItemIsSingleColumn = false
                         if (!it.isRealVisible(formAdapter)) continue@singleLine
                         singleLines.add(it)
                     }
@@ -121,6 +122,9 @@ class FormPartAdapter internal constructor(
                 item.groupIndex = index
                 item.itemCountForGroup = group.size
                 item.positionForGroup = position
+                if (item.isMustSingleColumn && position > 0) {
+                    group[position - 1].nextItemIsSingleColumn = true
+                }
             }
         }
         asyncDiffer.submitList(ArrayList<BaseForm>().apply { tempList.forEach { addAll(it) } })

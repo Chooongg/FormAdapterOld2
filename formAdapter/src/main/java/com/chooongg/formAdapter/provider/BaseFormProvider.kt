@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.annotation.GravityInt
 import com.chooongg.formAdapter.FormPartAdapter
 import com.chooongg.formAdapter.FormViewHolder
+import com.chooongg.formAdapter.data.LinkageForm
 import com.chooongg.formAdapter.item.BaseForm
 import com.chooongg.formAdapter.typeset.Typeset
 
@@ -40,12 +41,35 @@ abstract class BaseFormProvider {
      * 获取内容的对齐方式
      */
     @GravityInt
-    open fun getContentGravity(adapter: FormPartAdapter, typeset: Typeset, item: BaseForm): Int {
+    protected open fun getContentGravity(
+        adapter: FormPartAdapter,
+        typeset: Typeset,
+        item: BaseForm
+    ): Int {
         return if (item.contentGravity != null) {
             item.contentGravity!!
         } else if (item.isMustSingleColumn || adapter.formAdapter.normalColumnCount <= 1) {
             typeset.contentGravity()
         } else typeset.multiColumnContentGravity()
+    }
+
+    protected fun changeContent(adapter: FormPartAdapter, item: BaseForm, content: Any?) {
+        if (item.content != content) {
+            item.content = content
+            item.linkageBlock?.invoke(LinkageForm(adapter), item.field, item.content)
+        }
+    }
+
+    protected fun changeEx(
+        adapter: FormPartAdapter,
+        item: BaseForm,
+        field: String,
+        content: Any?
+    ) {
+        if (item.getExtensionContent(field) != content) {
+            item.putExtensionContent(field, content)
+            item.linkageBlock?.invoke(LinkageForm(adapter), field, content)
+        }
     }
 
     override fun equals(other: Any?): Boolean {
