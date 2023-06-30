@@ -26,6 +26,8 @@ class MaterialCardFilledStyle(
     override fun onCreateStyleLayout(parent: ViewGroup) = MaterialCardView(
         parent.context, null, com.google.android.material.R.attr.materialCardViewFilledStyle
     ).apply {
+        clipChildren = false
+        clipToPadding = false
         id = R.id.formInternalStyleParent
         tag = shapeAppearanceModel.toBuilder().build()
         layoutParams = GridLayoutManager.LayoutParams(
@@ -92,10 +94,10 @@ class MaterialCardFilledStyle(
         with(holder.getView<MaterialTextView>(R.id.formInternalContent)) {
             text = item.name
             updatePaddingRelative(
-                paddingInfo.horizontalGlobal,
-                paddingInfo.verticalGlobal,
-                paddingInfo.horizontalGlobal,
-                paddingInfo.verticalGlobal
+                paddingInfo.horizontalLocal,
+                paddingInfo.verticalLocal,
+                paddingInfo.horizontalLocal,
+                paddingInfo.verticalLocal
             )
         }
     }

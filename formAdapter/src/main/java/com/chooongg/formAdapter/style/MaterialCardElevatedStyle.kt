@@ -27,7 +27,10 @@ class MaterialCardElevatedStyle(
     override fun onCreateStyleLayout(parent: ViewGroup) = MaterialCardView(
         parent.context, null, com.google.android.material.R.attr.materialCardViewElevatedStyle
     ).apply {
+        clipChildren = false
+        clipToPadding = false
         id = R.id.formInternalStyleParent
+        preventCornerOverlap = true
         tag = shapeAppearanceModel.toBuilder().build()
         layoutParams = GridLayoutManager.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
@@ -96,10 +99,10 @@ class MaterialCardElevatedStyle(
         with(holder.getView<MaterialTextView>(R.id.formInternalContent)) {
             text = item.name
             updatePaddingRelative(
-                paddingInfo.horizontalGlobal,
-                paddingInfo.verticalGlobal,
-                paddingInfo.horizontalGlobal,
-                paddingInfo.verticalGlobal
+                paddingInfo.horizontalLocal,
+                paddingInfo.verticalLocal,
+                paddingInfo.horizontalLocal,
+                paddingInfo.verticalLocal
             )
         }
     }

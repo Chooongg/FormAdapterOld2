@@ -16,10 +16,10 @@ import com.chooongg.formAdapter.item.BaseForm
 abstract class Typeset(val ems: Int = FormManager.emsSize) {
 
     @GravityInt
-    open fun contentGravity(): Int = FormManager.contentGravity
+    protected open fun contentGravity(): Int = FormManager.contentGravity
 
     @GravityInt
-    open fun multiColumnContentGravity(): Int = FormManager.multiColumnContentGravity
+    protected open fun multiColumnContentGravity(): Int = FormManager.multiColumnContentGravity
 
     @Px
     open fun contentWidth(): Int = ViewGroup.LayoutParams.MATCH_PARENT
@@ -31,6 +31,20 @@ abstract class Typeset(val ems: Int = FormManager.emsSize) {
         holder: FormViewHolder,
         item: BaseForm
     )
+
+    /**
+     * 获取内容的对齐方式
+     */
+    @GravityInt
+    open fun getContentGravity(
+        adapter: FormPartAdapter, item: BaseForm
+    ): Int {
+        return if (item.contentGravity != null) {
+            item.contentGravity!!
+        } else if (item.isMustSingleColumn || adapter.formAdapter.normalColumnCount <= 1) {
+            contentGravity()
+        } else multiColumnContentGravity()
+    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

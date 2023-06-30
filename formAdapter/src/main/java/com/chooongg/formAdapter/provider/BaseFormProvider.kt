@@ -2,7 +2,6 @@ package com.chooongg.formAdapter.provider
 
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.GravityInt
 import com.chooongg.formAdapter.FormPartAdapter
 import com.chooongg.formAdapter.FormViewHolder
 import com.chooongg.formAdapter.data.LinkageForm
@@ -36,22 +35,6 @@ abstract class BaseFormProvider {
     ) = onBindItemView(adapter, typeset, holder, item)
 
     open fun onItemRecycler(holder: FormViewHolder) = Unit
-
-    /**
-     * 获取内容的对齐方式
-     */
-    @GravityInt
-    protected open fun getContentGravity(
-        adapter: FormPartAdapter,
-        typeset: Typeset,
-        item: BaseForm
-    ): Int {
-        return if (item.contentGravity != null) {
-            item.contentGravity!!
-        } else if (item.isMustSingleColumn || adapter.formAdapter.normalColumnCount <= 1) {
-            typeset.contentGravity()
-        } else typeset.multiColumnContentGravity()
-    }
 
     protected fun changeContent(adapter: FormPartAdapter, item: BaseForm, content: Any?) {
         if (item.content != content) {

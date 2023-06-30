@@ -5,4 +5,8 @@
 
     <style name="FormAdapter.TextAppearance.Content" parent="TextAppearance.Material3.BodyMedium" />
 
+    <style name="FormAdapter.TextAppearance.Label" parent="TextAppearance.Material3.HeadlineSmall" />
+
+    <style name="FormAdapter.TextAppearance.Tip" parent="TextAppearance.Material3.BodySmall" />
+
 </resources>

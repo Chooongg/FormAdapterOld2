@@ -12,12 +12,15 @@ import com.chooongg.formAdapter.FormAdapter
 import com.chooongg.formAdapter.addButton
 import com.chooongg.formAdapter.addDivider
 import com.chooongg.formAdapter.addInput
+import com.chooongg.formAdapter.addLabel
+import com.chooongg.formAdapter.addMenu
 import com.chooongg.formAdapter.addSelector
 import com.chooongg.formAdapter.addText
+import com.chooongg.formAdapter.addTip
 import com.chooongg.formAdapter.enum.FormEnableMode
-import com.chooongg.formAdapter.item.FormButton
 import com.chooongg.formAdapter.option.Option
 import com.chooongg.formAdapter.simple.databinding.FragmentBasicBinding
+import com.chooongg.formAdapter.style.CardStyle
 import com.chooongg.formAdapter.style.MaterialCardElevatedStyle
 import com.chooongg.formAdapter.style.MaterialCardFilledStyle
 import com.chooongg.formAdapter.typeset.VerticalTypeset
@@ -40,23 +43,7 @@ class BasicFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.formView.adapter = viewModel.adapter
         binding.btnRefresh.setOnClickListener {
-            viewModel.adapter.plusPart(0) {
-                dynamicPartMinGroupCount = 3
-                dynamicPartCreateGroupListener {
-                    addText("Text", "text") {
-                        content = "FormText"
-                    }
-                    addText("Text", "text") {
-                        content = "FormText"
-                    }
-                    addText("Text", "text") {
-                        content = "FormText"
-                    }
-                    addText("Text", "text") {
-                        content = "FormText"
-                    }
-                }
-            }
+            viewModel.adapter.isEditable = !viewModel.adapter.isEditable
         }
     }
 
@@ -64,30 +51,27 @@ class BasicFragment : Fragment() {
         val adapter = FormAdapter(true) {
             plusPart {
                 plusGroup {
-                    addText("FormAdapter") {
-                        content = "Android FormAdapter"
+                    addLabel("Android FormAdapter") {
+                        contentGravity = Gravity.CENTER_HORIZONTAL
                     }
                     addButton("IsEditable", "isEditable") {
                         enableMode = FormEnableMode.ALWAYS
                     }
-                    addButton("Button", "button") {
-                        buttonStyle = FormButton.ButtonStyle.ELEVATED
-                        contentGravity = Gravity.START
-                    }
-                    addButton("Button", "button") {
-                        buttonStyle = FormButton.ButtonStyle.OUTLINED
-                        contentGravity = Gravity.END
-                    }
-                    addButton("Button", "button") {
-                        buttonStyle = FormButton.ButtonStyle.TEXT
-                        contentGravity = Gravity.CENTER
-                    }
-                    addButton("Button", "button") {
-                        buttonStyle = FormButton.ButtonStyle.TONAL
+                    addTip("这是一个标签") {
                         contentGravity = Gravity.CENTER_HORIZONTAL
                     }
-                    addButton("Button", "button") {
-                        buttonStyle = FormButton.ButtonStyle.UN_ELEVATED
+                    addDivider() {
+                        matchParentWidth = true
+                    }
+                    addMenu("设置项", "setting") {
+
+                    }
+                }
+            }
+            plusPart(CardStyle()) {
+                plusGroup {
+                    addMenu("设置项", "setting") {
+
                     }
                 }
             }
@@ -118,7 +102,7 @@ class BasicFragment : Fragment() {
                             content = "FormText"
                         }
                         addDivider() {
-                            matchParentWidth = true
+                            matchParentWidth = false
                         }
                         addText("Text", "text") {
                             content = "FormText"
@@ -131,6 +115,9 @@ class BasicFragment : Fragment() {
                         }
                         addText("Text", "text") {
                             content = "FormText"
+                        }
+                        addMenu("设置项", "setting") {
+
                         }
                     }
                 }

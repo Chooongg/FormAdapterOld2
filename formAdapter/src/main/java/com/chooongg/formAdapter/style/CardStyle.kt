@@ -18,6 +18,8 @@ import com.google.android.material.textview.MaterialTextView
 class CardStyle(defaultTypeset: Typeset = HorizontalTypeset) : Style(defaultTypeset) {
 
     override fun onCreateStyleLayout(parent: ViewGroup) = CardView(parent.context).apply {
+        clipChildren = false
+        clipToPadding = false
         id = R.id.formInternalStyleParent
         radius = dp2px(8f).toFloat()
         layoutParams = MarginLayoutParams(

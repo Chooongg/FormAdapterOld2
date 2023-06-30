@@ -59,7 +59,7 @@ object FormSelectorProvider : BaseFormProvider() {
             isEnabled = item.isRealMenuEnable(adapter.formAdapter)
             text = item.getContentText()
             hint = item.hint ?: resources.getString(R.string.fromDefaultHintNone)
-            gravity = getContentGravity(adapter, typeset, item)
+            gravity = typeset.getContentGravity(adapter, item)
             val itemSelector = item as? FormSelector
             iconSize = itemSelector?.iconSize
                 ?: context.resources.getDimensionPixelSize(R.dimen.formIconSize)

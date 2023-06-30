@@ -18,6 +18,8 @@ object VerticalTypeset : Typeset() {
 
     override fun onCreateTypesetLayout(parent: ViewGroup, paddingInfo: FormPaddingInfo) =
         LinearLayoutCompat(parent.context).apply {
+            clipChildren = false
+            clipToPadding = false
             id = R.id.formInternalTypesetParent
             orientation = LinearLayoutCompat.VERTICAL
             clipChildren = false

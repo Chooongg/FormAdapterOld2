@@ -4,8 +4,11 @@ import com.chooongg.formAdapter.data.FormCreator
 import com.chooongg.formAdapter.item.FormButton
 import com.chooongg.formAdapter.item.FormDivider
 import com.chooongg.formAdapter.item.FormInput
+import com.chooongg.formAdapter.item.FormLabel
+import com.chooongg.formAdapter.item.FormMenu
 import com.chooongg.formAdapter.item.FormSelector
 import com.chooongg.formAdapter.item.FormText
+import com.chooongg.formAdapter.item.FormTip
 
 fun FormCreator.addButton(
     name: CharSequence?, field: String? = null, block: (FormButton.() -> Unit)? = null
@@ -26,3 +29,15 @@ fun FormCreator.addSelector(
 fun FormCreator.addText(
     name: CharSequence?, field: String? = null, block: (FormText.() -> Unit)? = null
 ) = add(FormText(name, field).apply { block?.invoke(this) })
+
+fun FormCreator.addTip(
+    name: CharSequence?, field: String? = null, block: (FormTip.() -> Unit)? = null
+) = add(FormTip(name, field).apply { block?.invoke(this) })
+
+fun FormCreator.addLabel(
+    name: CharSequence?, field: String? = null, block: (FormLabel.() -> Unit)? = null
+) = add(FormLabel(name, field).apply { block?.invoke(this) })
+
+fun FormCreator.addMenu(
+    name: CharSequence?, field: String? = null, block: (FormMenu.() -> Unit)? = null
+) = add(FormMenu(name, field).apply { block?.invoke(this) })

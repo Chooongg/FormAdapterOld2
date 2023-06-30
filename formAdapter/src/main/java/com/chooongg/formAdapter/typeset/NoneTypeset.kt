@@ -14,6 +14,8 @@ object NoneTypeset : Typeset(0) {
 
     override fun onCreateTypesetLayout(parent: ViewGroup, paddingInfo: FormPaddingInfo) =
         FrameLayout(parent.context).apply {
+            clipChildren = false
+            clipToPadding = false
             id = R.id.formInternalTypesetParent
             layoutParams = MarginLayoutParams(
                 MarginLayoutParams.MATCH_PARENT, MarginLayoutParams.WRAP_CONTENT

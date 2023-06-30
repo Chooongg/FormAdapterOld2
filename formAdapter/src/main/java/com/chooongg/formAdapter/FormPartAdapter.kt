@@ -32,10 +32,9 @@ class FormPartAdapter internal constructor(
     private lateinit var defaultPartName: String
 
     private val asyncDiffer = AsyncListDiffer(object : ListUpdateCallback {
-        override fun onChanged(position: Int, count: Int, payload: Any?) =
-            notifyItemChanged(position, payload)
-
-        override fun onRemoved(position: Int, count: Int) = notifyItemRangeRemoved(position, count)
+        override fun onChanged(position: Int, count: Int, payload: Any?) = Unit
+        override fun onRemoved(position: Int, count: Int) =
+            notifyItemRangeRemoved(position, count)
 
         override fun onInserted(position: Int, count: Int) =
             notifyItemRangeInserted(position, count)
@@ -127,7 +126,9 @@ class FormPartAdapter internal constructor(
                 }
             }
         }
-        asyncDiffer.submitList(ArrayList<BaseForm>().apply { tempList.forEach { addAll(it) } })
+        asyncDiffer.submitList(ArrayList<BaseForm>().apply { tempList.forEach { addAll(it) } }) {
+            notifyItemRangeChanged(0, itemCount)
+        }
     }
 
     private fun disassemblySingleLine(singleLines: ArrayList<BaseForm>) {

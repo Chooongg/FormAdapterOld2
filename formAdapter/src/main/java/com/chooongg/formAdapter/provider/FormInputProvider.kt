@@ -73,7 +73,7 @@ object FormInputProvider : BaseFormProvider() {
             if (tag is TextWatcher) removeTextChangedListener(tag as TextWatcher)
             setText(item.getContentText())
             hint = item.hint ?: resources.getString(R.string.formDefaultHintInput)
-            gravity = getContentGravity(adapter, typeset, item)
+            gravity = typeset.getContentGravity(adapter, item)
             val itemInput = item as? FormInput
             minLines = itemInput?.minLines ?: 0
             maxLines = itemInput?.maxLines ?: Int.MAX_VALUE

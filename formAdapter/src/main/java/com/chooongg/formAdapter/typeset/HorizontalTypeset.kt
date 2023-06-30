@@ -1,8 +1,5 @@
 package com.chooongg.formAdapter.typeset
 
-import android.graphics.text.LineBreaker
-import android.os.Build
-import android.text.Layout
 import android.view.Gravity
 import android.view.ViewGroup
 import androidx.appcompat.widget.LinearLayoutCompat
@@ -19,6 +16,8 @@ object HorizontalTypeset : Typeset(FormManager.emsSize) {
 
     override fun onCreateTypesetLayout(parent: ViewGroup, paddingInfo: FormPaddingInfo) =
         LinearLayoutCompat(parent.context).apply {
+            clipChildren = false
+            clipToPadding = false
             id = R.id.formInternalTypesetParent
             clipChildren = false
             clipToPadding = false
@@ -69,17 +68,10 @@ object HorizontalTypeset : Typeset(FormManager.emsSize) {
         }
         with(holder.getView<MaterialTextView>(R.id.formInternalName)) {
             text = adapter.formAdapter.nameFormat.format(context, item.name, item.isMust)
-            if (item.isMustSingleColumn || adapter.formAdapter.normalColumnCount <= 1) {
-                if (contentGravity() and Gravity.END == Gravity.END) {
-                    minWidth = 0
-                    maxEms = ems
-                } else setEms(ems)
-            } else {
-                if (multiColumnContentGravity() and Gravity.END == Gravity.END) {
-                    minWidth = 0
-                    maxEms = ems
-                } else setEms(ems)
-            }
+            if (getContentGravity(adapter, item) and Gravity.END == Gravity.END) {
+                minWidth = 0
+                maxEms = ems
+            } else setEms(ems)
         }
     }
 
