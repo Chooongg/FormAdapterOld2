@@ -205,7 +205,7 @@ class FormPartAdapter internal constructor(
 
     override fun onBindViewHolder(holder: FormViewHolder, position: Int) {
         val item = asyncDiffer.currentList[position]
-        style.onBindStyleLayout(holder, item)
+        style.onBindStyleLayout(this, holder, item)
         val typeset = formAdapter.getTypesetForItemViewType(holder.itemViewType)
         typeset.onBindTypesetLayout(this, holder, item)
         formAdapter.getItemProviderForItemViewType(holder.itemViewType)
@@ -216,7 +216,7 @@ class FormPartAdapter internal constructor(
         holder: FormViewHolder, position: Int, payloads: MutableList<Any>
     ) {
         val item = asyncDiffer.currentList[position]
-        style.onBindStyleLayout(holder, item)
+        style.onBindStyleLayout(this, holder, item)
         val typeset = formAdapter.getTypesetForItemViewType(holder.itemViewType)
         typeset.onBindTypesetLayout(this, holder, item)
         formAdapter.getItemProviderForItemViewType(holder.itemViewType)

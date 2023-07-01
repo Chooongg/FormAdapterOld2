@@ -3,6 +3,7 @@ package com.chooongg.formAdapter.style
 import android.content.Context
 import android.view.ViewGroup
 import androidx.core.view.updatePaddingRelative
+import com.chooongg.formAdapter.FormPartAdapter
 import com.chooongg.formAdapter.FormViewHolder
 import com.chooongg.formAdapter.R
 import com.chooongg.formAdapter.boundary.FormMarginInfo
@@ -18,7 +19,11 @@ object NoneStyle : Style(HorizontalTypeset) {
     }
 
     override fun onCreateStyleLayout(parent: ViewGroup) = null
-    override fun onBindStyleLayout(holder: FormViewHolder, item: BaseForm) = Unit
+    override fun onBindStyleLayout(
+        adapter: FormPartAdapter,
+        holder: FormViewHolder,
+        item: BaseForm
+    ) = Unit
 
     override fun onCreateGroupTitle(parent: ViewGroup) = MaterialTextView(parent.context).apply {
         id = R.id.formInternalContent

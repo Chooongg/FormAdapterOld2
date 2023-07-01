@@ -61,10 +61,10 @@ object FormInputProvider : BaseFormProvider() {
         holder: FormViewHolder,
         item: BaseForm
     ) {
+        val itemInput = item as? FormInput
         with(holder.getView<TextInputLayout>(R.id.formInternalContent)) {
             updateInputLayoutStyle(adapter, this, item)
             isEnabled = item.isRealMenuEnable(adapter.formAdapter)
-            val itemInput = item as? FormInput
             suffixText = itemInput?.suffixText
             prefixText = itemInput?.prefixText
             placeholderText = itemInput?.placeholderText
@@ -74,7 +74,6 @@ object FormInputProvider : BaseFormProvider() {
             setText(item.getContentText())
             hint = item.hint ?: resources.getString(R.string.formDefaultHintInput)
             gravity = typeset.getContentGravity(adapter, item)
-            val itemInput = item as? FormInput
             minLines = itemInput?.minLines ?: 0
             maxLines = itemInput?.maxLines ?: Int.MAX_VALUE
             isSingleLine = maxLines <= 1

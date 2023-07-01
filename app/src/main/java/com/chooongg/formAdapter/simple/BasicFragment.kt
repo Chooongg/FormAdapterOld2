@@ -64,7 +64,9 @@ class BasicFragment : Fragment() {
                         matchParentWidth = true
                     }
                     addMenu("设置项", "setting") {
-
+                        content = "新版本"
+                        badgeNumber = 100
+                        badgeMaxNumber = 99
                     }
                 }
             }

@@ -5,6 +5,7 @@ import android.view.ViewGroup.MarginLayoutParams
 import androidx.cardview.widget.CardView
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updatePaddingRelative
+import com.chooongg.formAdapter.FormPartAdapter
 import com.chooongg.formAdapter.FormViewHolder
 import com.chooongg.formAdapter.R
 import com.chooongg.formAdapter.boundary.Boundary
@@ -28,8 +29,13 @@ class CardStyle(defaultTypeset: Typeset = HorizontalTypeset) : Style(defaultType
         )
     }
 
-    override fun onBindStyleLayout(holder: FormViewHolder, item: BaseForm) {
+    override fun onBindStyleLayout(
+        adapter: FormPartAdapter,
+        holder: FormViewHolder,
+        item: BaseForm
+    ) {
         holder.getView<CardView>(R.id.formInternalStyleParent).let {
+            it.isEnabled = item.isRealEnable(adapter.formAdapter)
             it.updateLayoutParams<MarginLayoutParams> {
                 topMargin = when (item.marginBoundary.topType) {
                     Boundary.LOCAL -> marginInfo.verticalLocal

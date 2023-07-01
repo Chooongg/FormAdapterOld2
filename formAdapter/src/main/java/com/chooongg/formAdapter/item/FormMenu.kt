@@ -8,6 +8,12 @@ import com.chooongg.formAdapter.typeset.Typeset
 
 class FormMenu(name: CharSequence?, field: String?) : BaseForm(name, field) {
 
+    companion object {
+        const val NO_SET = -2
+    }
+
+    var isGlobalPadding:Boolean = true
+
     var iconRes: Int? = null
 
     var iconSize: Int? = null
@@ -15,6 +21,21 @@ class FormMenu(name: CharSequence?, field: String?) : BaseForm(name, field) {
     var iconTint: FormColorStateListBlock? = null
 
     var isShowMore: Boolean = true
+
+    var badgeNumber: Int? = null
+        set(value) {
+            field = value
+            if (value != null) badgeText = null
+        }
+
+    var badgeMaxNumber: Int = NO_SET
+
+    var badgeText: String? = null
+        set(value) {
+            field = value
+            if (value != null) badgeNumber = null
+        }
+
 
     override var typeset: Typeset? = NoneTypeset
 

@@ -10,6 +10,7 @@
     <item name="formInternalContentChildName" type="id" />
     <item name="formInternalContentChild" type="id" />
     <item name="formInternalContentChildIcon" type="id" />
+    <item name="formInternalContentChildBadge" type="id" />
     <item name="formInternalContentChildMoreIcon" type="id" />
 
 </resources>

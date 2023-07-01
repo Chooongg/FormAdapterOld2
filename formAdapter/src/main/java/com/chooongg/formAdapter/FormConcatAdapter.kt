@@ -32,7 +32,7 @@ open class FormConcatAdapter constructor(isEditable: Boolean) : RecyclerView.Ada
 
     val partAdapters get() = adapters.map { it as FormPartAdapter }
 
-    internal var _recyclerView: WeakReference<RecyclerView>? = null
+    internal var _recyclerView: WeakReference<RecyclerView> = WeakReference(null)
 
     private val dataObserver = object : RecyclerView.AdapterDataObserver() {
 
@@ -67,10 +67,15 @@ open class FormConcatAdapter constructor(isEditable: Boolean) : RecyclerView.Ada
 
     fun plusPart(adapter: FormPartAdapter) {
         concatAdapter.addAdapter(adapter)
+        if (_recyclerView.get() == null || adapters.size - 2 < 0) return
+        partAdapters[adapters.size - 2].update()
     }
 
     fun plusPart(index: Int, adapter: FormPartAdapter) {
         concatAdapter.addAdapter(index, adapter)
+        if (_recyclerView.get() == null) return
+        if (index - 1 >= 0) partAdapters[index - 1].update()
+        if (index + 1 < adapters.size) partAdapters[index + 1].update()
     }
 
     fun removePart(adapter: FormPartAdapter) {
@@ -86,7 +91,7 @@ open class FormConcatAdapter constructor(isEditable: Boolean) : RecyclerView.Ada
     }
 
     fun scrollToPosition(globalPosition: Int) {
-        _recyclerView?.get()?.smoothScrollToPosition(globalPosition)
+        _recyclerView.get()?.smoothScrollToPosition(globalPosition)
     }
 
     fun scrollToItem(item: BaseForm) {
@@ -196,7 +201,7 @@ open class FormConcatAdapter constructor(isEditable: Boolean) : RecyclerView.Ada
     }
 
     override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
-        _recyclerView = null
+        _recyclerView = WeakReference(null)
         concatAdapter.onDetachedFromRecyclerView(recyclerView)
         recyclerView.removeOnScrollListener(onScrollListener)
     }
@@ -227,7 +232,7 @@ open class FormConcatAdapter constructor(isEditable: Boolean) : RecyclerView.Ada
 
     fun clear() {
         concatAdapter.adapters.forEach { concatAdapter.removeAdapter(it) }
-        _recyclerView?.get()?.also {
+        _recyclerView.get()?.also {
             it.recycledViewPool.clear()
             typePool.clear()
         }

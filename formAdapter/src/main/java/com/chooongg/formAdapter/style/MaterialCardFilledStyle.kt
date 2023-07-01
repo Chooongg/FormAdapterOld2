@@ -3,10 +3,10 @@ package com.chooongg.formAdapter.style
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewGroup.MarginLayoutParams
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updatePaddingRelative
 import androidx.recyclerview.widget.GridLayoutManager
+import com.chooongg.formAdapter.FormPartAdapter
 import com.chooongg.formAdapter.FormViewHolder
 import com.chooongg.formAdapter.R
 import com.chooongg.formAdapter.boundary.Boundary
@@ -36,9 +36,13 @@ class MaterialCardFilledStyle(
         )
     }
 
-    override fun onBindStyleLayout(holder: FormViewHolder, item: BaseForm) {
-        Log.e("Form", "onBindStyleLayout: ${holder.absoluteAdapterPosition}")
+    override fun onBindStyleLayout(
+        adapter: FormPartAdapter,
+        holder: FormViewHolder,
+        item: BaseForm
+    ) {
         holder.getView<MaterialCardView>(R.id.formInternalStyleParent).let {
+            it.isEnabled = item.isRealEnable(adapter.formAdapter)
             if (elevation != null) it.cardElevation = elevation
             val originalShape = it.tag as? ShapeAppearanceModel ?: return
             val builder = it.shapeAppearanceModel.toBuilder()

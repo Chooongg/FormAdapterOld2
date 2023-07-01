@@ -51,6 +51,7 @@ object FormSelectorProvider : BaseFormProvider() {
         holder: FormViewHolder,
         item: BaseForm
     ) {
+        val itemSelector = item as? FormSelector
         val drawable = DeterminateDrawable.createCircularDrawable(
             holder.itemView.context,
             CircularProgressIndicatorSpec(holder.itemView.context, null)
@@ -60,7 +61,6 @@ object FormSelectorProvider : BaseFormProvider() {
             text = item.getContentText()
             hint = item.hint ?: resources.getString(R.string.fromDefaultHintNone)
             gravity = typeset.getContentGravity(adapter, item)
-            val itemSelector = item as? FormSelector
             iconSize = itemSelector?.iconSize
                 ?: context.resources.getDimensionPixelSize(R.dimen.formIconSize)
             updateLayoutParams<ViewGroup.LayoutParams> {

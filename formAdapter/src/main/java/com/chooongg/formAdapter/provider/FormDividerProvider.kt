@@ -32,8 +32,9 @@ object FormDividerProvider : BaseFormProvider() {
         holder: FormViewHolder,
         item: BaseForm
     ) {
+        val itemDivider = item as? FormDivider
         with(holder.getView<MaterialDivider>(R.id.formInternalContent)) {
-            if ((item as? FormDivider)?.matchParentWidth == true) {
+            if (itemDivider?.matchParentWidth == true) {
                 dividerInsetStart = 0
                 dividerInsetEnd = 0
                 updateLayoutParams<MarginLayoutParams> {

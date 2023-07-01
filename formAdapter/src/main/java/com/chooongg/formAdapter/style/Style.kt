@@ -3,6 +3,7 @@ package com.chooongg.formAdapter.style
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
+import com.chooongg.formAdapter.FormPartAdapter
 import com.chooongg.formAdapter.FormViewHolder
 import com.chooongg.formAdapter.R
 import com.chooongg.formAdapter.boundary.FormMarginInfo
@@ -62,7 +63,7 @@ abstract class Style(val defaultTypeset: Typeset) {
     /**
      * 绑定样式布局
      */
-    abstract fun onBindStyleLayout(holder: FormViewHolder, item: BaseForm)
+    abstract fun onBindStyleLayout(adapter: FormPartAdapter, holder: FormViewHolder, item: BaseForm)
 
     /**
      * 创建分组标题

@@ -27,11 +27,11 @@ object FormLabelProvider : BaseFormProvider() {
         holder: FormViewHolder,
         item: BaseForm
     ) {
+        val itemTip = item as? FormLabel
         with(holder.getView<MaterialTextView>(R.id.formInternalContent)) {
             text = item.name
             hint = item.hint ?: resources.getString(R.string.fromDefaultHintNone)
             gravity = item.contentGravity ?: Gravity.NO_GRAVITY
-            val itemTip = item as? FormLabel
             if (itemTip?.color != null) {
                 setTextColor(itemTip.color!!.invoke(context))
             } else {
