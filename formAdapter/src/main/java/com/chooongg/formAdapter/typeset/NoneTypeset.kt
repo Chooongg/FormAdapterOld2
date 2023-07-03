@@ -1,8 +1,9 @@
 package com.chooongg.formAdapter.typeset
 
+import android.view.View
 import android.view.ViewGroup
-import android.view.ViewGroup.MarginLayoutParams
 import android.widget.FrameLayout
+import androidx.recyclerview.widget.GridLayoutManager
 import com.chooongg.formAdapter.FormPartAdapter
 import com.chooongg.formAdapter.FormViewHolder
 import com.chooongg.formAdapter.R
@@ -17,10 +18,20 @@ object NoneTypeset : Typeset(0) {
             clipChildren = false
             clipToPadding = false
             id = R.id.formInternalTypesetParent
-            layoutParams = MarginLayoutParams(
-                MarginLayoutParams.MATCH_PARENT, MarginLayoutParams.WRAP_CONTENT
+            layoutParams = GridLayoutManager.LayoutParams(
+                GridLayoutManager.LayoutParams.MATCH_PARENT,
+                GridLayoutManager.LayoutParams.WRAP_CONTENT
             )
         }
+
+    override fun addView(parent: ViewGroup, view: View) {
+        parent.addView(
+            view, view.layoutParams ?: FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.WRAP_CONTENT
+            )
+        )
+    }
 
     override fun onBindTypesetLayout(
         adapter: FormPartAdapter,

@@ -1,15 +1,19 @@
 package com.chooongg.formAdapter.style
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.view.ViewGroup
 import androidx.core.view.updatePaddingRelative
 import com.chooongg.formAdapter.FormPartAdapter
 import com.chooongg.formAdapter.FormViewHolder
 import com.chooongg.formAdapter.R
 import com.chooongg.formAdapter.boundary.FormMarginInfo
+import com.chooongg.formAdapter.boundary.FormPaddingInfo
 import com.chooongg.formAdapter.item.BaseForm
 import com.chooongg.formAdapter.item.InternalFormGroupTitle
 import com.chooongg.formAdapter.typeset.HorizontalTypeset
+import com.chooongg.utils.ext.attrColor
+import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.textview.MaterialTextView
 
 object NoneStyle : Style(HorizontalTypeset) {
@@ -18,12 +22,20 @@ object NoneStyle : Style(HorizontalTypeset) {
         return FormMarginInfo(0, 0, 0, 0)
     }
 
-    override fun onCreateStyleLayout(parent: ViewGroup) = null
-    override fun onBindStyleLayout(
-        adapter: FormPartAdapter,
-        holder: FormViewHolder,
-        item: BaseForm
-    ) = Unit
+    override fun onCreatePaddingInfo(context: Context): FormPaddingInfo {
+        return FormPaddingInfo(
+            context.resources.getDimensionPixelSize(R.dimen.formVerticalGlobalPaddingSize),
+            context.resources.getDimensionPixelSize(R.dimen.formVerticalGlobalPaddingSize),
+            context.resources.getDimensionPixelSize(R.dimen.formHorizontalLocalPaddingSize),
+            context.resources.getDimensionPixelSize(R.dimen.formHorizontalGlobalPaddingSize)
+        )
+    }
+
+    override fun onBindStyle(adapter: FormPartAdapter, holder: FormViewHolder, item: BaseForm) {
+        holder.itemView.isEnabled = item.isRealEnable(adapter.formAdapter)
+        holder.itemView.clipToOutline = false
+        holder.itemView.background = null
+    }
 
     override fun onCreateGroupTitle(parent: ViewGroup) = MaterialTextView(parent.context).apply {
         id = R.id.formInternalContent

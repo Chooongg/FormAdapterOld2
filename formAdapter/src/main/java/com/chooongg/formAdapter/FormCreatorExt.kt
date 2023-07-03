@@ -7,6 +7,7 @@ import com.chooongg.formAdapter.item.FormInput
 import com.chooongg.formAdapter.item.FormLabel
 import com.chooongg.formAdapter.item.FormMenu
 import com.chooongg.formAdapter.item.FormSelector
+import com.chooongg.formAdapter.item.FormSwitch
 import com.chooongg.formAdapter.item.FormText
 import com.chooongg.formAdapter.item.FormTip
 
@@ -41,3 +42,7 @@ fun FormCreator.addLabel(
 fun FormCreator.addMenu(
     name: CharSequence?, field: String? = null, block: (FormMenu.() -> Unit)? = null
 ) = add(FormMenu(name, field).apply { block?.invoke(this) })
+
+fun FormCreator.addSwitch(
+    name: CharSequence?, field: String? = null, block: (FormSwitch.() -> Unit)? = null
+) = add(FormSwitch(name, field).apply { block?.invoke(this) })

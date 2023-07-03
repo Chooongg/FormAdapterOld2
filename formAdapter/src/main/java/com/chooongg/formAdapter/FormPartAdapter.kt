@@ -184,43 +184,43 @@ class FormPartAdapter internal constructor(
     override fun getItemViewType(position: Int): Int {
         val item = asyncDiffer.currentList[position]
         return formAdapter.getItemViewType(
-            style, item.typeset ?: style.defaultTypeset, item.getItemProvider(formAdapter)
+            item.typeset ?: style.defaultTypeset, item.getItemProvider(formAdapter)
         )
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FormViewHolder {
-        val styleLayout = style.onCreateStyleLayout(parent)
         val typeset = formAdapter.getTypesetForItemViewType(viewType)
-        val typesetLayout = typeset.onCreateTypesetLayout(styleLayout ?: parent, style.paddingInfo)
+        val typesetLayout = typeset.onCreateTypesetLayout(parent, style.paddingInfo)
         val itemView = formAdapter.getItemProviderForItemViewType(viewType)
-            .onCreateItemView(this, typeset, typesetLayout ?: styleLayout ?: parent)
-        if (typesetLayout != null) {
-            styleLayout?.addView(typesetLayout)
-            typesetLayout.addView(itemView)
-        } else {
-            styleLayout?.addView(itemView)
-        }
-        return FormViewHolder(styleLayout ?: typesetLayout ?: itemView)
+            .onCreateItemView(this, typeset, typesetLayout ?: parent)
+        if (typesetLayout != null) typeset.addView(typesetLayout,itemView)
+        return FormViewHolder(typesetLayout ?: itemView)
     }
 
     override fun onBindViewHolder(holder: FormViewHolder, position: Int) {
         val item = asyncDiffer.currentList[position]
-        style.onBindStyleLayout(this, holder, item)
+        style.onBindStyle(this, holder, item)
         val typeset = formAdapter.getTypesetForItemViewType(holder.itemViewType)
         typeset.onBindTypesetLayout(this, holder, item)
-        formAdapter.getItemProviderForItemViewType(holder.itemViewType)
-            .onBindItemView(this, typeset, holder, item)
+        val itemProvider = formAdapter.getItemProviderForItemViewType(holder.itemViewType)
+        holder.itemView.foreground = itemProvider.onBindItemViewForeground(this, holder, item)
+        itemProvider.onBindItemView(this, typeset, holder, item)
+        itemProvider.onBindItemViewClick(this, holder, item)
+        itemProvider.onBindItemViewLongClick(this, holder, item)
     }
 
     override fun onBindViewHolder(
         holder: FormViewHolder, position: Int, payloads: MutableList<Any>
     ) {
         val item = asyncDiffer.currentList[position]
-        style.onBindStyleLayout(this, holder, item)
+        style.onBindStyle(this, holder, item)
         val typeset = formAdapter.getTypesetForItemViewType(holder.itemViewType)
         typeset.onBindTypesetLayout(this, holder, item)
-        formAdapter.getItemProviderForItemViewType(holder.itemViewType)
-            .onBindItemView(this, typeset, holder, item, payloads)
+        val itemProvider = formAdapter.getItemProviderForItemViewType(holder.itemViewType)
+        holder.itemView.foreground = itemProvider.onBindItemViewForeground(this, holder, item)
+        itemProvider.onBindItemView(this, typeset, holder, item, payloads)
+        itemProvider.onBindItemViewClick(this, holder, item)
+        itemProvider.onBindItemViewLongClick(this, holder, item)
     }
 
     override fun onViewRecycled(holder: FormViewHolder) {

@@ -2,6 +2,7 @@ package com.chooongg.formAdapter.provider
 
 import android.annotation.SuppressLint
 import android.content.res.ColorStateList
+import android.graphics.drawable.Drawable
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.ViewGroup
@@ -17,23 +18,24 @@ import com.chooongg.formAdapter.item.BaseForm
 import com.chooongg.formAdapter.item.FormMenu
 import com.chooongg.formAdapter.typeset.Typeset
 import com.chooongg.utils.ext.attrColor
-import com.chooongg.utils.ext.attrDrawable
 import com.chooongg.utils.ext.doOnClick
 import com.chooongg.utils.ext.dp2px
 import com.chooongg.utils.ext.gone
 import com.chooongg.utils.ext.resDimensionPixelSize
 import com.chooongg.utils.ext.resDrawable
 import com.chooongg.utils.ext.visible
-import com.google.android.material.card.MaterialCardView
 import com.google.android.material.textview.MaterialTextView
 
 object FormMenuProvider : BaseFormProvider() {
+
     override fun onCreateItemView(
         adapter: FormPartAdapter,
         typeset: Typeset,
         parent: ViewGroup
     ) = LinearLayoutCompat(parent.context).apply {
         id = R.id.formInternalContent
+        clipChildren = false
+        clipToPadding = false
         orientation = LinearLayoutCompat.HORIZONTAL
         gravity = Gravity.CENTER_VERTICAL
         addView(AppCompatImageView(context).apply {
@@ -70,7 +72,7 @@ object FormMenuProvider : BaseFormProvider() {
                         intArrayOf(-android.R.attr.state_enabled)
                     ),
                     intArrayOf(
-                        attrColor(com.google.android.material.R.attr.colorTertiary),
+                        attrColor(com.google.android.material.R.attr.colorPrimary),
                         attrColor(com.google.android.material.R.attr.colorOutline)
                     )
                 )
@@ -143,9 +145,6 @@ object FormMenuProvider : BaseFormProvider() {
         }
         with(holder.getView<LinearLayoutCompat>(R.id.formInternalContent)) {
             isEnabled = item.isRealEnable(adapter.formAdapter)
-            if (parent.parent !is MaterialCardView) {
-                setBackgroundResource(R.drawable.ripple_form_item)
-            } else background =  null
             setPadding(
                 when (item.paddingBoundary.startType) {
                     Boundary.GLOBAL -> adapter.style.paddingInfo.horizontalGlobal - adapter.style.paddingInfo.horizontalLocal
@@ -222,4 +221,18 @@ object FormMenuProvider : BaseFormProvider() {
             if (itemMenu?.isShowMore == true) visible() else gone()
         }
     }
+
+    override fun onBindItemViewForeground(
+        adapter: FormPartAdapter,
+        holder: FormViewHolder,
+        item: BaseForm
+    ): Drawable? {
+        return super.onBindItemViewForeground(adapter, holder, item)
+    }
+
+    override fun onBindItemViewLongClick(
+        adapter: FormPartAdapter,
+        holder: FormViewHolder,
+        item: BaseForm
+    ) = Unit
 }

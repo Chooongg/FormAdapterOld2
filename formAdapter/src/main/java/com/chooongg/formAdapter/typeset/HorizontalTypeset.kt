@@ -1,8 +1,10 @@
 package com.chooongg.formAdapter.typeset
 
 import android.view.Gravity
+import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.recyclerview.widget.GridLayoutManager
 import com.chooongg.formAdapter.FormManager
 import com.chooongg.formAdapter.FormPartAdapter
 import com.chooongg.formAdapter.FormViewHolder
@@ -21,10 +23,7 @@ object HorizontalTypeset : Typeset(FormManager.emsSize) {
             id = R.id.formInternalTypesetParent
             clipChildren = false
             clipToPadding = false
-            layoutParams = ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-            )
+            isBaselineAligned = false
             addView(MaterialTextView(context).apply {
                 id = R.id.formInternalName
                 setTextAppearance(R.style.FormAdapter_TextAppearance_Name)
@@ -39,7 +38,20 @@ object HorizontalTypeset : Typeset(FormManager.emsSize) {
                     LinearLayoutCompat.LayoutParams.WRAP_CONTENT
                 )
             })
+            layoutParams = GridLayoutManager.LayoutParams(
+                GridLayoutManager.LayoutParams.MATCH_PARENT,
+                GridLayoutManager.LayoutParams.WRAP_CONTENT
+            )
         }
+
+    override fun addView(parent: ViewGroup, view: View) {
+        parent.addView(view, 1, view.layoutParams ?: LinearLayoutCompat.LayoutParams(
+            LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+            LinearLayoutCompat.LayoutParams.WRAP_CONTENT
+        ).apply {
+            gravity = Gravity.CENTER_VERTICAL
+        })
+    }
 
     override fun onBindTypesetLayout(
         adapter: FormPartAdapter,

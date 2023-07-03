@@ -1,7 +1,5 @@
 package com.chooongg.formAdapter.data
 
-import androidx.annotation.DrawableRes
-import androidx.annotation.Px
 import com.chooongg.formAdapter.FormAdapter
 import com.chooongg.formAdapter.enum.FormEnableMode
 import com.chooongg.formAdapter.enum.FormVisibilityMode
@@ -30,7 +28,7 @@ abstract class AbstractFormData(
         return when (visibilityMode) {
             FormVisibilityMode.ALWAYS -> true
             FormVisibilityMode.ONLY_EDIT -> adapter.isEditable
-            FormVisibilityMode.ONLY_SEE -> !adapter.isEditable
+            FormVisibilityMode.ONLY_SHOW -> !adapter.isEditable
             FormVisibilityMode.NEVER -> false
         }
     }

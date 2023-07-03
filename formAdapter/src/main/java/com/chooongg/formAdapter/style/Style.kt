@@ -11,6 +11,8 @@ import com.chooongg.formAdapter.boundary.FormPaddingInfo
 import com.chooongg.formAdapter.item.BaseForm
 import com.chooongg.formAdapter.item.InternalFormGroupTitle
 import com.chooongg.formAdapter.typeset.Typeset
+import com.chooongg.utils.ext.attrResourcesId
+import com.google.android.material.shape.ShapeAppearanceModel
 
 /**
  * 表单样式
@@ -55,15 +57,7 @@ abstract class Style(val defaultTypeset: Typeset) {
         )
     }
 
-    /**
-     * 创建样式布局
-     */
-    abstract fun onCreateStyleLayout(parent: ViewGroup): ViewGroup?
-
-    /**
-     * 绑定样式布局
-     */
-    abstract fun onBindStyleLayout(adapter: FormPartAdapter, holder: FormViewHolder, item: BaseForm)
+    abstract fun onBindStyle(adapter: FormPartAdapter, holder: FormViewHolder, item: BaseForm)
 
     /**
      * 创建分组标题
@@ -74,6 +68,51 @@ abstract class Style(val defaultTypeset: Typeset) {
      * 绑定分组标题
      */
     abstract fun onBindGroupTitle(holder: FormViewHolder, item: InternalFormGroupTitle)
+
+    open fun getShapeAppearanceModel(
+        holder: FormViewHolder,
+        item: BaseForm
+    ): ShapeAppearanceModel {
+        val originalShape = if (holder.itemView.tag is ShapeAppearanceModel) {
+            holder.itemView.tag as ShapeAppearanceModel
+        } else {
+            val shapeResId = holder.itemView.attrResourcesId(
+                com.google.android.material.R.attr.shapeAppearanceCornerMedium, 0
+            )
+            val temp = ShapeAppearanceModel.builder(holder.itemView.context, shapeResId, 0).build()
+            holder.itemView.tag = temp
+            temp
+        }
+        val builder = originalShape.toBuilder()
+        if (holder.itemView.layoutDirection == View.LAYOUT_DIRECTION_LTR) {
+            if (item.marginBoundary.topType != 0 && item.marginBoundary.startType != 0) {
+                builder.setTopLeftCornerSize(originalShape.topLeftCornerSize)
+            } else builder.setTopLeftCornerSize(0f)
+            if (item.marginBoundary.topType != 0 && item.marginBoundary.endType != 0) {
+                builder.setTopRightCornerSize(originalShape.topRightCornerSize)
+            } else builder.setTopRightCornerSize(0f)
+            if (item.marginBoundary.bottomType != 0 && item.marginBoundary.startType != 0) {
+                builder.setBottomLeftCornerSize(originalShape.bottomLeftCornerSize)
+            } else builder.setBottomLeftCornerSize(0f)
+            if (item.marginBoundary.bottomType != 0 && item.marginBoundary.endType != 0) {
+                builder.setBottomRightCornerSize(originalShape.bottomRightCornerSize)
+            } else builder.setBottomRightCornerSize(0f)
+        } else {
+            if (item.marginBoundary.topType != 0 && item.marginBoundary.endType != 0) {
+                builder.setTopLeftCornerSize(originalShape.topLeftCornerSize)
+            } else builder.setTopLeftCornerSize(0f)
+            if (item.marginBoundary.topType != 0 && item.marginBoundary.startType != 0) {
+                builder.setTopRightCornerSize(originalShape.topRightCornerSize)
+            } else builder.setTopRightCornerSize(0f)
+            if (item.marginBoundary.bottomType != 0 && item.marginBoundary.endType != 0) {
+                builder.setBottomLeftCornerSize(originalShape.bottomLeftCornerSize)
+            } else builder.setBottomLeftCornerSize(0f)
+            if (item.marginBoundary.bottomType != 0 && item.marginBoundary.startType != 0) {
+                builder.setBottomRightCornerSize(originalShape.bottomRightCornerSize)
+            } else builder.setBottomRightCornerSize(0f)
+        }
+        return builder.build()
+    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

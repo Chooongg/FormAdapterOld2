@@ -1,5 +1,6 @@
 package com.chooongg.formAdapter.typeset
 
+import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.GravityInt
 import androidx.annotation.Px
@@ -25,6 +26,8 @@ abstract class Typeset(val ems: Int = FormManager.emsSize) {
     open fun contentWidth(): Int = ViewGroup.LayoutParams.MATCH_PARENT
 
     abstract fun onCreateTypesetLayout(parent: ViewGroup, paddingInfo: FormPaddingInfo): ViewGroup?
+
+    abstract fun addView(parent: ViewGroup, view: View)
 
     abstract fun onBindTypesetLayout(
         adapter: FormPartAdapter,

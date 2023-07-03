@@ -29,6 +29,8 @@ object FormSelectorProvider : BaseFormProvider() {
         minimumWidth = 0
         minHeight = 0
         minWidth = 0
+        insetBottom = 0
+        insetTop = 0
         iconTint = ColorStateList.valueOf(hintTextColors.defaultColor)
         iconGravity = MaterialButton.ICON_GRAVITY_END
         setIconResource(R.drawable.ic_form_arrow_down)

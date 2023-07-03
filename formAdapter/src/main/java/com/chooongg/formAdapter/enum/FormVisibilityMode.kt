@@ -12,7 +12,7 @@ enum class FormVisibilityMode {
     /**
      * 仅只读时可见
      */
-    ONLY_SEE,
+    ONLY_SHOW,
 
     /**
      * 仅编辑时可见

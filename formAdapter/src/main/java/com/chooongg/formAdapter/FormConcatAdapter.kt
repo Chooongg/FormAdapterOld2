@@ -212,8 +212,8 @@ open class FormConcatAdapter constructor(isEditable: Boolean) : RecyclerView.Ada
 
     private val typePool = ArrayList<FormTypeInfo>()
 
-    internal fun getItemViewType(style: Style, typeset: Typeset, provider: BaseFormProvider): Int {
-        val info = FormTypeInfo(style, typeset, provider)
+    internal fun getItemViewType(typeset: Typeset, provider: BaseFormProvider): Int {
+        val info = FormTypeInfo(typeset, provider)
         if (!typePool.contains(info)) {
             typePool.add(info)
         }

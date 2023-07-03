@@ -53,4 +53,16 @@ object FormDividerProvider : BaseFormProvider() {
             }
         }
     }
+
+    override fun onBindItemViewForeground(
+        adapter: FormPartAdapter,
+        holder: FormViewHolder,
+        item: BaseForm
+    ) = null
+
+    override fun onBindItemViewLongClick(
+        adapter: FormPartAdapter,
+        holder: FormViewHolder,
+        item: BaseForm
+    ) = Unit
 }

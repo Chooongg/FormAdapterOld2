@@ -1,6 +1,7 @@
 package com.chooongg.formAdapter.provider
 
 import android.animation.AnimatorInflater
+import android.graphics.drawable.Drawable
 import android.view.Gravity
 import android.view.ViewGroup
 import android.view.ViewGroup.MarginLayoutParams
@@ -15,6 +16,7 @@ import com.chooongg.formAdapter.R
 import com.chooongg.formAdapter.item.BaseForm
 import com.chooongg.formAdapter.item.FormButton
 import com.chooongg.formAdapter.typeset.Typeset
+import com.chooongg.utils.ext.doOnClick
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.theme.overlay.MaterialThemeOverlay
 
@@ -150,6 +152,22 @@ object FormButtonProvider : BaseFormProvider() {
                     gravity = contentGravity
                 }
             }
+        }
+    }
+
+    override fun onBindItemViewForeground(
+        adapter: FormPartAdapter,
+        holder: FormViewHolder,
+        item: BaseForm
+    ) = null
+
+    override fun onBindItemViewLongClick(
+        adapter: FormPartAdapter,
+        holder: FormViewHolder,
+        item: BaseForm
+    ) {
+        holder.getView<MaterialButton>(R.id.formInternalContent).doOnClick {
+
         }
     }
 }

@@ -43,7 +43,7 @@ abstract class AbstractMenuFormData(name: CharSequence?) : AbstractFormData(name
         return when (menuVisibilityMode) {
             FormVisibilityMode.ALWAYS -> true
             FormVisibilityMode.ONLY_EDIT -> isEditable
-            FormVisibilityMode.ONLY_SEE -> !isEditable
+            FormVisibilityMode.ONLY_SHOW -> !isEditable
             FormVisibilityMode.NEVER -> false
         }
     }
