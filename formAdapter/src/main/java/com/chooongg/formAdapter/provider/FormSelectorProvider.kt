@@ -43,7 +43,7 @@ object FormSelectorProvider : BaseFormProvider() {
         insetTop = 0
         iconSize = resources.getDimensionPixelSize(R.dimen.formIconSize)
         iconTint = ColorStateList.valueOf(hintTextColors.defaultColor)
-        iconGravity = MaterialButton.ICON_GRAVITY_END
+        iconGravity = MaterialButton.ICON_GRAVITY_TEXT_END
         setIconResource(R.drawable.ic_form_arrow_down)
         setTextAppearance(R.style.FormAdapter_TextAppearance_Content)
         setPadding(
