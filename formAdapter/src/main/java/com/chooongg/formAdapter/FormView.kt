@@ -5,6 +5,7 @@ import android.content.res.Resources
 import android.util.AttributeSet
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.RecyclerView
+import androidx.startup.Initializer
 import com.chooongg.utils.ext.getActivity
 import com.chooongg.utils.ext.hideIME
 import com.chooongg.utils.ext.resDimensionPixelSize
@@ -39,8 +40,12 @@ class FormView @JvmOverloads constructor(
                 }
             }
         })
-        itemAnimator = object : DefaultItemAnimator() {
+        itemAnimator = object:FormItemAnimator(){
             init {
+                changeDuration = 5000
+                moveDuration = 5000
+                removeDuration = 5000
+                addDuration = 5000
             }
         }
     }
@@ -53,7 +58,7 @@ class FormView @JvmOverloads constructor(
         }
     }
 
-    override fun setLayoutManager(layout: RecyclerView.LayoutManager?) {
+    override fun setLayoutManager(layout: LayoutManager?) {
         if (layout is FormLayoutManager) {
             layout.setPadding(formPaddingStart, formPaddingEnd)
         }

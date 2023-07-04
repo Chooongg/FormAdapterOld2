@@ -21,7 +21,8 @@ import com.chooongg.formAdapter.enum.FormEnableMode
 import com.chooongg.formAdapter.enum.FormVisibilityMode
 import com.chooongg.formAdapter.option.Option
 import com.chooongg.formAdapter.simple.databinding.FragmentBasicBinding
-import com.chooongg.formAdapter.style.MaterialCardElevatedStyle
+import com.chooongg.formAdapter.style.CardElevatedStyle
+import com.chooongg.formAdapter.style.CardFilledStyle
 
 class BasicFragment : Fragment() {
 
@@ -47,7 +48,7 @@ class BasicFragment : Fragment() {
 
     class BasicViewModel : ViewModel() {
         val adapter = FormAdapter(true) {
-            plusPart(MaterialCardElevatedStyle()) {
+            for (i in 0..6) plusPart(CardElevatedStyle()) {
                 plusGroup {
                     addLabel("Android FormAdapter") {
                         contentGravity = Gravity.CENTER_HORIZONTAL
@@ -60,6 +61,7 @@ class BasicFragment : Fragment() {
                         contentGravity = Gravity.CENTER_HORIZONTAL
                     }
                     addInput("Input", "input") {
+                        visibilityMode = FormVisibilityMode.ONLY_EDIT
                         maxLines = 3
                     }
                     addSelector("Selector", "selector") {
@@ -76,6 +78,9 @@ class BasicFragment : Fragment() {
                     }
                     addDivider() {
                         matchParentWidth = true
+                    }
+                    addSwitch("Switch", "switch") {
+
                     }
                     addSwitch("Switch", "switch") {
 

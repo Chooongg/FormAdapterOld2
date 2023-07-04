@@ -193,7 +193,7 @@ class FormPartAdapter internal constructor(
         val typesetLayout = typeset.onCreateTypesetLayout(parent, style.paddingInfo)
         val itemView = formAdapter.getItemProviderForItemViewType(viewType)
             .onCreateItemView(this, typeset, typesetLayout ?: parent)
-        if (typesetLayout != null) typeset.addView(typesetLayout,itemView)
+        if (typesetLayout != null) typeset.addView(typesetLayout, itemView)
         return FormViewHolder(typesetLayout ?: itemView)
     }
 
@@ -223,8 +223,19 @@ class FormPartAdapter internal constructor(
         itemProvider.onBindItemViewLongClick(this, holder, item)
     }
 
+    override fun onViewAttachedToWindow(holder: FormViewHolder) {
+        formAdapter.getItemProviderForItemViewType(holder.itemViewType)
+            .onViewAttachedToWindow(holder)
+    }
+
+    override fun onViewDetachedFromWindow(holder: FormViewHolder) {
+        formAdapter.getItemProviderForItemViewType(holder.itemViewType)
+            .onViewDetachedFromWindow(holder)
+    }
+
     override fun onViewRecycled(holder: FormViewHolder) {
-        formAdapter.getItemProviderForItemViewType(holder.itemViewType).onItemRecycler(holder)
+        formAdapter.getItemProviderForItemViewType(holder.itemViewType)
+            .onItemRecycler(holder)
     }
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {

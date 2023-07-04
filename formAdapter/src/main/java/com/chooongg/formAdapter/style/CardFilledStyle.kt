@@ -2,9 +2,9 @@ package com.chooongg.formAdapter.style
 
 import android.content.res.ColorStateList
 import android.view.ViewGroup
-import android.view.ViewGroup.MarginLayoutParams
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updatePaddingRelative
+import com.chooongg.formAdapter.FormColorStateListBlock
 import com.chooongg.formAdapter.FormPartAdapter
 import com.chooongg.formAdapter.FormViewHolder
 import com.chooongg.formAdapter.R
@@ -18,15 +18,15 @@ import com.google.android.material.elevation.ElevationOverlayProvider
 import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.textview.MaterialTextView
 
-class MaterialCardElevatedStyle(
-    val customElevation: Float? = null,
+class CardFilledStyle(
+    val color: FormColorStateListBlock? = null,
     defaultTypeset: Typeset = HorizontalTypeset
 ) : Style(defaultTypeset) {
 
     override fun onBindStyle(adapter: FormPartAdapter, holder: FormViewHolder, item: BaseForm) {
         holder.itemView.isEnabled = item.isRealEnable(adapter.formAdapter)
         holder.itemView.clipToOutline = true
-        holder.itemView.updateLayoutParams<MarginLayoutParams> {
+        holder.itemView.updateLayoutParams<ViewGroup.MarginLayoutParams> {
             topMargin = when (item.marginBoundary.topType) {
                 Boundary.GLOBAL -> marginInfo.verticalGlobal
                 Boundary.LOCAL -> marginInfo.verticalLocal
@@ -39,14 +39,16 @@ class MaterialCardElevatedStyle(
             }
         }
         val shape = getShapeAppearanceModel(holder, item)
-        holder.itemView.elevation = customElevation ?: holder.itemView.attrChildDimensionPixelSize(
-            com.google.android.material.R.attr.materialCardViewElevatedStyle,
-            com.google.android.material.R.attr.cardElevation, 0
-        ).toFloat()
         val shapeDrawable = MaterialShapeDrawable(shape).apply {
             val provider = ElevationOverlayProvider(holder.itemView.context)
-            fillColor = ColorStateList.valueOf(
-                provider.compositeOverlay(provider.themeSurfaceColor, holder.itemView.elevation)
+            fillColor = color?.invoke(holder.itemView.context) ?: ColorStateList.valueOf(
+                provider.compositeOverlay(
+                    provider.themeSurfaceColor,
+                    holder.itemView.attrChildDimensionPixelSize(
+                        com.google.android.material.R.attr.materialCardViewElevatedStyle,
+                        com.google.android.material.R.attr.cardElevation, 0
+                    ).toFloat()
+                )
             )
         }
         holder.itemView.background = shapeDrawable
@@ -71,17 +73,17 @@ class MaterialCardElevatedStyle(
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other !is MaterialCardElevatedStyle) return false
+        if (other !is CardFilledStyle) return false
         if (!super.equals(other)) return false
 
-        if (customElevation != other.customElevation) return false
+        if (color != other.color) return false
 
         return true
     }
 
     override fun hashCode(): Int {
         var result = super.hashCode()
-        result = 31 * result + (customElevation?.hashCode() ?: 0)
+        result = 31 * result + (color?.hashCode() ?: 0)
         return result
     }
 }

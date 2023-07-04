@@ -89,16 +89,24 @@ abstract class BaseFormProvider {
         }
     }
 
+    open fun onViewAttachedToWindow(holder: FormViewHolder) = Unit
+
+    open fun onViewDetachedFromWindow(holder: FormViewHolder) = Unit
+
     open fun onItemRecycler(holder: FormViewHolder) = Unit
 
-    protected fun changeContent(adapter: FormPartAdapter, item: BaseForm, content: Any?) {
+    protected fun changeContentAndNotifyLinkage(
+        adapter: FormPartAdapter,
+        item: BaseForm,
+        content: Any?
+    ) {
         if (item.content != content) {
             item.content = content
             item.linkageBlock?.invoke(LinkageForm(adapter), item.field, item.content)
         }
     }
 
-    protected fun changeExtension(
+    protected fun changeExtensionAndNotifyLinkage(
         adapter: FormPartAdapter,
         item: BaseForm,
         field: String,

@@ -38,7 +38,7 @@ class MaterialCardOutlinedStyle(
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other !is MaterialCardElevatedStyle) return false
+        if (other !is CardElevatedStyle) return false
         if (!super.equals(other)) return false
 
         return true

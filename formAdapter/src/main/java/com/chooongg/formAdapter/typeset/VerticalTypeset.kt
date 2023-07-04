@@ -4,6 +4,7 @@ import android.graphics.drawable.ColorDrawable
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import com.chooongg.formAdapter.FormPartAdapter
@@ -24,8 +25,6 @@ object VerticalTypeset : Typeset() {
             clipToPadding = false
             id = R.id.formInternalTypesetParent
             orientation = LinearLayoutCompat.VERTICAL
-            clipChildren = false
-            clipToPadding = false
             showDividers = LinearLayoutCompat.SHOW_DIVIDER_MIDDLE
             dividerDrawable = object : ColorDrawable() {
                 override fun getIntrinsicWidth() = paddingInfo.horizontalLocal
@@ -53,9 +52,9 @@ object VerticalTypeset : Typeset() {
 
     override fun addView(parent: ViewGroup, view: View) {
         parent.addView(
-            view, view.layoutParams ?: LinearLayoutCompat.LayoutParams(
-                LinearLayoutCompat.LayoutParams.MATCH_PARENT,
-                LinearLayoutCompat.LayoutParams.WRAP_CONTENT
+            view, view.layoutParams ?: FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.WRAP_CONTENT
             )
         )
     }

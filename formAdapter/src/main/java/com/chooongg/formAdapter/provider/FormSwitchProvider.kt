@@ -20,13 +20,22 @@ object FormSwitchProvider : BaseFormProvider() {
         typeset: Typeset,
         parent: ViewGroup
     ) = FrameLayout(parent.context).apply {
-        id = R.id.formInternalContent
         clipChildren = false
         clipToPadding = false
+        id = R.id.formInternalContent
         val switch = MaterialSwitch(context).apply {
+            clipChildren = false
+            clipToPadding = false
             id = R.id.formInternalContentChild
-//            minimumHeight = 0
-//            minHeight = 0
+            setTextAppearance(R.style.FormAdapter_TextAppearance_Content)
+            setPadding(
+                adapter.style.paddingInfo.horizontalLocal,
+                adapter.style.paddingInfo.verticalLocal,
+                adapter.style.paddingInfo.horizontalLocal,
+                adapter.style.paddingInfo.verticalLocal,
+            )
+            minimumHeight = 0
+            minHeight = 0
             layoutParams = FrameLayout.LayoutParams(
                 FrameLayout.LayoutParams.WRAP_CONTENT,
                 FrameLayout.LayoutParams.WRAP_CONTENT

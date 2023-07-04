@@ -55,6 +55,14 @@ object FormInputProvider : BaseFormProvider() {
         )
     }
 
+    override fun onViewAttachedToWindow(holder: FormViewHolder) {
+        with(holder.getView<TextInputLayout>(R.id.formInternalContent)) {
+            val temp = isEnabled
+            isEnabled = false
+            if (temp) isEnabled = true
+        }
+    }
+
     override fun onBindItemView(
         adapter: FormPartAdapter,
         typeset: Typeset,
@@ -71,16 +79,17 @@ object FormInputProvider : BaseFormProvider() {
         }
         with(holder.getView<TextInputEditText>(R.id.formInternalContentChild)) {
             if (tag is TextWatcher) removeTextChangedListener(tag as TextWatcher)
-            setText(item.getContentText())
+            setText(item.content as? CharSequence ?: item.getContentText())
             hint = item.hint ?: resources.getString(R.string.formDefaultHintInput)
             gravity = typeset.getContentGravity(adapter, item)
-            minLines = itemInput?.minLines ?: 0
-            maxLines = itemInput?.maxLines ?: Int.MAX_VALUE
-            isSingleLine = maxLines <= 1
+            if (maxLines <= 1) {
+                setSingleLine()
+            } else {
+                minLines = itemInput?.minLines ?: 0
+                maxLines = itemInput?.maxLines ?: Int.MAX_VALUE
+            }
             val watcher = doAfterTextChanged { editable ->
-                item.content = editable
-                // TODO 更新Content通知
-//                adapter.globalAdapter.listener?.onFormContentChanged(adapter, this, it)
+                changeContentAndNotifyLinkage(adapter, item, editable)
             }
             tag = watcher
             setOnEditorActionListener { _, actionId, _ ->

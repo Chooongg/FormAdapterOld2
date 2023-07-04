@@ -21,8 +21,6 @@ object HorizontalTypeset : Typeset(FormManager.emsSize) {
             clipChildren = false
             clipToPadding = false
             id = R.id.formInternalTypesetParent
-            clipChildren = false
-            clipToPadding = false
             isBaselineAligned = false
             addView(MaterialTextView(context).apply {
                 id = R.id.formInternalName
