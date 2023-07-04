@@ -36,7 +36,7 @@ abstract class BaseOptionForm(name: CharSequence?, field: String?) : BaseForm(na
 
     protected var optionResult: OptionResult = OptionResult.NotLoading
 
-    protected val options: List<BaseOption>?
+    val options: List<BaseOption>?
         get() = localOptions ?: (optionResult as? OptionResult.Success)?.options
 
     fun localOptions(local: List<BaseOption>) {

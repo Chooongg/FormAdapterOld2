@@ -3,9 +3,9 @@ package com.chooongg.formAdapter
 import android.content.Context
 import android.content.res.Resources
 import android.util.AttributeSet
-import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.constraintlayout.motion.utils.Easing
+import androidx.constraintlayout.motion.widget.MotionInterpolator
 import androidx.recyclerview.widget.RecyclerView
-import androidx.startup.Initializer
 import com.chooongg.utils.ext.getActivity
 import com.chooongg.utils.ext.hideIME
 import com.chooongg.utils.ext.resDimensionPixelSize
@@ -40,14 +40,7 @@ class FormView @JvmOverloads constructor(
                 }
             }
         })
-        itemAnimator = object:FormItemAnimator(){
-            init {
-                changeDuration = 5000
-                moveDuration = 5000
-                removeDuration = 5000
-                addDuration = 5000
-            }
-        }
+        itemAnimator = FormItemAnimator()
     }
 
     fun setPadding(paddingVertical: Int, paddingHorizontal: Int) {

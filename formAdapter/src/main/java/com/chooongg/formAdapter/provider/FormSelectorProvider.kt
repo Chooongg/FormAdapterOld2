@@ -2,15 +2,23 @@ package com.chooongg.formAdapter.provider
 
 import android.annotation.SuppressLint
 import android.content.res.ColorStateList
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.style.ForegroundColorSpan
+import android.view.Gravity
 import android.view.ViewGroup
 import android.view.ViewGroup.MarginLayoutParams
+import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.updateLayoutParams
 import com.chooongg.formAdapter.FormPartAdapter
 import com.chooongg.formAdapter.FormViewHolder
 import com.chooongg.formAdapter.R
+import com.chooongg.formAdapter.enum.FormSelectorOpenMode
 import com.chooongg.formAdapter.item.BaseForm
 import com.chooongg.formAdapter.item.FormSelector
 import com.chooongg.formAdapter.typeset.Typeset
+import com.chooongg.utils.ext.attrColor
+import com.chooongg.utils.ext.doOnClick
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.progressindicator.CircularProgressIndicatorSpec
 import com.google.android.material.progressindicator.DeterminateDrawable
@@ -63,14 +71,66 @@ object FormSelectorProvider : BaseFormProvider() {
             text = item.getContentText()
             hint = item.hint ?: resources.getString(R.string.fromDefaultHintNone)
             gravity = typeset.getContentGravity(adapter, item)
-            iconSize = itemSelector?.iconSize
-                ?: context.resources.getDimensionPixelSize(R.dimen.formIconSize)
             updateLayoutParams<ViewGroup.LayoutParams> {
                 width = typeset.contentWidth()
+            }
+            doOnClick {
+                onClickButton(adapter, holder, item)
+
             }
 //            icon = drawable
 //            drawable.start()
         }
+    }
+
+    private fun onClickButton(adapter: FormPartAdapter, holder: FormViewHolder, item: BaseForm) {
+        if (item !is FormSelector) return
+        if (!item.options.isNullOrEmpty()) {
+            show(adapter, holder, item)
+        }
+    }
+
+    private fun show(adapter: FormPartAdapter, holder: FormViewHolder, item: FormSelector) {
+        adapter.formAdapter.clearFocus()
+        when (item.openMode) {
+            FormSelectorOpenMode.POPUPMENU -> showPopupMenu(adapter, holder, item)
+            FormSelectorOpenMode.PAGE -> showPage(adapter, holder, item)
+            FormSelectorOpenMode.AUTO -> {
+                if ((item.options?.size ?: 0) > 30) showPage(adapter, holder, item)
+                else showPopupMenu(adapter, holder, item)
+            }
+        }
+    }
+
+    private fun showPopupMenu(
+        adapter: FormPartAdapter,
+        holder: FormViewHolder,
+        item: FormSelector
+    ) {
+        val view = holder.getView<MaterialButton>(R.id.formInternalContent)
+        val popupMenu = PopupMenu(view.context, view, Gravity.END)
+        popupMenu.setForceShowIcon(true)
+        item.options!!.forEachIndexed { index, option ->
+            popupMenu.menu.add(0, index, index, if (item.content == option) {
+                SpannableString(option.getName()).apply {
+                    setSpan(
+                        ForegroundColorSpan(view.attrColor(androidx.appcompat.R.attr.colorPrimary)),
+                        0, count(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE
+                    )
+                }
+            } else option.getName())
+        }
+        popupMenu.setOnMenuItemClickListener {
+            val option =
+                item.options!!.getOrNull(it.itemId) ?: return@setOnMenuItemClickListener false
+            changeContentAndNotifyLinkage(adapter, item, option)
+            view.text = item.getContentText()
+            true
+        }
+        popupMenu.show()
+    }
+
+    private fun showPage(adapter: FormPartAdapter, holder: FormViewHolder, item: FormSelector) {
     }
 
     override fun onItemRecycler(holder: FormViewHolder) {

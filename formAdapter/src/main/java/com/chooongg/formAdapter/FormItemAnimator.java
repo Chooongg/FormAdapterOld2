@@ -3,13 +3,13 @@ package com.chooongg.formAdapter;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.TimeInterpolator;
-import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.view.View;
 import android.view.ViewPropertyAnimator;
 
 import androidx.annotation.NonNull;
 import androidx.core.view.ViewCompat;
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
 
@@ -166,9 +166,11 @@ public class FormItemAnimator extends SimpleItemAnimator {
         final View view = holder.itemView;
         final ViewPropertyAnimator animation = view.animate();
         mRemoveAnimations.add(holder);
+        final float elevation = view.getElevation();
         animation.setDuration(getRemoveDuration()).alpha(0).setListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationStart(Animator animator) {
+                view.setElevation(0);
                 dispatchRemoveStarting(holder);
             }
 
@@ -176,6 +178,7 @@ public class FormItemAnimator extends SimpleItemAnimator {
             public void onAnimationEnd(Animator animator) {
                 animation.setListener(null);
                 view.setAlpha(1);
+                view.setElevation(elevation);
                 dispatchRemoveFinished(holder);
                 mRemoveAnimations.remove(holder);
                 dispatchFinishedWhenDone();
@@ -196,10 +199,12 @@ public class FormItemAnimator extends SimpleItemAnimator {
         final View view = holder.itemView;
         final ViewPropertyAnimator animation = view.animate();
         mAddAnimations.add(holder);
+        final float elevation = view.getElevation();
         animation.alpha(1).setDuration(getAddDuration())
                 .setListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationStart(Animator animator) {
+                        view.setElevation(0);
                         dispatchAddStarting(holder);
                     }
 
@@ -210,6 +215,7 @@ public class FormItemAnimator extends SimpleItemAnimator {
 
                     @Override
                     public void onAnimationEnd(Animator animator) {
+                        view.setElevation(elevation);
                         animation.setListener(null);
                         dispatchAddFinished(holder);
                         mAddAnimations.remove(holder);
@@ -344,8 +350,9 @@ public class FormItemAnimator extends SimpleItemAnimator {
         if (newView != null) {
             final ViewPropertyAnimator newViewAnimation = newView.animate();
             mChangeAnimations.add(changeInfo.newHolder);
+            newView.setAlpha(1f);
             newViewAnimation.translationX(0).translationY(0).setDuration(getChangeDuration())
-                    .alpha(1).setListener(new AnimatorListenerAdapter() {
+                    .setListener(new AnimatorListenerAdapter() {
                         @Override
                         public void onAnimationStart(Animator animator) {
                             dispatchChangeStarting(changeInfo.newHolder, false);
@@ -354,7 +361,6 @@ public class FormItemAnimator extends SimpleItemAnimator {
                         @Override
                         public void onAnimationEnd(Animator animator) {
                             newViewAnimation.setListener(null);
-                            newView.setAlpha(1);
                             newView.setTranslationX(0);
                             newView.setTranslationY(0);
                             dispatchChangeFinished(changeInfo.newHolder, false);
@@ -472,7 +478,7 @@ public class FormItemAnimator extends SimpleItemAnimator {
     @SuppressLint("Recycle")
     private void resetAnimation(RecyclerView.ViewHolder holder) {
         if (sDefaultInterpolator == null) {
-            sDefaultInterpolator = new ValueAnimator().getInterpolator();
+            sDefaultInterpolator = new FastOutSlowInInterpolator();
         }
         holder.itemView.animate().setInterpolator(sDefaultInterpolator);
         endAnimation(holder);

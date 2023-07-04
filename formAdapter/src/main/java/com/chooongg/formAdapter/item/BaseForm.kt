@@ -1,6 +1,7 @@
 package com.chooongg.formAdapter.item
 
 import androidx.annotation.GravityInt
+import androidx.annotation.RestrictTo
 import com.chooongg.formAdapter.FormAdapter
 import com.chooongg.formAdapter.FormLinkageBlock
 import com.chooongg.formAdapter.boundary.Boundary

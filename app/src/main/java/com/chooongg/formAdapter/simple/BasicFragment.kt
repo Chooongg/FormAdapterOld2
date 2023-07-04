@@ -55,6 +55,7 @@ class BasicFragment : Fragment() {
                     }
                     addButton("IsEditable", "isEditable") {
                         enableMode = FormEnableMode.ALWAYS
+                        menuText = ""
                     }
                     addTip("这是一个标签") {
                         visibilityMode = FormVisibilityMode.ONLY_EDIT
@@ -72,7 +73,13 @@ class BasicFragment : Fragment() {
                                 Option("选项1"),
                                 Option("选项2"),
                                 Option("选项3"),
-                                Option("选项4")
+                                Option("选项4"),
+                                Option("选项5"),
+                                Option("选项6"),
+                                Option("选项7"),
+                                Option("选项8"),
+                                Option("选项9"),
+                                Option("选项10"),
                             )
                         )
                     }
