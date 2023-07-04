@@ -83,6 +83,24 @@ class BasicFragment : Fragment() {
                             )
                         )
                     }
+                    addSelector("Selector", "selector") {
+                        isMust = true
+                        content = "FormSelector"
+                        localOptions(
+                            listOf(
+                                Option("选项1"),
+                                Option("选项2"),
+                                Option("选项3"),
+                                Option("选项4"),
+                                Option("选项5"),
+                                Option("选项6"),
+                                Option("选项7"),
+                                Option("选项8"),
+                                Option("选项9"),
+                                Option("选项10"),
+                            )
+                        )
+                    }
                     addDivider() {
                         matchParentWidth = true
                     }

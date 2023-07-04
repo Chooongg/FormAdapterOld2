@@ -6,8 +6,10 @@ import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
 import android.view.Gravity
+import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.MarginLayoutParams
+import androidx.appcompat.view.menu.MenuPopupHelper
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.updateLayoutParams
 import com.chooongg.formAdapter.FormPartAdapter
@@ -39,6 +41,7 @@ object FormSelectorProvider : BaseFormProvider() {
         minWidth = 0
         insetBottom = 0
         insetTop = 0
+        iconSize = resources.getDimensionPixelSize(R.dimen.formIconSize)
         iconTint = ColorStateList.valueOf(hintTextColors.defaultColor)
         iconGravity = MaterialButton.ICON_GRAVITY_END
         setIconResource(R.drawable.ic_form_arrow_down)
@@ -109,7 +112,7 @@ object FormSelectorProvider : BaseFormProvider() {
     ) {
         val view = holder.getView<MaterialButton>(R.id.formInternalContent)
         val popupMenu = PopupMenu(view.context, view, Gravity.END)
-        popupMenu.setForceShowIcon(true)
+        configPopupMenu(popupMenu, view)
         item.options!!.forEachIndexed { index, option ->
             popupMenu.menu.add(0, index, index, if (item.content == option) {
                 SpannableString(option.getName()).apply {
@@ -131,6 +134,29 @@ object FormSelectorProvider : BaseFormProvider() {
     }
 
     private fun showPage(adapter: FormPartAdapter, holder: FormViewHolder, item: FormSelector) {
+    }
+
+    @Suppress("INACCESSIBLE_TYPE")
+    @SuppressLint("RestrictedApi")
+    private fun configPopupMenu(popupMenu: PopupMenu, view: MaterialButton) {
+        try {
+            val mPopupHelper = popupMenu.javaClass.getDeclaredField("mPopup")
+
+            mPopupHelper.isAccessible = true
+
+            val mHelper = mPopupHelper[popupMenu] as MenuPopupHelper
+            val standardMenuClass = Class.forName("android.support.v7.view.menu.StandardMenuPopup")
+            // 设置不测量item宽度
+            val mHasContentWidth = standardMenuClass.getDeclaredField("mHasContentWidth")
+            mHasContentWidth.isAccessible = true
+            mHasContentWidth.setBoolean(mHelper.popup, true)
+            // 设置弹出框宽度
+            val mContentWidth = standardMenuClass.getDeclaredField("mContentWidth")
+            mContentWidth.isAccessible = true
+            mContentWidth.setInt(mHelper.popup, view.width)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     override fun onItemRecycler(holder: FormViewHolder) {
