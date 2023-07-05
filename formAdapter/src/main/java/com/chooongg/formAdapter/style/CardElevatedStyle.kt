@@ -18,7 +18,7 @@ import com.google.android.material.elevation.ElevationOverlayProvider
 import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.textview.MaterialTextView
 
-class CardElevatedStyle(
+open class CardElevatedStyle(
     val customElevation: Float? = null,
     defaultTypeset: Typeset = HorizontalTypeset
 ) : Style(defaultTypeset) {
@@ -43,13 +43,13 @@ class CardElevatedStyle(
             com.google.android.material.R.attr.materialCardViewElevatedStyle,
             com.google.android.material.R.attr.cardElevation, 0
         ).toFloat()
-        val shapeDrawable = MaterialShapeDrawable(shape).apply {
-            val provider = ElevationOverlayProvider(holder.itemView.context)
-            fillColor = ColorStateList.valueOf(
-                provider.compositeOverlay(provider.themeSurfaceColor, holder.itemView.elevation)
-            )
-        }
-        holder.itemView.background = shapeDrawable
+        if (holder.itemView.background is MaterialShapeDrawable) {
+            (holder.itemView.background as MaterialShapeDrawable).shapeAppearanceModel = shape
+        } else holder.itemView.background = MaterialShapeDrawable(shape)
+        val provider = ElevationOverlayProvider(holder.itemView.context)
+        (holder.itemView.background as MaterialShapeDrawable).fillColor = ColorStateList.valueOf(
+            provider.compositeOverlay(provider.themeSurfaceColor, holder.itemView.elevation)
+        )
     }
 
     override fun onCreateGroupTitle(parent: ViewGroup) = MaterialTextView(parent.context).apply {

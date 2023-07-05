@@ -1,7 +1,7 @@
 package com.chooongg.formAdapter.item
 
+import android.content.Context
 import androidx.annotation.GravityInt
-import androidx.annotation.RestrictTo
 import com.chooongg.formAdapter.FormAdapter
 import com.chooongg.formAdapter.FormLinkageBlock
 import com.chooongg.formAdapter.boundary.Boundary
@@ -63,10 +63,6 @@ abstract class BaseForm(
      */
     open var isMustSingleColumn: Boolean = false
 
-
-    //</editor-fold>
-
-    //<editor-fold desc="菜单 Menu">
 
     //</editor-fold>
 
@@ -284,5 +280,5 @@ abstract class BaseForm(
     /**
      * 获取内容文本
      */
-    open fun getContentText(): CharSequence? = content?.toString()
+    open fun getContentText(context: Context): CharSequence? = content?.toString()
 }

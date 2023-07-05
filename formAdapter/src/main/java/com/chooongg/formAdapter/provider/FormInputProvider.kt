@@ -79,7 +79,7 @@ object FormInputProvider : BaseFormProvider() {
         }
         with(holder.getView<TextInputEditText>(R.id.formInternalContentChild)) {
             if (tag is TextWatcher) removeTextChangedListener(tag as TextWatcher)
-            setText(item.content as? CharSequence ?: item.getContentText())
+            setText(item.content as? CharSequence ?: item.getContentText(context))
             hint = item.hint ?: resources.getString(R.string.formDefaultHintInput)
             gravity = typeset.getContentGravity(adapter, item)
             if (maxLines <= 1) {

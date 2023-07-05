@@ -1,8 +1,6 @@
 package com.chooongg.formAdapter.provider
 
-import android.content.res.ColorStateList
 import android.graphics.drawable.Drawable
-import android.graphics.drawable.RippleDrawable
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.PopupMenu
@@ -12,8 +10,6 @@ import com.chooongg.formAdapter.data.LinkageForm
 import com.chooongg.formAdapter.item.BaseForm
 import com.chooongg.formAdapter.typeset.Typeset
 import com.chooongg.utils.ClipboardUtils
-import com.chooongg.utils.ext.attrColor
-import com.google.android.material.shape.MaterialShapeDrawable
 
 /**
  * 继承此类的子类请使用 object 修饰
@@ -45,24 +41,20 @@ abstract class BaseFormProvider {
         adapter: FormPartAdapter,
         holder: FormViewHolder,
         item: BaseForm
-    ): Drawable? = RippleDrawable(
-        ColorStateList.valueOf(
-            holder.itemView.attrColor(androidx.appcompat.R.attr.colorControlHighlight)
-        ),
-        null,
-        holder.itemView.background ?: MaterialShapeDrawable(
-            adapter.style.getShapeAppearanceModel(holder, item)
-        )
-    )
+    ): Drawable? = null
+
+    open fun isEnableItemClick(): Boolean = false
 
     open fun onBindItemViewClick(
         adapter: FormPartAdapter,
         holder: FormViewHolder,
         item: BaseForm
     ) {
-        holder.itemView.setOnClickListener {
+        if (isEnableItemClick()) {
+            holder.itemView.setOnClickListener {
 
-        }
+            }
+        } else holder.itemView.setOnClickListener(null)
     }
 
     open fun onBindItemViewLongClick(
@@ -73,13 +65,13 @@ abstract class BaseFormProvider {
         holder.itemView.setOnLongClickListener { view ->
             val popupMenu = PopupMenu(view.context, view)
             popupMenu.menu.add(0, 0, 0, "复制名称")
-            if (item.getContentText() != null) {
+            if (item.getContentText(view.context) != null) {
                 popupMenu.menu.add(0, 1, 1, "复制内容")
             }
             popupMenu.setOnMenuItemClickListener {
                 when (it.itemId) {
                     0 -> ClipboardUtils.copyText(item.name)
-                    1 -> ClipboardUtils.copyText(item.getContentText())
+                    1 -> ClipboardUtils.copyText(item.getContentText(view.context))
                     else -> return@setOnMenuItemClickListener false
                 }
                 true

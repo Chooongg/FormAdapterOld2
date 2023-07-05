@@ -2,7 +2,6 @@ package com.chooongg.formAdapter.provider
 
 import android.annotation.SuppressLint
 import android.content.res.ColorStateList
-import android.graphics.drawable.Drawable
 import android.graphics.drawable.RippleDrawable
 import android.util.TypedValue
 import android.view.Gravity

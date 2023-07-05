@@ -3,9 +3,6 @@ package com.chooongg.formAdapter.provider
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.res.ColorStateList
-import android.text.SpannableString
-import android.text.Spanned
-import android.text.style.ForegroundColorSpan
 import android.view.Gravity
 import android.view.ViewGroup
 import android.view.ViewGroup.MarginLayoutParams
@@ -24,8 +21,8 @@ import com.chooongg.utils.ext.attrColor
 import com.chooongg.utils.ext.doOnClick
 import com.chooongg.utils.ext.getActivity
 import com.chooongg.utils.ext.showToast
+import com.chooongg.utils.ext.style
 import com.google.android.material.button.MaterialButton
-import com.google.android.material.progressindicator.CircularProgressIndicatorSpec
 import com.google.android.material.progressindicator.DeterminateDrawable
 import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
 
@@ -68,14 +65,14 @@ object FormSelectorProvider : BaseFormProvider() {
         holder: FormViewHolder,
         item: BaseForm
     ) {
-        val itemSelector = item as? FormSelector
-        val drawable = DeterminateDrawable.createCircularDrawable(
-            holder.itemView.context,
-            CircularProgressIndicatorSpec(holder.itemView.context, null)
-        )
+//        val itemSelector = item as? FormSelector
+//        val drawable = DeterminateDrawable.createCircularDrawable(
+//            holder.itemView.context,
+//            CircularProgressIndicatorSpec(holder.itemView.context, null)
+//        )
         with(holder.getView<MaterialButton>(R.id.formInternalContent)) {
             isEnabled = item.isRealMenuEnable(adapter.formAdapter)
-            text = item.getContentText()
+            text = item.getContentText(context)
             hint = item.hint ?: resources.getString(R.string.formDefaultHintSelect)
             gravity = typeset.getContentGravity(adapter, item)
             updateLayoutParams<ViewGroup.LayoutParams> {
@@ -114,22 +111,30 @@ object FormSelectorProvider : BaseFormProvider() {
         val view = holder.getView<MaterialButton>(R.id.formInternalContent)
         val popupMenu = PopupMenu(view.context, view, Gravity.END)
         if (!item.isMust) {
-            popupMenu.menu.add(0, 0, 0, SpannableString(view.hint).apply {
-                setSpan(
-                    ForegroundColorSpan(view.attrColor(android.R.attr.textColorHint)),
-                    0, count(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE
-                )
-            })
+            popupMenu.menu.add(0, 0, 0, (view.hint ?: "").style {
+                setForegroundColor(view.attrColor(android.R.attr.textColorHint))
+            }.toSpannableString())
         }
         item.options!!.forEachIndexed { index, option ->
-            popupMenu.menu.add(0, index + 1, index + 1, if (item.content == option) {
-                SpannableString(option.getName()).apply {
-                    setSpan(
-                        ForegroundColorSpan(view.attrColor(androidx.appcompat.R.attr.colorPrimary)),
-                        0, count(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE
-                    )
-                }
-            } else option.getName())
+            val text = (option.getName()).style {
+                setForegroundColor(
+                    if (item.content == option) {
+                        view.attrColor(androidx.appcompat.R.attr.colorPrimary)
+                    } else {
+                        view.attrColor(com.google.android.material.R.attr.colorOnSurface)
+                    }
+                )
+            } + " ".style {} + (option.getSecondaryName() ?: "").style {
+                setTextSizeRelative(0.8f)
+                setForegroundColor(
+                    if (item.content == option) {
+                        view.attrColor(androidx.appcompat.R.attr.colorPrimary)
+                    } else {
+                        view.attrColor(com.google.android.material.R.attr.colorOutline)
+                    }
+                )
+            }
+            popupMenu.menu.add(0, index + 1, index + 1, text.toSpannableString())
         }
         popupMenu.setOnMenuItemClickListener {
             if (it.itemId == 0) {
@@ -140,7 +145,7 @@ object FormSelectorProvider : BaseFormProvider() {
             val option =
                 item.options!!.getOrNull(it.itemId - 1) ?: return@setOnMenuItemClickListener false
             changeContentAndNotifyLinkage(adapter, item, option)
-            view.text = item.getContentText()
+            view.text = item.getContentText(view.context)
             true
         }
         popupMenu.show()
@@ -158,7 +163,7 @@ object FormSelectorProvider : BaseFormProvider() {
         FormSelectorPageActivity.Controller.formSelector = item
         FormSelectorPageActivity.Controller.resultBlock = {
             changeContentAndNotifyLinkage(adapter, item, it)
-            view.text = item.getContentText()
+            view.text = item.getContentText(view.context)
         }
         if (activity != null) {
             activity.setExitSharedElementCallback(MaterialContainerTransformSharedElementCallback())

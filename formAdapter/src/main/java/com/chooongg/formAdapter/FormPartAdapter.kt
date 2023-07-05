@@ -165,9 +165,9 @@ class FormPartAdapter internal constructor(
                 }
             }
         }
-        asyncDiffer.currentList.forEachIndexed { index, item ->
-            if (item.field == field) {
-                block(item)
+        asyncDiffer.currentList.forEach {
+            if (it.field == field) {
+                block(it)
                 if (update) update()
                 return true
             }

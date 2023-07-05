@@ -1,10 +1,7 @@
 package com.chooongg.formAdapter.provider
 
 import android.view.ViewGroup
-import android.view.ViewGroup.MarginLayoutParams
 import android.widget.FrameLayout
-import androidx.appcompat.widget.LinearLayoutCompat
-import androidx.core.view.setPadding
 import androidx.core.view.updateLayoutParams
 import com.chooongg.formAdapter.FormPartAdapter
 import com.chooongg.formAdapter.FormViewHolder
@@ -12,7 +9,6 @@ import com.chooongg.formAdapter.R
 import com.chooongg.formAdapter.item.BaseForm
 import com.chooongg.formAdapter.typeset.Typeset
 import com.google.android.material.materialswitch.MaterialSwitch
-import com.google.android.material.switchmaterial.SwitchMaterial
 
 object FormSwitchProvider : BaseFormProvider() {
     override fun onCreateItemView(
@@ -51,6 +47,8 @@ object FormSwitchProvider : BaseFormProvider() {
         item: BaseForm
     ) {
         with(holder.getView<MaterialSwitch>(R.id.formInternalContentChild)) {
+            isEnabled = item.isRealEnable(adapter.formAdapter)
+            isChecked = item.content as? Boolean ?: false
             updateLayoutParams<FrameLayout.LayoutParams> {
                 gravity = typeset.getContentGravity(adapter, item)
             }

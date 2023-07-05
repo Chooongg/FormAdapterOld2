@@ -18,7 +18,7 @@ import com.google.android.material.elevation.ElevationOverlayProvider
 import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.textview.MaterialTextView
 
-class CardFilledStyle(
+open class CardFilledStyle(
     val color: FormColorStateListBlock? = null,
     defaultTypeset: Typeset = HorizontalTypeset
 ) : Style(defaultTypeset) {
@@ -39,9 +39,12 @@ class CardFilledStyle(
             }
         }
         val shape = getShapeAppearanceModel(holder, item).configShapeAppearanceModel(holder, item)
-        val shapeDrawable = MaterialShapeDrawable(shape).apply {
-            val provider = ElevationOverlayProvider(holder.itemView.context)
-            fillColor = color?.invoke(holder.itemView.context) ?: ColorStateList.valueOf(
+        if (holder.itemView.background is MaterialShapeDrawable) {
+            (holder.itemView.background as MaterialShapeDrawable).shapeAppearanceModel = shape
+        } else holder.itemView.background = MaterialShapeDrawable(shape)
+        val provider = ElevationOverlayProvider(holder.itemView.context)
+        (holder.itemView.background as MaterialShapeDrawable).fillColor =
+            color?.invoke(holder.itemView.context) ?: ColorStateList.valueOf(
                 provider.compositeOverlay(
                     provider.themeSurfaceColor,
                     holder.itemView.attrChildDimensionPixelSize(
@@ -50,8 +53,6 @@ class CardFilledStyle(
                     ).toFloat()
                 )
             )
-        }
-        holder.itemView.background = shapeDrawable
     }
 
     override fun onCreateGroupTitle(parent: ViewGroup) = MaterialTextView(parent.context).apply {

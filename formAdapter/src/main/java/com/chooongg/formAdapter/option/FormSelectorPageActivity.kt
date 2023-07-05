@@ -4,6 +4,7 @@ import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.RippleDrawable
 import android.os.Bundle
+import android.view.Gravity
 import android.view.ViewGroup
 import android.view.ViewGroup.MarginLayoutParams
 import android.view.Window
@@ -27,7 +28,8 @@ import com.chooongg.utils.ext.attrResourcesId
 import com.chooongg.utils.ext.doOnClick
 import com.chooongg.utils.ext.dp2px
 import com.chooongg.utils.ext.hideIME
-import com.chooongg.utils.ext.showIME
+import com.chooongg.utils.ext.setText
+import com.chooongg.utils.ext.style
 import com.chooongg.utils.ext.withMain
 import com.google.android.material.motion.MotionUtils
 import com.google.android.material.shape.MaterialShapeDrawable
@@ -64,6 +66,7 @@ class FormSelectorPageActivity : AppCompatActivity() {
         setContentView(binding.root)
         onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
+                hideIME()
                 finishAfterTransition()
             }
         })
@@ -89,7 +92,6 @@ class FormSelectorPageActivity : AppCompatActivity() {
                 }
             }
         })
-        showIME(binding.inputSearch)
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
@@ -108,7 +110,7 @@ class FormSelectorPageActivity : AppCompatActivity() {
                     val searchList = options?.filter {
                         it.getName().lowercase().startsWith(search.lowercase()) ||
                                 it.getSecondaryName()?.lowercase()
-                                    ?.startsWith(search.lowercase()) ?: true
+                                    ?.startsWith(search.lowercase()) ?: false
                     }
                     withMain { optionAdapter.submit(searchList) }
                 }
@@ -211,6 +213,7 @@ class FormSelectorPageActivity : AppCompatActivity() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
             FormViewHolder(MaterialTextView(parent.context).apply {
                 val size = dp2px(8f)
+                gravity = Gravity.CENTER_VERTICAL
                 setPadding(size, size * 2, size, size * 2)
                 val shapeResId = parent.attrResourcesId(
                     com.google.android.material.R.attr.shapeAppearanceCornerMedium, 0
@@ -233,12 +236,20 @@ class FormSelectorPageActivity : AppCompatActivity() {
         override fun onBindViewHolder(holder: FormViewHolder, position: Int) {
             val option = asyncDiffer.currentList[position]
             with(holder.itemView as MaterialTextView) {
-                text = option?.getName()
-                if (option == selected) {
-                    setTextColor(attrColor(com.google.android.material.R.attr.colorPrimary))
-                } else {
-                    setTextColor(attrColor(com.google.android.material.R.attr.colorOnSurface))
-                }
+                setText((option?.getName() ?: "").style {
+                    if (option == selected) {
+                        setForegroundColor(attrColor(androidx.appcompat.R.attr.colorPrimary))
+                    } else {
+                        setForegroundColor(attrColor(com.google.android.material.R.attr.colorOnSurface))
+                    }
+                } + " ".style {} + (option?.getSecondaryName() ?: "").style {
+                    setTextSizeRelative(0.8f)
+                    if (option == selected) {
+                        setForegroundColor(attrColor(androidx.appcompat.R.attr.colorPrimary))
+                    } else {
+                        setForegroundColor(attrColor(com.google.android.material.R.attr.colorOutline))
+                    }
+                })
                 doOnClick {
                     selectBlock(option)
                 }
