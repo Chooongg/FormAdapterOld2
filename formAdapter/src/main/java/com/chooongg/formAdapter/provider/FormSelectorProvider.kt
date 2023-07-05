@@ -1,16 +1,16 @@
 package com.chooongg.formAdapter.provider
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.res.ColorStateList
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
 import android.view.Gravity
-import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.MarginLayoutParams
-import androidx.appcompat.view.menu.MenuPopupHelper
 import androidx.appcompat.widget.PopupMenu
+import androidx.core.app.ActivityOptionsCompat
 import androidx.core.view.updateLayoutParams
 import com.chooongg.formAdapter.FormPartAdapter
 import com.chooongg.formAdapter.FormViewHolder
@@ -18,12 +18,16 @@ import com.chooongg.formAdapter.R
 import com.chooongg.formAdapter.enum.FormSelectorOpenMode
 import com.chooongg.formAdapter.item.BaseForm
 import com.chooongg.formAdapter.item.FormSelector
+import com.chooongg.formAdapter.option.FormSelectorPageActivity
 import com.chooongg.formAdapter.typeset.Typeset
 import com.chooongg.utils.ext.attrColor
 import com.chooongg.utils.ext.doOnClick
+import com.chooongg.utils.ext.getActivity
+import com.chooongg.utils.ext.showToast
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.progressindicator.CircularProgressIndicatorSpec
 import com.google.android.material.progressindicator.DeterminateDrawable
+import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
 
 object FormSelectorProvider : BaseFormProvider() {
 
@@ -72,15 +76,12 @@ object FormSelectorProvider : BaseFormProvider() {
         with(holder.getView<MaterialButton>(R.id.formInternalContent)) {
             isEnabled = item.isRealMenuEnable(adapter.formAdapter)
             text = item.getContentText()
-            hint = item.hint ?: resources.getString(R.string.fromDefaultHintNone)
+            hint = item.hint ?: resources.getString(R.string.formDefaultHintSelect)
             gravity = typeset.getContentGravity(adapter, item)
             updateLayoutParams<ViewGroup.LayoutParams> {
                 width = typeset.contentWidth()
             }
-            doOnClick {
-                onClickButton(adapter, holder, item)
-
-            }
+            doOnClick { onClickButton(adapter, holder, item) }
 //            icon = drawable
 //            drawable.start()
         }
@@ -112,9 +113,16 @@ object FormSelectorProvider : BaseFormProvider() {
     ) {
         val view = holder.getView<MaterialButton>(R.id.formInternalContent)
         val popupMenu = PopupMenu(view.context, view, Gravity.END)
-        configPopupMenu(popupMenu, view)
+        if (!item.isMust) {
+            popupMenu.menu.add(0, 0, 0, SpannableString(view.hint).apply {
+                setSpan(
+                    ForegroundColorSpan(view.attrColor(android.R.attr.textColorHint)),
+                    0, count(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE
+                )
+            })
+        }
         item.options!!.forEachIndexed { index, option ->
-            popupMenu.menu.add(0, index, index, if (item.content == option) {
+            popupMenu.menu.add(0, index + 1, index + 1, if (item.content == option) {
                 SpannableString(option.getName()).apply {
                     setSpan(
                         ForegroundColorSpan(view.attrColor(androidx.appcompat.R.attr.colorPrimary)),
@@ -124,8 +132,13 @@ object FormSelectorProvider : BaseFormProvider() {
             } else option.getName())
         }
         popupMenu.setOnMenuItemClickListener {
+            if (it.itemId == 0) {
+                changeContentAndNotifyLinkage(adapter, item, null)
+                view.text = null
+                return@setOnMenuItemClickListener true
+            }
             val option =
-                item.options!!.getOrNull(it.itemId) ?: return@setOnMenuItemClickListener false
+                item.options!!.getOrNull(it.itemId - 1) ?: return@setOnMenuItemClickListener false
             changeContentAndNotifyLinkage(adapter, item, option)
             view.text = item.getContentText()
             true
@@ -134,29 +147,27 @@ object FormSelectorProvider : BaseFormProvider() {
     }
 
     private fun showPage(adapter: FormPartAdapter, holder: FormViewHolder, item: FormSelector) {
-    }
-
-    @Suppress("INACCESSIBLE_TYPE")
-    @SuppressLint("RestrictedApi")
-    private fun configPopupMenu(popupMenu: PopupMenu, view: MaterialButton) {
-        try {
-            val mPopupHelper = popupMenu.javaClass.getDeclaredField("mPopup")
-
-            mPopupHelper.isAccessible = true
-
-            val mHelper = mPopupHelper[popupMenu] as MenuPopupHelper
-            val standardMenuClass = Class.forName("android.support.v7.view.menu.StandardMenuPopup")
-            // 设置不测量item宽度
-            val mHasContentWidth = standardMenuClass.getDeclaredField("mHasContentWidth")
-            mHasContentWidth.isAccessible = true
-            mHasContentWidth.setBoolean(mHelper.popup, true)
-            // 设置弹出框宽度
-            val mContentWidth = standardMenuClass.getDeclaredField("mContentWidth")
-            mContentWidth.isAccessible = true
-            mContentWidth.setInt(mHelper.popup, view.width)
-        } catch (e: Exception) {
-            e.printStackTrace()
+        val view = holder.getView<MaterialButton>(R.id.formInternalContent)
+        val activity = view.context.getActivity()
+        val intent = Intent(view.context, FormSelectorPageActivity::class.java)
+        intent.putExtra("name", item.name)
+        if (item.options.isNullOrEmpty()) {
+            showToast(R.string.formDefaultSelectorOptionsEmpty)
+            return
         }
+        FormSelectorPageActivity.Controller.formSelector = item
+        FormSelectorPageActivity.Controller.resultBlock = {
+            changeContentAndNotifyLinkage(adapter, item, it)
+            view.text = item.getContentText()
+        }
+        if (activity != null) {
+            activity.setExitSharedElementCallback(MaterialContainerTransformSharedElementCallback())
+            activity.startActivity(
+                intent, ActivityOptionsCompat.makeSceneTransitionAnimation(
+                    activity, view, "FormSelectorPage"
+                ).toBundle()
+            )
+        } else view.context.startActivity(intent)
     }
 
     override fun onItemRecycler(holder: FormViewHolder) {

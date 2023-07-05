@@ -44,4 +44,22 @@ abstract class AbstractFormData(
             FormEnableMode.NEVER -> false
         }
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is AbstractFormData) return false
+
+        if (name != other.name) return false
+        if (visibilityMode != other.visibilityMode) return false
+        if (enableMode != other.enableMode) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = name?.hashCode() ?: 0
+        result = 31 * result + visibilityMode.hashCode()
+        result = 31 * result + enableMode.hashCode()
+        return result
+    }
 }

@@ -5,7 +5,6 @@ import android.content.res.ColorStateList
 import com.chooongg.formAdapter.FormAdapter
 import com.chooongg.formAdapter.provider.FormInputProvider
 import com.chooongg.formAdapter.provider.FormTextProvider
-import com.chooongg.formAdapter.typeset.NoneTypeset
 import com.google.android.material.textfield.TextInputLayout
 import com.google.android.material.textfield.TextInputLayout.BoxBackgroundMode
 
@@ -27,5 +26,5 @@ class FormInput(name: CharSequence?, field: String?) : BaseForm(name, field) {
     var placeholderText: CharSequence? = null
 
     override fun getItemProvider(adapter: FormAdapter) =
-        if (adapter.isEditable) FormInputProvider else FormTextProvider
+        if (isRealEnable(adapter)) FormInputProvider else FormTextProvider
 }

@@ -4,4 +4,5 @@
     <string name="fromDefaultHintNone">空</string>
     <string name="formDefaultHintSelect">请选择</string>
     <string name="formDefaultHintInput">请输入</string>
+    <string name="formDefaultSelectorOptionsEmpty">没有可选项</string>
 </resources>

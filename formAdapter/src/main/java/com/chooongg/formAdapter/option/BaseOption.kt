@@ -5,5 +5,6 @@ package com.chooongg.formAdapter.option
  */
 interface BaseOption {
     fun getName(): String
-    fun getValue(): Any?
+    fun getSecondaryName():String?
+    fun getValue(): String?
 }

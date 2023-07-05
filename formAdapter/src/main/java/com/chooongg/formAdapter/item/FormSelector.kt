@@ -16,7 +16,7 @@ open class FormSelector(name: CharSequence?, field: String?) : BaseOptionForm(na
     override fun hasOpenOperation() = true
 
     override fun getItemProvider(adapter: FormAdapter) =
-        if (adapter.isEditable) FormSelectorProvider else FormTextProvider
+        if (isRealEnable(adapter)) FormSelectorProvider else FormTextProvider
 
     override fun getContentText(): CharSequence? {
         return (content as? BaseOption)?.getName() ?: content?.toString()

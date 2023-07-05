@@ -6,6 +6,7 @@ import android.animation.TimeInterpolator;
 import android.annotation.SuppressLint;
 import android.view.View;
 import android.view.ViewPropertyAnimator;
+import android.view.animation.AccelerateInterpolator;
 
 import androidx.annotation.NonNull;
 import androidx.core.view.ViewCompat;
@@ -86,16 +87,13 @@ public class FormItemAnimator extends SimpleItemAnimator {
             final ArrayList<MoveInfo> moves = new ArrayList<>(mPendingMoves);
             mMovesList.add(moves);
             mPendingMoves.clear();
-            Runnable mover = new Runnable() {
-                @Override
-                public void run() {
-                    for (MoveInfo moveInfo : moves) {
-                        animateMoveImpl(moveInfo.holder, moveInfo.fromX, moveInfo.fromY,
-                                moveInfo.toX, moveInfo.toY);
-                    }
-                    moves.clear();
-                    mMovesList.remove(moves);
+            Runnable mover = () -> {
+                for (MoveInfo moveInfo : moves) {
+                    animateMoveImpl(moveInfo.holder, moveInfo.fromX, moveInfo.fromY,
+                            moveInfo.toX, moveInfo.toY);
                 }
+                moves.clear();
+                mMovesList.remove(moves);
             };
             if (removalsPending) {
                 View view = moves.get(0).holder.itemView;
@@ -109,15 +107,12 @@ public class FormItemAnimator extends SimpleItemAnimator {
             final ArrayList<ChangeInfo> changes = new ArrayList<>(mPendingChanges);
             mChangesList.add(changes);
             mPendingChanges.clear();
-            Runnable changer = new Runnable() {
-                @Override
-                public void run() {
-                    for (ChangeInfo change : changes) {
-                        animateChangeImpl(change);
-                    }
-                    changes.clear();
-                    mChangesList.remove(changes);
+            Runnable changer = () -> {
+                for (ChangeInfo change : changes) {
+                    animateChangeImpl(change);
                 }
+                changes.clear();
+                mChangesList.remove(changes);
             };
             if (removalsPending) {
                 RecyclerView.ViewHolder holder = changes.get(0).oldHolder;
@@ -131,15 +126,12 @@ public class FormItemAnimator extends SimpleItemAnimator {
             final ArrayList<RecyclerView.ViewHolder> additions = new ArrayList<>(mPendingAdditions);
             mAdditionsList.add(additions);
             mPendingAdditions.clear();
-            Runnable adder = new Runnable() {
-                @Override
-                public void run() {
-                    for (RecyclerView.ViewHolder holder : additions) {
-                        animateAddImpl(holder);
-                    }
-                    additions.clear();
-                    mAdditionsList.remove(additions);
+            Runnable adder = () -> {
+                for (RecyclerView.ViewHolder holder : additions) {
+                    animateAddImpl(holder);
                 }
+                additions.clear();
+                mAdditionsList.remove(additions);
             };
             if (removalsPending || movesPending || changesPending) {
                 long removeDuration = removalsPending ? getRemoveDuration() : 0;
@@ -147,7 +139,7 @@ public class FormItemAnimator extends SimpleItemAnimator {
                 long changeDuration = changesPending ? getChangeDuration() : 0;
                 long totalDelay = removeDuration + Math.max(moveDuration, changeDuration);
                 View view = additions.get(0).itemView;
-                ViewCompat.postOnAnimationDelayed(view, adder, totalDelay);
+                ViewCompat.postOnAnimationDelayed(view, adder, totalDelay / 2);
             } else {
                 adder.run();
             }
@@ -167,23 +159,25 @@ public class FormItemAnimator extends SimpleItemAnimator {
         final ViewPropertyAnimator animation = view.animate();
         mRemoveAnimations.add(holder);
         final float elevation = view.getElevation();
-        animation.setDuration(getRemoveDuration()).alpha(0).setListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationStart(Animator animator) {
-                view.setElevation(0);
-                dispatchRemoveStarting(holder);
-            }
+        animation.setDuration(getRemoveDuration()).alpha(0)
+                .setInterpolator(new AccelerateInterpolator(3))
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationStart(Animator animator) {
+                        view.setElevation(0);
+                        dispatchRemoveStarting(holder);
+                    }
 
-            @Override
-            public void onAnimationEnd(Animator animator) {
-                animation.setListener(null);
-                view.setAlpha(1);
-                view.setElevation(elevation);
-                dispatchRemoveFinished(holder);
-                mRemoveAnimations.remove(holder);
-                dispatchFinishedWhenDone();
-            }
-        }).start();
+                    @Override
+                    public void onAnimationEnd(Animator animator) {
+                        animation.setListener(null);
+                        view.setAlpha(1);
+                        view.setElevation(elevation);
+                        dispatchRemoveFinished(holder);
+                        mRemoveAnimations.remove(holder);
+                        dispatchFinishedWhenDone();
+                    }
+                }).start();
     }
 
     @Override
@@ -201,6 +195,7 @@ public class FormItemAnimator extends SimpleItemAnimator {
         mAddAnimations.add(holder);
         final float elevation = view.getElevation();
         animation.alpha(1).setDuration(getAddDuration())
+                .setInterpolator(new AccelerateInterpolator(3))
                 .setListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationStart(Animator animator) {
@@ -211,6 +206,7 @@ public class FormItemAnimator extends SimpleItemAnimator {
                     @Override
                     public void onAnimationCancel(Animator animator) {
                         view.setAlpha(1);
+                        view.setElevation(elevation);
                     }
 
                     @Override

@@ -18,11 +18,11 @@ import com.chooongg.formAdapter.addSelector
 import com.chooongg.formAdapter.addSwitch
 import com.chooongg.formAdapter.addTip
 import com.chooongg.formAdapter.enum.FormEnableMode
+import com.chooongg.formAdapter.enum.FormSelectorOpenMode
 import com.chooongg.formAdapter.enum.FormVisibilityMode
 import com.chooongg.formAdapter.option.Option
 import com.chooongg.formAdapter.simple.databinding.FragmentBasicBinding
 import com.chooongg.formAdapter.style.CardElevatedStyle
-import com.chooongg.formAdapter.style.CardFilledStyle
 
 class BasicFragment : Fragment() {
 
@@ -66,20 +66,18 @@ class BasicFragment : Fragment() {
                         maxLines = 3
                     }
                     addSelector("Selector", "selector") {
-                        isMust = true
                         content = "FormSelector"
+                        openMode = FormSelectorOpenMode.PAGE
                         localOptions(
                             listOf(
-                                Option("选项1"),
-                                Option("选项2"),
-                                Option("选项3"),
-                                Option("选项4"),
-                                Option("选项5"),
-                                Option("选项6"),
-                                Option("选项7"),
-                                Option("选项8"),
-                                Option("选项9"),
-                                Option("选项10"),
+                                Option("张三"),
+                                Option("李四"),
+                                Option("王五"),
+                                Option("赵六"),
+                                Option("田七"),
+                                Option("周八"),
+                                Option("吴九"),
+                                Option("郑十"),
                             )
                         )
                     }

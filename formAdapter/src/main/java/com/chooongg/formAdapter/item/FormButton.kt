@@ -29,19 +29,15 @@ class FormButton(name: CharSequence?, field: String?) : BaseForm(name, field) {
     override var typeset: Typeset? = NoneTypeset
 
     @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP_PREFIX)
-    @Deprecated("invalid property", ReplaceWith("name"))
     override var menuText: CharSequence? = null
 
     @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP_PREFIX)
-    @Deprecated("invalid property", ReplaceWith("iconRes"))
     override var menuIconRes: Int? = null
 
     @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP_PREFIX)
-    @Deprecated("invalid property", ReplaceWith("iconSize"))
     override var menuIconSize: Int? = null
 
     @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP_PREFIX)
-    @Deprecated("invalid property")
     override var menuVisibilityMode: FormVisibilityMode = FormVisibilityMode.ALWAYS
 
     override fun getItemProvider(adapter: FormAdapter) = FormButtonProvider

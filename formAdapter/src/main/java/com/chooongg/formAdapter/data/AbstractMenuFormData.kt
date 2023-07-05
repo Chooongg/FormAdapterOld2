@@ -59,4 +59,28 @@ abstract class AbstractMenuFormData(name: CharSequence?) : AbstractFormData(name
             FormEnableMode.NEVER -> false
         }
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is AbstractMenuFormData) return false
+        if (!super.equals(other)) return false
+
+        if (menuText != other.menuText) return false
+        if (menuIconRes != other.menuIconRes) return false
+        if (menuIconSize != other.menuIconSize) return false
+        if (menuVisibilityMode != other.menuVisibilityMode) return false
+        if (menuEnableMode != other.menuEnableMode) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = super.hashCode()
+        result = 31 * result + (menuText?.hashCode() ?: 0)
+        result = 31 * result + (menuIconRes ?: 0)
+        result = 31 * result + (menuIconSize ?: 0)
+        result = 31 * result + menuVisibilityMode.hashCode()
+        result = 31 * result + menuEnableMode.hashCode()
+        return result
+    }
 }

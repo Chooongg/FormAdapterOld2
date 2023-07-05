@@ -3,6 +3,7 @@ package com.chooongg.formAdapter.provider
 import android.annotation.SuppressLint
 import android.content.res.ColorStateList
 import android.graphics.drawable.Drawable
+import android.graphics.drawable.RippleDrawable
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.ViewGroup
@@ -24,6 +25,7 @@ import com.chooongg.utils.ext.gone
 import com.chooongg.utils.ext.resDimensionPixelSize
 import com.chooongg.utils.ext.resDrawable
 import com.chooongg.utils.ext.visible
+import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.textview.MaterialTextView
 
 object FormMenuProvider : BaseFormProvider() {
@@ -226,9 +228,15 @@ object FormMenuProvider : BaseFormProvider() {
         adapter: FormPartAdapter,
         holder: FormViewHolder,
         item: BaseForm
-    ): Drawable? {
-        return super.onBindItemViewForeground(adapter, holder, item)
-    }
+    ) = RippleDrawable(
+        ColorStateList.valueOf(
+            holder.itemView.attrColor(androidx.appcompat.R.attr.colorControlHighlight)
+        ),
+        null,
+        holder.itemView.background ?: MaterialShapeDrawable(
+            adapter.style.getShapeAppearanceModel(holder, item)
+        )
+    )
 
     override fun onBindItemViewLongClick(
         adapter: FormPartAdapter,

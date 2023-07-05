@@ -12,6 +12,4 @@ class SingleLineForm internal constructor() : BaseForm(null, null) {
     internal var items = mutableListOf<BaseForm>()
 
     override fun getItemProvider(adapter: FormAdapter) = FormTextProvider
-
-
 }

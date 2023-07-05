@@ -83,32 +83,39 @@ abstract class Style(val defaultTypeset: Typeset) {
             holder.itemView.tag = temp
             temp
         }
-        val builder = originalShape.toBuilder()
+        return originalShape
+    }
+
+    open fun ShapeAppearanceModel.configShapeAppearanceModel(
+        holder: FormViewHolder,
+        item: BaseForm,
+    ): ShapeAppearanceModel {
+        val builder = toBuilder()
         if (holder.itemView.layoutDirection == View.LAYOUT_DIRECTION_LTR) {
             if (item.marginBoundary.topType != 0 && item.marginBoundary.startType != 0) {
-                builder.setTopLeftCornerSize(originalShape.topLeftCornerSize)
+                builder.setTopLeftCornerSize(topLeftCornerSize)
             } else builder.setTopLeftCornerSize(0f)
             if (item.marginBoundary.topType != 0 && item.marginBoundary.endType != 0) {
-                builder.setTopRightCornerSize(originalShape.topRightCornerSize)
+                builder.setTopRightCornerSize(topRightCornerSize)
             } else builder.setTopRightCornerSize(0f)
             if (item.marginBoundary.bottomType != 0 && item.marginBoundary.startType != 0) {
-                builder.setBottomLeftCornerSize(originalShape.bottomLeftCornerSize)
+                builder.setBottomLeftCornerSize(bottomLeftCornerSize)
             } else builder.setBottomLeftCornerSize(0f)
             if (item.marginBoundary.bottomType != 0 && item.marginBoundary.endType != 0) {
-                builder.setBottomRightCornerSize(originalShape.bottomRightCornerSize)
+                builder.setBottomRightCornerSize(bottomRightCornerSize)
             } else builder.setBottomRightCornerSize(0f)
         } else {
             if (item.marginBoundary.topType != 0 && item.marginBoundary.endType != 0) {
-                builder.setTopLeftCornerSize(originalShape.topLeftCornerSize)
+                builder.setTopLeftCornerSize(topLeftCornerSize)
             } else builder.setTopLeftCornerSize(0f)
             if (item.marginBoundary.topType != 0 && item.marginBoundary.startType != 0) {
-                builder.setTopRightCornerSize(originalShape.topRightCornerSize)
+                builder.setTopRightCornerSize(topRightCornerSize)
             } else builder.setTopRightCornerSize(0f)
             if (item.marginBoundary.bottomType != 0 && item.marginBoundary.endType != 0) {
-                builder.setBottomLeftCornerSize(originalShape.bottomLeftCornerSize)
+                builder.setBottomLeftCornerSize(bottomLeftCornerSize)
             } else builder.setBottomLeftCornerSize(0f)
             if (item.marginBoundary.bottomType != 0 && item.marginBoundary.startType != 0) {
-                builder.setBottomRightCornerSize(originalShape.bottomRightCornerSize)
+                builder.setBottomRightCornerSize(bottomRightCornerSize)
             } else builder.setBottomRightCornerSize(0f)
         }
         return builder.build()

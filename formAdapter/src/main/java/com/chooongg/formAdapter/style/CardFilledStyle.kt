@@ -38,7 +38,7 @@ class CardFilledStyle(
                 else -> 0
             }
         }
-        val shape = getShapeAppearanceModel(holder, item)
+        val shape = getShapeAppearanceModel(holder, item).configShapeAppearanceModel(holder, item)
         val shapeDrawable = MaterialShapeDrawable(shape).apply {
             val provider = ElevationOverlayProvider(holder.itemView.context)
             fillColor = color?.invoke(holder.itemView.context) ?: ColorStateList.valueOf(
