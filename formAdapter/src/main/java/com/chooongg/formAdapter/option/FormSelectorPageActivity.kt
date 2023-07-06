@@ -41,6 +41,7 @@ import com.google.android.material.transition.platform.MaterialContainerTransfor
 import com.google.android.material.transition.platform.MaterialSharedAxis
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.util.regex.Pattern
 
 class FormSelectorPageActivity : AppCompatActivity() {
 
@@ -108,9 +109,14 @@ class FormSelectorPageActivity : AppCompatActivity() {
             } else {
                 job = lifecycleScope.launch {
                     val searchList = options?.filter {
-                        it.getName().lowercase().startsWith(search.lowercase()) ||
-                                it.getSecondaryName()?.lowercase()
-                                    ?.startsWith(search.lowercase()) ?: false
+                        val regex = Regex(".*${search.lowercase()}.*")
+                        if (regex.matches(it.getName().lowercase())) {
+                            return@filter true
+                        }
+                        val secondary = it.getSecondaryName()
+                        if (secondary != null) {
+                            regex.matches(secondary.lowercase())
+                        } else false
                     }
                     withMain { optionAdapter.submit(searchList) }
                 }
