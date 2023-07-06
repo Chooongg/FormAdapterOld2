@@ -12,17 +12,21 @@ import com.chooongg.formAdapter.FormAdapter
 import com.chooongg.formAdapter.addButton
 import com.chooongg.formAdapter.addDivider
 import com.chooongg.formAdapter.addInput
+import com.chooongg.formAdapter.addInputAutoComplete
 import com.chooongg.formAdapter.addLabel
 import com.chooongg.formAdapter.addMenu
 import com.chooongg.formAdapter.addSelector
 import com.chooongg.formAdapter.addSwitch
 import com.chooongg.formAdapter.addTip
 import com.chooongg.formAdapter.enum.FormEnableMode
+import com.chooongg.formAdapter.enum.FormOptionLoadMode
 import com.chooongg.formAdapter.enum.FormSelectorOpenMode
 import com.chooongg.formAdapter.enum.FormVisibilityMode
 import com.chooongg.formAdapter.option.Option
+import com.chooongg.formAdapter.option.OptionResult
 import com.chooongg.formAdapter.simple.databinding.FragmentBasicBinding
 import com.chooongg.formAdapter.style.CardElevatedStyle
+import kotlinx.coroutines.delay
 
 class BasicFragment : Fragment() {
 
@@ -61,39 +65,65 @@ class BasicFragment : Fragment() {
                         visibilityMode = FormVisibilityMode.ONLY_EDIT
                         contentGravity = Gravity.CENTER_HORIZONTAL
                     }
-                    addInput("Input", "input") {
-                        visibilityMode = FormVisibilityMode.ONLY_EDIT
-                        maxLines = 3
-                    }
                     addSelector("Selector", "selector") {
                         content = "FormSelector"
                         openMode = FormSelectorOpenMode.PAGE
-                        localOptions(
-                            listOf(
-                                Option("张三","130181199505087310"),
-                                Option("李四","130181199505087310"),
-                                Option("王五","13123451341236"),
-                                Option("赵六","167835789"),
-                                Option("田七","981234867"),
-                                Option("周八","731897564"),
-                                Option("吴九","378189"),
-                                Option("郑十","8515968"),
+                        optionLoadMode = FormOptionLoadMode.EMPTY
+                        optionLoader {
+                            delay(5000)
+                            OptionResult.Success(
+                                listOf(
+                                    Option("张三", "130181199505087310"),
+                                    Option("李四", "130181199505087310"),
+                                    Option("王五", "13123451341236"),
+                                    Option("赵六", "167835789"),
+                                    Option("田七", "981234867"),
+                                    Option("周八", "731897564"),
+                                    Option("吴九", "378189"),
+                                    Option("郑十", "8515968"),
+                                )
                             )
-                        )
+                        }
+                    }
+                    addInput("Input", "input") {
+                        placeholderText = "请输入手机号"
+                        maxLength = 11
+                        maxLines = 3
+                    }
+                    addInput("Input", "input") {
+                        maxLength = 11
+                        maxLines = 3
+                    }
+                    addInputAutoComplete("AutoComplete", "inputAutoComplete") {
+                        optionLoader {
+                            delay(5000)
+                            OptionResult.Success(
+                                listOf(
+                                    "张三",
+                                    "李四",
+                                    "王五",
+                                    "赵六",
+                                    "田七",
+                                    "周八",
+                                    "吴九",
+                                    "郑十"
+                                )
+                            )
+                        }
                     }
                     addSelector("Selector", "selector") {
                         isMust = true
                         content = "FormSelector"
                         localOptions(
                             listOf(
-                                Option("张三","130181199505087310"),
-                                Option("李四","130181199505087310"),
-                                Option("王五","13123451341236"),
-                                Option("赵六","167835789"),
-                                Option("田七","981234867"),
-                                Option("周八","731897564"),
-                                Option("吴九","378189"),
-                                Option("郑十","8515968"),
+                                Option("张三", "130181199505087310"),
+                                Option("李四", "130181199505087310"),
+                                Option("王五", "13123451341236"),
+                                Option("赵六", "167835789"),
+                                Option("田七", "981234867"),
+                                Option("周八", "731897564"),
+                                Option("吴九", "378189"),
+                                Option("郑十", "8515968"),
                             )
                         )
                     }

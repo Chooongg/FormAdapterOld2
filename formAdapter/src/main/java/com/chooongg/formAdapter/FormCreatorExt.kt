@@ -4,6 +4,7 @@ import com.chooongg.formAdapter.data.FormCreator
 import com.chooongg.formAdapter.item.FormButton
 import com.chooongg.formAdapter.item.FormDivider
 import com.chooongg.formAdapter.item.FormInput
+import com.chooongg.formAdapter.item.FormInputAutoComplete
 import com.chooongg.formAdapter.item.FormLabel
 import com.chooongg.formAdapter.item.FormMenu
 import com.chooongg.formAdapter.item.FormSelector
@@ -46,3 +47,7 @@ fun FormCreator.addMenu(
 fun FormCreator.addSwitch(
     name: CharSequence?, field: String? = null, block: (FormSwitch.() -> Unit)? = null
 ) = add(FormSwitch(name, field).apply { block?.invoke(this) })
+
+fun FormCreator.addInputAutoComplete(
+    name: CharSequence?, field: String? = null, block: (FormInputAutoComplete.() -> Unit)? = null
+) = add(FormInputAutoComplete(name, field).apply { block?.invoke(this) })

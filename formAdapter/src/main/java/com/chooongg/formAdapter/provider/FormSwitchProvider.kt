@@ -48,7 +48,11 @@ object FormSwitchProvider : BaseFormProvider() {
     ) {
         with(holder.getView<MaterialSwitch>(R.id.formInternalContentChild)) {
             isEnabled = item.isRealEnable(adapter.formAdapter)
+            setOnCheckedChangeListener(null)
             isChecked = item.content as? Boolean ?: false
+            setOnCheckedChangeListener { _, isCheck ->
+                changeContentAndNotifyLinkage(adapter, item, isCheck)
+            }
             updateLayoutParams<FrameLayout.LayoutParams> {
                 gravity = typeset.getContentGravity(adapter, item)
             }

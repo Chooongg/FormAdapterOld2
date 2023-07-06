@@ -8,7 +8,7 @@ import com.chooongg.formAdapter.provider.FormSelectorProvider
 import com.chooongg.formAdapter.provider.FormTextProvider
 import com.chooongg.utils.ext.style
 
-open class FormSelector(name: CharSequence?, field: String?) : BaseOptionForm(name, field) {
+open class FormSelector(name: CharSequence?, field: String?) : BaseOptionForm<BaseOption>(name, field) {
 
     /**
      * 打开模式

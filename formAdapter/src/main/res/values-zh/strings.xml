@@ -4,5 +4,9 @@
     <string name="fromDefaultHintNone">空</string>
     <string name="formDefaultHintSelect">请选择</string>
     <string name="formDefaultHintInput">请输入</string>
-    <string name="formDefaultSelectorOptionsEmpty">没有可选项</string>
+
+    <string name="formDefaultOptionsLoading">选项加载中</string>
+    <string name="formDefaultOptionsEmpty">没有可选项</string>
+
+    <string name="formDefaultSearchHint">输入要搜索的文本</string>
 </resources>

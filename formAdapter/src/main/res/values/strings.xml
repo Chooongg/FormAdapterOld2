@@ -4,5 +4,9 @@
     <string name="fromDefaultHintNone">None</string>
     <string name="formDefaultHintSelect">Please select</string>
     <string name="formDefaultHintInput">Please enter</string>
-    <string name="formDefaultSelectorOptionsEmpty">No options available</string>
+
+    <string name="formDefaultOptionsLoading">Option loading</string>
+    <string name="formDefaultOptionsEmpty">No options available</string>
+
+    <string name="formDefaultSearchHint">Enter text to search</string>
 </resources>

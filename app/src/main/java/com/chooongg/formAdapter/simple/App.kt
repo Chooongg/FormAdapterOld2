@@ -25,6 +25,6 @@ class App : Application() {
             client.start()
         }
 
-        FormManager.contentGravity = Gravity.END
+//        FormManager.contentGravity = Gravity.END
     }
 }

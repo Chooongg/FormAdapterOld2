@@ -1,13 +1,10 @@
 package com.chooongg.formAdapter.provider
 
-import android.content.res.ColorStateList
-import android.graphics.Color
 import android.text.TextWatcher
 import android.view.ViewGroup
 import android.view.ViewGroup.MarginLayoutParams
 import android.view.inputmethod.EditorInfo
-import androidx.core.view.setMargins
-import androidx.core.view.updateLayoutParams
+import androidx.core.view.updatePadding
 import androidx.core.widget.doAfterTextChanged
 import com.chooongg.formAdapter.FormPartAdapter
 import com.chooongg.formAdapter.FormViewHolder
@@ -15,7 +12,7 @@ import com.chooongg.formAdapter.R
 import com.chooongg.formAdapter.item.BaseForm
 import com.chooongg.formAdapter.item.FormInput
 import com.chooongg.formAdapter.typeset.Typeset
-import com.chooongg.utils.ext.dp2px
+import com.chooongg.utils.ext.attrColorStateList
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 
@@ -25,9 +22,7 @@ object FormInputProvider : BaseFormProvider() {
         typeset: Typeset,
         parent: ViewGroup
     ) = TextInputLayout(
-        parent.context,
-        null,
-        com.google.android.material.R.attr.textInputOutlinedStyle
+        parent.context, null, com.google.android.material.R.attr.textInputOutlinedStyle
     ).apply {
         id = R.id.formInternalContent
         val editText = TextInputEditText(context).apply {
@@ -38,18 +33,24 @@ object FormInputProvider : BaseFormProvider() {
             setFadingEdgeLength(adapter.style.paddingInfo.horizontalGlobal)
             setTextAppearance(R.style.FormAdapter_TextAppearance_Content)
             setPadding(
-                adapter.style.paddingInfo.horizontalLocal,
-                adapter.style.paddingInfo.verticalLocal,
-                adapter.style.paddingInfo.horizontalLocal,
-                adapter.style.paddingInfo.verticalLocal
+                0, adapter.style.paddingInfo.verticalLocal,
+                0, adapter.style.paddingInfo.verticalLocal
             )
         }
         addView(editText)
         isHintEnabled = false
-        setBoxBackgroundColorStateList(ColorStateList.valueOf(Color.TRANSPARENT))
+        boxStrokeWidth = 0
+        boxStrokeWidthFocused = 0
+        placeholderTextAppearance = R.style.FormAdapter_TextAppearance_Content
+        placeholderTextColor = attrColorStateList(android.R.attr.textColorHint)
         setPrefixTextAppearance(R.style.FormAdapter_TextAppearance_Content)
         setSuffixTextAppearance(R.style.FormAdapter_TextAppearance_Content)
         setEndIconTintList(editText.hintTextColors)
+        endIconMinSize = resources.getDimensionPixelSize(R.dimen.formIconSize)
+        setPadding(
+            adapter.style.paddingInfo.horizontalLocal, 0,
+            adapter.style.paddingInfo.horizontalLocal, 0
+        )
         layoutParams = MarginLayoutParams(
             MarginLayoutParams.MATCH_PARENT, MarginLayoutParams.WRAP_CONTENT
         )
@@ -71,17 +72,35 @@ object FormInputProvider : BaseFormProvider() {
     ) {
         val itemInput = item as? FormInput
         with(holder.getView<TextInputLayout>(R.id.formInternalContent)) {
-            updateInputLayoutStyle(adapter, this, item)
             isEnabled = item.isRealMenuEnable(adapter.formAdapter)
             suffixText = itemInput?.suffixText
             prefixText = itemInput?.prefixText
             placeholderText = itemInput?.placeholderText
+            if (itemInput?.maxLength != null && itemInput.maxLength != Int.MAX_VALUE) {
+                if (itemInput.isShowCounter != false) {
+                    isCounterEnabled = true
+                    counterMaxLength = itemInput.maxLength
+                    getChildAt(1).updatePadding(
+                        top = 0,
+                        bottom = adapter.style.paddingInfo.verticalLocal
+                    )
+                } else isCounterEnabled = false
+            } else isCounterEnabled = false
         }
         with(holder.getView<TextInputEditText>(R.id.formInternalContentChild)) {
             if (tag is TextWatcher) removeTextChangedListener(tag as TextWatcher)
-            setText(item.content as? CharSequence ?: item.getContentText(context))
             hint = item.hint ?: resources.getString(R.string.formDefaultHintInput)
+            setText(item.content as? CharSequence ?: item.getContentText(context))
             gravity = typeset.getContentGravity(adapter, item)
+            if (itemInput?.placeholderText != null) {
+                setOnFocusChangeListener { _, isFocus ->
+                    hint = if (isFocus) {
+                        null
+                    } else {
+                        item.hint ?: resources.getString(R.string.formDefaultHintInput)
+                    }
+                }
+            } else hint = item.hint ?: resources.getString(R.string.formDefaultHintInput)
             if (maxLines <= 1) {
                 setSingleLine()
             } else {
@@ -97,52 +116,6 @@ object FormInputProvider : BaseFormProvider() {
                     adapter.formAdapter.clearFocus()
                     true
                 } else false
-            }
-        }
-    }
-
-    private fun updateInputLayoutStyle(
-        adapter: FormPartAdapter,
-        view: TextInputLayout,
-        item: BaseForm
-    ) {
-        val backgroundMode =
-            (item as? FormInput)?.backgroundMode ?: TextInputLayout.BOX_BACKGROUND_NONE
-        view.boxBackgroundMode = if (backgroundMode == TextInputLayout.BOX_BACKGROUND_NONE) {
-            TextInputLayout.BOX_BACKGROUND_OUTLINE
-        } else backgroundMode
-        when (backgroundMode) {
-            TextInputLayout.BOX_BACKGROUND_NONE -> {
-                view.boxStrokeWidth = 0
-                view.boxStrokeWidthFocused = 0
-                view.updateLayoutParams<MarginLayoutParams> {
-                    setMargins(0)
-                }
-            }
-
-            TextInputLayout.BOX_BACKGROUND_OUTLINE -> {
-                view.boxStrokeWidth = dp2px(1f)
-                view.boxStrokeWidthFocused = dp2px(2f)
-                view.updateLayoutParams<MarginLayoutParams> {
-                    setMargins(0)
-                }
-            }
-
-            TextInputLayout.BOX_BACKGROUND_FILLED -> {
-                view.boxStrokeWidth = 0
-                view.boxStrokeWidthFocused = 0
-                view.setBoxBackgroundColorStateList(
-                    (item as? FormInput)?.backgroundColor?.invoke(view.context)
-                        ?: ColorStateList.valueOf(Color.TRANSPARENT)
-                )
-                view.updateLayoutParams<MarginLayoutParams> {
-                    setMargins(
-                        adapter.style.paddingInfo.horizontalLocal,
-                        adapter.style.paddingInfo.verticalLocal,
-                        adapter.style.paddingInfo.horizontalLocal,
-                        adapter.style.paddingInfo.verticalLocal
-                    )
-                }
             }
         }
     }

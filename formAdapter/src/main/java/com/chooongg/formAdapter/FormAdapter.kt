@@ -8,7 +8,7 @@ import com.chooongg.formAdapter.style.Style
 import com.chooongg.utils.ext.getActivity
 import com.chooongg.utils.ext.hideIME
 
-class FormAdapter(isEditable: Boolean, block: (FormAdapter.() -> Unit)?) :
+class FormAdapter(isEditable: Boolean, block: (FormAdapter.() -> Unit)? = null) :
     FormConcatAdapter(isEditable) {
 
     init {

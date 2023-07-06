@@ -3,8 +3,6 @@ package com.chooongg.formAdapter
 import android.content.Context
 import android.content.res.Resources
 import android.util.AttributeSet
-import androidx.constraintlayout.motion.utils.Easing
-import androidx.constraintlayout.motion.widget.MotionInterpolator
 import androidx.recyclerview.widget.RecyclerView
 import com.chooongg.utils.ext.getActivity
 import com.chooongg.utils.ext.hideIME
@@ -41,6 +39,9 @@ class FormView @JvmOverloads constructor(
             }
         })
         itemAnimator = FormItemAnimator()
+        if (isInEditMode) {
+            layoutManager = FormLayoutManager(context)
+        }
     }
 
     fun setPadding(paddingVertical: Int, paddingHorizontal: Int) {

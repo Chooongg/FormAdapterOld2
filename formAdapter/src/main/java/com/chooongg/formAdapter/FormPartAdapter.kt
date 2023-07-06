@@ -12,6 +12,7 @@ import com.chooongg.formAdapter.item.BaseForm
 import com.chooongg.formAdapter.item.SingleLineForm
 import com.chooongg.formAdapter.style.NoneStyle
 import com.chooongg.formAdapter.style.Style
+import com.chooongg.utils.ext.logE
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -181,6 +182,8 @@ class FormPartAdapter internal constructor(
 
     fun getItem(position: Int) = asyncDiffer.currentList[position]
 
+    fun indexOfPosition(item: BaseForm) = asyncDiffer.currentList.indexOf(item)
+
     override fun getItemViewType(position: Int): Int {
         val item = asyncDiffer.currentList[position]
         return formAdapter.getItemViewType(
@@ -198,6 +201,7 @@ class FormPartAdapter internal constructor(
     }
 
     override fun onBindViewHolder(holder: FormViewHolder, position: Int) {
+        logE("Form", "onBindViewHolder()")
         val item = asyncDiffer.currentList[position]
         style.onBindStyle(this, holder, item)
         val typeset = formAdapter.getTypesetForItemViewType(holder.itemViewType)
@@ -212,6 +216,7 @@ class FormPartAdapter internal constructor(
     override fun onBindViewHolder(
         holder: FormViewHolder, position: Int, payloads: MutableList<Any>
     ) {
+        logE("Form", "onBindViewHolder() payloads: $payloads")
         val item = asyncDiffer.currentList[position]
         style.onBindStyle(this, holder, item)
         val typeset = formAdapter.getTypesetForItemViewType(holder.itemViewType)

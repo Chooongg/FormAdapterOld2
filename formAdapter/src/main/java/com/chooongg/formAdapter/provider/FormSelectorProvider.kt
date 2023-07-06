@@ -2,7 +2,6 @@ package com.chooongg.formAdapter.provider
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.content.res.ColorStateList
 import android.view.Gravity
 import android.view.ViewGroup
 import android.view.ViewGroup.MarginLayoutParams
@@ -16,14 +15,17 @@ import com.chooongg.formAdapter.enum.FormSelectorOpenMode
 import com.chooongg.formAdapter.item.BaseForm
 import com.chooongg.formAdapter.item.FormSelector
 import com.chooongg.formAdapter.option.FormSelectorPageActivity
+import com.chooongg.formAdapter.option.OptionResult
 import com.chooongg.formAdapter.typeset.Typeset
 import com.chooongg.utils.ext.attrColor
 import com.chooongg.utils.ext.doOnClick
+import com.chooongg.utils.ext.dp2px
 import com.chooongg.utils.ext.getActivity
 import com.chooongg.utils.ext.showToast
 import com.chooongg.utils.ext.style
 import com.google.android.material.button.MaterialButton
-import com.google.android.material.progressindicator.DeterminateDrawable
+import com.google.android.material.progressindicator.CircularProgressIndicatorSpec
+import com.google.android.material.progressindicator.IndeterminateDrawable
 import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
 
 object FormSelectorProvider : BaseFormProvider() {
@@ -43,9 +45,8 @@ object FormSelectorProvider : BaseFormProvider() {
         insetBottom = 0
         insetTop = 0
         iconSize = resources.getDimensionPixelSize(R.dimen.formIconSize)
-        iconTint = ColorStateList.valueOf(hintTextColors.defaultColor)
-        iconGravity = MaterialButton.ICON_GRAVITY_TEXT_END
-        setIconResource(R.drawable.ic_form_arrow_down)
+        iconTint = hintTextColors
+        iconGravity = MaterialButton.ICON_GRAVITY_END
         setTextAppearance(R.style.FormAdapter_TextAppearance_Content)
         setPadding(
             adapter.style.paddingInfo.horizontalLocal,
@@ -65,11 +66,8 @@ object FormSelectorProvider : BaseFormProvider() {
         holder: FormViewHolder,
         item: BaseForm
     ) {
-//        val itemSelector = item as? FormSelector
-//        val drawable = DeterminateDrawable.createCircularDrawable(
-//            holder.itemView.context,
-//            CircularProgressIndicatorSpec(holder.itemView.context, null)
-//        )
+        val itemSelector = item as? FormSelector
+        configOption(holder, itemSelector)
         with(holder.getView<MaterialButton>(R.id.formInternalContent)) {
             isEnabled = item.isRealMenuEnable(adapter.formAdapter)
             text = item.getContentText(context)
@@ -79,15 +77,73 @@ object FormSelectorProvider : BaseFormProvider() {
                 width = typeset.contentWidth()
             }
             doOnClick { onClickButton(adapter, holder, item) }
-//            icon = drawable
-//            drawable.start()
+        }
+        loadOption(adapter, holder, itemSelector)
+    }
+
+    override fun onBindItemView(
+        adapter: FormPartAdapter,
+        typeset: Typeset,
+        holder: FormViewHolder,
+        item: BaseForm,
+        payloads: List<Any>
+    ) {
+        if (payloads.isEmpty()) {
+            super.onBindItemView(adapter, typeset, holder, item, payloads)
+            return
+        }
+        if (payloads.contains("changeOption")) {
+            configOption(holder, item as? FormSelector)
+        }
+    }
+
+    private fun loadOption(adapter: FormPartAdapter, holder: FormViewHolder, item: FormSelector?) {
+        if (item?.isNeedToLoadOption() == true) {
+            item.loadOption(adapter) {
+                holder.itemView.post {
+                    adapter.notifyItemChanged(adapter.indexOfPosition(item), "changeOption")
+                }
+            }
+        }
+    }
+
+    private fun configOption(holder: FormViewHolder, item: FormSelector?) {
+        with(holder.getView<MaterialButton>(R.id.formInternalContent)) {
+            if (item == null) {
+                setIconResource(R.drawable.ic_form_arrow_down)
+                return@with
+            }
+            when (item.loaderResult) {
+                is OptionResult.Loading -> {
+                    val drawable = IndeterminateDrawable.createCircularDrawable(
+                        context,
+                        CircularProgressIndicatorSpec(context, null).apply {
+                            trackThickness = dp2px(2f)
+                            indicatorSize = iconSize
+                            indicatorInset = iconSize / 4
+                            indicatorColors = intArrayOf(attrColor(android.R.attr.textColorHint))
+                        }
+                    )
+                    icon = drawable
+                    drawable.start()
+                }
+
+                is OptionResult.Error -> setIconResource(R.drawable.ic_form_error)
+
+                else -> setIconResource(R.drawable.ic_form_arrow_down)
+            }
         }
     }
 
     private fun onClickButton(adapter: FormPartAdapter, holder: FormViewHolder, item: BaseForm) {
         if (item !is FormSelector) return
-        if (!item.options.isNullOrEmpty()) {
-            show(adapter, holder, item)
+        if (!item.options.isNullOrEmpty()) show(adapter, holder, item)
+        else {
+            when (item.loaderResult) {
+                is OptionResult.Loading -> showToast(R.string.formDefaultOptionsLoading)
+                else -> showToast(R.string.formDefaultOptionsEmpty)
+            }
+            loadOption(adapter, holder, item)
         }
     }
 
@@ -156,10 +212,6 @@ object FormSelectorProvider : BaseFormProvider() {
         val activity = view.context.getActivity()
         val intent = Intent(view.context, FormSelectorPageActivity::class.java)
         intent.putExtra("name", item.name)
-        if (item.options.isNullOrEmpty()) {
-            showToast(R.string.formDefaultSelectorOptionsEmpty)
-            return
-        }
         FormSelectorPageActivity.Controller.formSelector = item
         FormSelectorPageActivity.Controller.resultBlock = {
             changeContentAndNotifyLinkage(adapter, item, it)
@@ -177,8 +229,8 @@ object FormSelectorProvider : BaseFormProvider() {
 
     override fun onItemRecycler(holder: FormViewHolder) {
         holder.getView<MaterialButton>(R.id.formInternalContent).also {
-            if (it.icon is DeterminateDrawable<*>) {
-                (it.icon as DeterminateDrawable<*>).stop()
+            if (it.icon is IndeterminateDrawable<*>) {
+                (it.icon as IndeterminateDrawable<*>).stop()
             }
         }
     }
