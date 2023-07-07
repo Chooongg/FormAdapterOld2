@@ -2,6 +2,7 @@ package com.chooongg.formAdapter.provider
 
 import android.view.Gravity
 import android.view.ViewGroup
+import androidx.core.view.updateLayoutParams
 import com.chooongg.formAdapter.FormPartAdapter
 import com.chooongg.formAdapter.FormViewHolder
 import com.chooongg.formAdapter.R

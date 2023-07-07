@@ -8,7 +8,7 @@ import com.chooongg.utils.ext.dp2px
 
 object FormManager {
 
-    var emsSize = 6
+    var emsSize = 5
     var maxItemWidth = dp2px(300f)
     var horizontalDividerType = Boundary.LOCAL
     var singleLineDividerType = Boundary.GLOBAL

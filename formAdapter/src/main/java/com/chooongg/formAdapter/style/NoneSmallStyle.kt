@@ -16,7 +16,7 @@ import com.chooongg.utils.ext.attrColor
 import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.textview.MaterialTextView
 
-object NoneStyle : Style(HorizontalTypeset) {
+object NoneSmallStyle : Style(HorizontalTypeset) {
 
     override fun onCreateMarginInfo(context: Context): FormMarginInfo {
         return FormMarginInfo(0, 0, 0, 0)
@@ -24,8 +24,8 @@ object NoneStyle : Style(HorizontalTypeset) {
 
     override fun onCreatePaddingInfo(context: Context): FormPaddingInfo {
         return FormPaddingInfo(
-            context.resources.getDimensionPixelSize(R.dimen.formVerticalGlobalPaddingSize),
-            context.resources.getDimensionPixelSize(R.dimen.formVerticalGlobalPaddingSize),
+            context.resources.getDimensionPixelSize(R.dimen.formVerticalLocalPaddingSize),
+            context.resources.getDimensionPixelSize(R.dimen.formVerticalLocalPaddingSize),
             context.resources.getDimensionPixelSize(R.dimen.formHorizontalLocalPaddingSize),
             context.resources.getDimensionPixelSize(R.dimen.formHorizontalGlobalPaddingSize)
         )
@@ -62,7 +62,7 @@ object NoneStyle : Style(HorizontalTypeset) {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other !is NoneStyle) return false
+        if (other !is NoneSmallStyle) return false
         if (!super.equals(other)) return false
         return true
     }

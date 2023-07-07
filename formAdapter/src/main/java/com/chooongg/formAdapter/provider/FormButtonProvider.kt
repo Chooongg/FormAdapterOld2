@@ -1,7 +1,6 @@
 package com.chooongg.formAdapter.provider
 
 import android.animation.AnimatorInflater
-import android.graphics.drawable.Drawable
 import android.view.Gravity
 import android.view.ViewGroup
 import android.view.ViewGroup.MarginLayoutParams
@@ -13,10 +12,11 @@ import androidx.core.view.updateLayoutParams
 import com.chooongg.formAdapter.FormPartAdapter
 import com.chooongg.formAdapter.FormViewHolder
 import com.chooongg.formAdapter.R
+import com.chooongg.formAdapter.data.FormCreator
 import com.chooongg.formAdapter.item.BaseForm
 import com.chooongg.formAdapter.item.FormButton
 import com.chooongg.formAdapter.typeset.Typeset
-import com.chooongg.utils.ext.doOnClick
+import com.chooongg.utils.ext.doOnLongClick
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.theme.overlay.MaterialThemeOverlay
 
@@ -118,7 +118,7 @@ object FormButtonProvider : BaseFormProvider() {
     }
 
     private fun configButtonGravity(view: MaterialButton, contentGravity: Int) {
-        if (contentGravity == Gravity.NO_GRAVITY){
+        if (contentGravity == Gravity.NO_GRAVITY) {
             view.updateLayoutParams<ViewGroup.LayoutParams> {
                 width = ViewGroup.LayoutParams.MATCH_PARENT
             }
@@ -135,7 +135,7 @@ object FormButtonProvider : BaseFormProvider() {
                     gravity = Gravity.NO_GRAVITY
                 }
             }
-        }else{
+        } else {
             view.updateLayoutParams<ViewGroup.LayoutParams> {
                 width = ViewGroup.LayoutParams.WRAP_CONTENT
             }
@@ -166,8 +166,8 @@ object FormButtonProvider : BaseFormProvider() {
         holder: FormViewHolder,
         item: BaseForm
     ) {
-        holder.getView<MaterialButton>(R.id.formInternalContent).doOnClick {
-
+        holder.getView<MaterialButton>(R.id.formInternalContent).doOnLongClick {
+            false
         }
     }
 }

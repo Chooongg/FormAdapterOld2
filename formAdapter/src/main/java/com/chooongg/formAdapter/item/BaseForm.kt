@@ -2,6 +2,7 @@ package com.chooongg.formAdapter.item
 
 import android.content.Context
 import androidx.annotation.GravityInt
+import androidx.annotation.StringRes
 import com.chooongg.formAdapter.FormAdapter
 import com.chooongg.formAdapter.FormLinkageBlock
 import com.chooongg.formAdapter.boundary.Boundary
@@ -17,14 +18,18 @@ import kotlin.random.Random
  */
 abstract class BaseForm(
     /**
+     * 名称资源
+     */
+    @StringRes override var nameRes: Int?,
+    /**
      * 名称
      */
-    name: CharSequence?,
+    override var name: CharSequence?,
     /**
      * 字段
      */
-    val field: String?,
-) : AbstractMenuFormData(name) {
+    open var field: String?
+) : AbstractMenuFormData() {
 
     //<editor-fold desc="基础 Basic">
 

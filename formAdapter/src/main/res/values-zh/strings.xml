@@ -5,8 +5,12 @@
     <string name="formDefaultHintSelect">请选择</string>
     <string name="formDefaultHintInput">请输入</string>
 
-    <string name="formDefaultOptionsLoading">选项加载中</string>
-    <string name="formDefaultOptionsEmpty">没有可选项</string>
+    <string name="formPickerOpenError">无法打开选择器</string>
 
-    <string name="formDefaultSearchHint">输入要搜索的文本</string>
+    <string name="formOptionsLoading">选项加载中</string>
+    <string name="formOptionsEmpty">没有可选项</string>
+
+    <string name="formSearchHint">输入要搜索的文本</string>
+
+    <string name="formRatingFormat">%f星</string>
 </resources>

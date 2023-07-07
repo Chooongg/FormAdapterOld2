@@ -5,8 +5,12 @@
     <string name="formDefaultHintSelect">Please select</string>
     <string name="formDefaultHintInput">Please enter</string>
 
-    <string name="formDefaultOptionsLoading">Option loading</string>
-    <string name="formDefaultOptionsEmpty">No options available</string>
+    <string name="formPickerOpenError">Failed to open selector</string>
 
-    <string name="formDefaultSearchHint">Enter text to search</string>
+    <string name="formOptionsLoading">Option loading</string>
+    <string name="formOptionsEmpty">No options available</string>
+
+    <string name="formSearchHint">Enter text to search</string>
+
+    <string name="formRatingFormat">%f Star</string>
 </resources>

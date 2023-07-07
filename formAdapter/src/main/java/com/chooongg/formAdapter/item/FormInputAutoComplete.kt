@@ -1,12 +1,24 @@
 package com.chooongg.formAdapter.item
 
+import androidx.annotation.StringRes
 import com.chooongg.formAdapter.FormAdapter
+import com.chooongg.formAdapter.data.FormCreator
 import com.chooongg.formAdapter.provider.FormInputAutoCompleteProvider
 import com.chooongg.formAdapter.provider.FormTextProvider
 
+fun FormCreator.addInputAutoComplete(
+    name: CharSequence?, field: String? = null, block: (FormInputAutoComplete.() -> Unit)? = null
+) = add(FormInputAutoComplete(null, name, field).apply { block?.invoke(this) })
+
+fun FormCreator.addInputAutoComplete(
+    @StringRes nameRes: Int?,
+    field: String? = null,
+    block: (FormInputAutoComplete.() -> Unit)? = null
+) = add(FormInputAutoComplete(nameRes, null, field).apply { block?.invoke(this) })
+
 class FormInputAutoComplete(
-    name: CharSequence?, field: String?
-) : BaseOptionForm<String>(name, field) {
+    @StringRes nameRes: Int?, name: CharSequence?, field: String?
+) : BaseOptionForm<String>(nameRes, name, field) {
 
     var prefixText: CharSequence? = null
 

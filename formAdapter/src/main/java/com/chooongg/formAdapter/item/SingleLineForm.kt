@@ -7,7 +7,7 @@ import com.chooongg.formAdapter.provider.FormTextProvider
  * 单行表单
  * max:10
  */
-class SingleLineForm internal constructor() : BaseForm(null, null) {
+class SingleLineForm internal constructor() : BaseForm(null, null, null) {
 
     internal var items = mutableListOf<BaseForm>()
 

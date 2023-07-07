@@ -1,6 +1,7 @@
 package com.chooongg.formAdapter.provider
 
 import android.view.ViewGroup
+import android.view.ViewGroup.MarginLayoutParams
 import android.widget.FrameLayout
 import androidx.core.view.updateLayoutParams
 import com.chooongg.formAdapter.FormPartAdapter
@@ -38,6 +39,9 @@ object FormSwitchProvider : BaseFormProvider() {
             )
         }
         addView(switch)
+        layoutParams = MarginLayoutParams(
+            MarginLayoutParams.MATCH_PARENT, MarginLayoutParams.WRAP_CONTENT
+        )
     }
 
     override fun onBindItemView(

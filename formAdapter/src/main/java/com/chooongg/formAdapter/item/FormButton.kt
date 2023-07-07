@@ -1,15 +1,26 @@
 package com.chooongg.formAdapter.item
 
 import androidx.annotation.RestrictTo
+import androidx.annotation.StringRes
 import com.chooongg.formAdapter.FormAdapter
 import com.chooongg.formAdapter.FormColorStateListBlock
+import com.chooongg.formAdapter.data.FormCreator
 import com.chooongg.formAdapter.enum.FormVisibilityMode
 import com.chooongg.formAdapter.provider.FormButtonProvider
 import com.chooongg.formAdapter.typeset.NoneTypeset
 import com.chooongg.formAdapter.typeset.Typeset
 import com.google.android.material.button.MaterialButton
 
-class FormButton(name: CharSequence?, field: String?) : BaseForm(name, field) {
+fun FormCreator.addButton(
+    name: CharSequence?, field: String? = null, block: (FormButton.() -> Unit)? = null
+) = add(FormButton(null, name, field).apply { block?.invoke(this) })
+
+fun FormCreator.addButton(
+    @StringRes nameRes: Int?, field: String? = null, block: (FormButton.() -> Unit)? = null
+) = add(FormButton(nameRes, null, field).apply { block?.invoke(this) })
+
+class FormButton(@StringRes nameRes: Int?, name: CharSequence?, field: String?) :
+    BaseForm(nameRes, name, field) {
 
     enum class ButtonStyle {
         DEFAULT, TEXT, TONAL, OUTLINED, ELEVATED, UN_ELEVATED

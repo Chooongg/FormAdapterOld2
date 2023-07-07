@@ -1,5 +1,6 @@
 package com.chooongg.formAdapter.typeset
 
+import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
@@ -29,7 +30,9 @@ object NoneTypeset : Typeset(0) {
             view, view.layoutParams ?: FrameLayout.LayoutParams(
                 FrameLayout.LayoutParams.MATCH_PARENT,
                 FrameLayout.LayoutParams.WRAP_CONTENT
-            )
+            ).apply {
+                gravity = Gravity.CENTER_VERTICAL
+            }
         )
     }
 

@@ -24,7 +24,6 @@ open class CardElevatedStyle(
 ) : Style(defaultTypeset) {
 
     override fun onBindStyle(adapter: FormPartAdapter, holder: FormViewHolder, item: BaseForm) {
-        holder.itemView.isEnabled = item.isRealEnable(adapter.formAdapter)
         holder.itemView.clipToOutline = true
         holder.itemView.updateLayoutParams<MarginLayoutParams> {
             topMargin = when (item.marginBoundary.topType) {

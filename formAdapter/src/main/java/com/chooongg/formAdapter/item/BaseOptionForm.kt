@@ -1,5 +1,6 @@
 package com.chooongg.formAdapter.item
 
+import androidx.annotation.StringRes
 import com.chooongg.formAdapter.FormOptionLoader
 import com.chooongg.formAdapter.FormPartAdapter
 import com.chooongg.formAdapter.enum.FormOptionLoadMode
@@ -11,7 +12,8 @@ import kotlinx.coroutines.withContext
 /**
  * 选项表单 Item 基类
  */
-abstract class BaseOptionForm<T>(name: CharSequence?, field: String?) : BaseForm(name, field) {
+abstract class BaseOptionForm<T>(@StringRes nameRes: Int?, name: CharSequence?, field: String?) :
+    BaseForm(nameRes, name, field) {
 
     /**
      * 是否具有打开操作

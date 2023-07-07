@@ -2,11 +2,18 @@ package com.chooongg.formAdapter.data
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.Px
+import androidx.annotation.StringRes
 import com.chooongg.formAdapter.FormAdapter
 import com.chooongg.formAdapter.enum.FormEnableMode
 import com.chooongg.formAdapter.enum.FormVisibilityMode
 
-abstract class AbstractMenuFormData(name: CharSequence?) : AbstractFormData(name) {
+abstract class AbstractMenuFormData : AbstractFormData() {
+
+    /**
+     * 菜单文本资源
+     */
+    @StringRes
+    open var menuTextRes: Int? = null
 
     /**
      * 菜单文本
@@ -65,9 +72,9 @@ abstract class AbstractMenuFormData(name: CharSequence?) : AbstractFormData(name
         if (other !is AbstractMenuFormData) return false
         if (!super.equals(other)) return false
 
+        if (menuTextRes != other.menuTextRes) return false
         if (menuText != other.menuText) return false
         if (menuIconRes != other.menuIconRes) return false
-        if (menuIconSize != other.menuIconSize) return false
         if (menuVisibilityMode != other.menuVisibilityMode) return false
         if (menuEnableMode != other.menuEnableMode) return false
 
@@ -76,9 +83,9 @@ abstract class AbstractMenuFormData(name: CharSequence?) : AbstractFormData(name
 
     override fun hashCode(): Int {
         var result = super.hashCode()
+        result = 31 * result + (menuTextRes?.hashCode() ?: 0)
         result = 31 * result + (menuText?.hashCode() ?: 0)
-        result = 31 * result + (menuIconRes ?: 0)
-        result = 31 * result + (menuIconSize ?: 0)
+        result = 31 * result + (menuIconRes?.hashCode() ?: 0)
         result = 31 * result + menuVisibilityMode.hashCode()
         result = 31 * result + menuEnableMode.hashCode()
         return result

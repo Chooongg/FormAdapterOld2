@@ -128,9 +128,6 @@ object FormMenuProvider : BaseFormProvider() {
                 marginEnd = adapter.style.paddingInfo.horizontalLocal
             }
         })
-        layoutParams = MarginLayoutParams(
-            MarginLayoutParams.MATCH_PARENT, MarginLayoutParams.WRAP_CONTENT
-        )
     }
 
     @SuppressLint("SetTextI18n")

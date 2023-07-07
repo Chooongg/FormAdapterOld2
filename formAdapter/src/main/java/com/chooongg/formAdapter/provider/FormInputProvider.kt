@@ -1,5 +1,6 @@
 package com.chooongg.formAdapter.provider
 
+import android.content.res.ColorStateList
 import android.text.TextWatcher
 import android.view.ViewGroup
 import android.view.ViewGroup.MarginLayoutParams
@@ -12,7 +13,7 @@ import com.chooongg.formAdapter.R
 import com.chooongg.formAdapter.item.BaseForm
 import com.chooongg.formAdapter.item.FormInput
 import com.chooongg.formAdapter.typeset.Typeset
-import com.chooongg.utils.ext.attrColorStateList
+import com.chooongg.utils.ext.attrColor
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 
@@ -42,7 +43,7 @@ object FormInputProvider : BaseFormProvider() {
         boxStrokeWidth = 0
         boxStrokeWidthFocused = 0
         placeholderTextAppearance = R.style.FormAdapter_TextAppearance_Content
-        placeholderTextColor = attrColorStateList(android.R.attr.textColorHint)
+        placeholderTextColor = ColorStateList.valueOf(attrColor(android.R.attr.textColorHint))
         setPrefixTextAppearance(R.style.FormAdapter_TextAppearance_Content)
         setSuffixTextAppearance(R.style.FormAdapter_TextAppearance_Content)
         setEndIconTintList(editText.hintTextColors)
@@ -76,10 +77,10 @@ object FormInputProvider : BaseFormProvider() {
             suffixText = itemInput?.suffixText
             prefixText = itemInput?.prefixText
             placeholderText = itemInput?.placeholderText
-            if (itemInput?.maxLength != null && itemInput.maxLength != Int.MAX_VALUE) {
-                if (itemInput.isShowCounter != false) {
+            if (itemInput?.counterLength != null && itemInput.counterLength != Int.MAX_VALUE) {
+                if (itemInput.showCounter != false) {
                     isCounterEnabled = true
-                    counterMaxLength = itemInput.maxLength
+                    counterMaxLength = itemInput.counterLength
                     getChildAt(1).updatePadding(
                         top = 0,
                         bottom = adapter.style.paddingInfo.verticalLocal

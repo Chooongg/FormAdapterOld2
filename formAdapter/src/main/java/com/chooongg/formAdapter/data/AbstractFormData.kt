@@ -1,15 +1,22 @@
 package com.chooongg.formAdapter.data
 
+import androidx.annotation.StringRes
 import com.chooongg.formAdapter.FormAdapter
 import com.chooongg.formAdapter.enum.FormEnableMode
 import com.chooongg.formAdapter.enum.FormVisibilityMode
 
-abstract class AbstractFormData(
+abstract class AbstractFormData {
+
+    /**
+     * 名称资源
+     */
+    @StringRes
+    open var nameRes: Int? = null
+
     /**
      * 名称
      */
-    open var name: CharSequence?
-) {
+    open var name: CharSequence? = null
 
     /**
      * 可见模式
@@ -49,6 +56,7 @@ abstract class AbstractFormData(
         if (this === other) return true
         if (other !is AbstractFormData) return false
 
+        if (nameRes != other.nameRes) return false
         if (name != other.name) return false
         if (visibilityMode != other.visibilityMode) return false
         if (enableMode != other.enableMode) return false
@@ -57,7 +65,8 @@ abstract class AbstractFormData(
     }
 
     override fun hashCode(): Int {
-        var result = name?.hashCode() ?: 0
+        var result = nameRes?.hashCode() ?: 0
+        result = 31 * result + (name?.hashCode() ?: 0)
         result = 31 * result + visibilityMode.hashCode()
         result = 31 * result + enableMode.hashCode()
         return result

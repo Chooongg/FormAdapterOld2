@@ -13,3 +13,5 @@ typealias FormColorStateListBlock = Context.() -> ColorStateList
 typealias FormLinkageBlock = (linkage: LinkageForm, field: String?, content: Any?) -> Unit
 
 typealias FormOptionLoader<T> = suspend (BaseOptionForm<T>) -> OptionResult<T>
+
+typealias FormSliderFormatter = (Float) -> String

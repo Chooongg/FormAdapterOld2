@@ -1,18 +1,29 @@
 package com.chooongg.formAdapter.item
 
+import androidx.annotation.StringRes
 import com.chooongg.formAdapter.FormAdapter
 import com.chooongg.formAdapter.FormColorStateListBlock
+import com.chooongg.formAdapter.data.FormCreator
 import com.chooongg.formAdapter.provider.FormMenuProvider
 import com.chooongg.formAdapter.typeset.NoneTypeset
 import com.chooongg.formAdapter.typeset.Typeset
 
-class FormMenu(name: CharSequence?, field: String?) : BaseForm(name, field) {
+fun FormCreator.addMenu(
+    name: CharSequence?, field: String? = null, block: (FormMenu.() -> Unit)? = null
+) = add(FormMenu(null, name, field).apply { block?.invoke(this) })
+
+fun FormCreator.addMenu(
+    @StringRes nameRes: Int?, field: String? = null, block: (FormMenu.() -> Unit)? = null
+) = add(FormMenu(nameRes, null, field).apply { block?.invoke(this) })
+
+class FormMenu(@StringRes nameRes: Int?, name: CharSequence?, field: String?) :
+    BaseForm(nameRes, name, field) {
 
     companion object {
         const val NO_SET = -2
     }
 
-    var isGlobalPadding:Boolean = true
+    var isGlobalPadding: Boolean = true
 
     var iconRes: Int? = null
 

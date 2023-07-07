@@ -8,6 +8,7 @@ import com.chooongg.formAdapter.FormViewHolder
 import com.chooongg.formAdapter.R
 import com.chooongg.formAdapter.item.BaseForm
 import com.chooongg.formAdapter.typeset.Typeset
+import com.chooongg.utils.ext.attrColor
 import com.google.android.material.textview.MaterialTextView
 
 object FormTextProvider : BaseFormProvider() {
@@ -19,12 +20,14 @@ object FormTextProvider : BaseFormProvider() {
     ) = MaterialTextView(parent.context).apply {
         id = R.id.formInternalContent
         setTextAppearance(R.style.FormAdapter_TextAppearance_Content)
+        setHintTextColor(attrColor(android.R.attr.textColorHint))
         setPadding(
             adapter.style.paddingInfo.horizontalLocal,
             adapter.style.paddingInfo.verticalLocal,
             adapter.style.paddingInfo.horizontalLocal,
             adapter.style.paddingInfo.verticalLocal
         )
+        alpha = 0.8f
         layoutParams = MarginLayoutParams(
             MarginLayoutParams.MATCH_PARENT, MarginLayoutParams.WRAP_CONTENT
         )

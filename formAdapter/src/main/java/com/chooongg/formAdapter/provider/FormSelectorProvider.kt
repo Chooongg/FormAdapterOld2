@@ -118,9 +118,8 @@ object FormSelectorProvider : BaseFormProvider() {
                     val drawable = IndeterminateDrawable.createCircularDrawable(
                         context,
                         CircularProgressIndicatorSpec(context, null).apply {
-                            trackThickness = dp2px(2f)
-                            indicatorSize = iconSize
-                            indicatorInset = iconSize / 4
+                            trackThickness = dp2px(1.5f)
+                            indicatorSize = iconSize / 2
                             indicatorColors = intArrayOf(attrColor(android.R.attr.textColorHint))
                         }
                     )
@@ -140,8 +139,8 @@ object FormSelectorProvider : BaseFormProvider() {
         if (!item.options.isNullOrEmpty()) show(adapter, holder, item)
         else {
             when (item.loaderResult) {
-                is OptionResult.Loading -> showToast(R.string.formDefaultOptionsLoading)
-                else -> showToast(R.string.formDefaultOptionsEmpty)
+                is OptionResult.Loading -> showToast(R.string.formOptionsLoading)
+                else -> showToast(R.string.formOptionsEmpty)
             }
             loadOption(adapter, holder, item)
         }

@@ -4,7 +4,7 @@ import com.chooongg.formAdapter.item.BaseForm
 import com.chooongg.formAdapter.item.InternalFormGroupTitle
 import com.chooongg.formAdapter.item.SingleLineForm
 
-open class GroupData : AbstractMenuFormData(null), FormCreator {
+open class GroupData : AbstractMenuFormData(), FormCreator {
 
     private val _items = mutableListOf<BaseForm>()
 
@@ -36,17 +36,17 @@ open class GroupData : AbstractMenuFormData(null), FormCreator {
         index: Int
     ): InternalFormGroupTitle? {
         groupTitleItem = if ((part.dynamicPart && part.dynamicPartShowName) || name != null) {
-            val groupName = if (part.dynamicPart) {
-                if (part.dynamicPartShowName) {
-                    part.dynamicPartNameFormatBlock?.invoke(part.dynamicPartName, index)
-                } else null
-            } else name
-            (groupTitleItem ?: InternalFormGroupTitle(groupName)).also {
+            (groupTitleItem ?: InternalFormGroupTitle(nameRes, name)).also {
                 it.isDynamicPart = part.dynamicPart
-                it.name = groupName
-                it.menuIconRes = menuIconRes
+                it.nameRes = nameRes
+                it.name = if (part.dynamicPart) {
+                    if (part.dynamicPartShowName) {
+                        part.dynamicPartNameFormatBlock?.invoke(part.dynamicPartName, index)
+                    } else null
+                } else name
+                it.menuTextRes = menuTextRes
                 it.menuText = menuText
-                it.menuIconSize = menuIconSize
+                it.menuIconRes = menuIconRes
                 it.menuVisibilityMode = menuVisibilityMode
                 it.menuEnableMode = menuEnableMode
             }
