@@ -12,7 +12,6 @@ import com.chooongg.formAdapter.item.BaseForm
 import com.chooongg.formAdapter.item.SingleLineForm
 import com.chooongg.formAdapter.style.NoneStyle
 import com.chooongg.formAdapter.style.Style
-import com.chooongg.utils.ext.logE
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -45,7 +44,8 @@ class FormPartAdapter internal constructor(
 
     }, AsyncDifferConfig.Builder(object : DiffUtil.ItemCallback<BaseForm>() {
         override fun areItemsTheSame(oldItem: BaseForm, newItem: BaseForm) =
-            oldItem.javaClass == newItem.javaClass
+            (oldItem.typeset ?: style.defaultTypeset) == (newItem.typeset ?: style.defaultTypeset)
+                    && oldItem.javaClass == newItem.javaClass
 
         override fun areContentsTheSame(oldItem: BaseForm, newItem: BaseForm) =
             oldItem.antiRepeatCode == newItem.antiRepeatCode
