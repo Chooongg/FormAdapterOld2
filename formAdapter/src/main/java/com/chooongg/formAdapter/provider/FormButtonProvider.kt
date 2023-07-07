@@ -47,7 +47,7 @@ object FormButtonProvider : BaseFormProvider() {
     ) {
         val itemButton = item as? FormButton
         with(holder.getView<MaterialButton>(R.id.formInternalContent)) {
-            isEnabled = item.isRealMenuEnable(adapter.formAdapter)
+            isEnabled = item.isRealEnable(adapter.formAdapter)
             text = item.name
             hint = item.hint
             if (itemButton?.iconRes != null) {

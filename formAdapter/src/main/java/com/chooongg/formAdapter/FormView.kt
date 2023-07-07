@@ -1,7 +1,6 @@
 package com.chooongg.formAdapter
 
 import android.content.Context
-import android.content.res.Resources
 import android.util.AttributeSet
 import androidx.recyclerview.widget.RecyclerView
 import com.chooongg.utils.ext.getActivity
@@ -39,9 +38,6 @@ class FormView @JvmOverloads constructor(
             }
         })
         itemAnimator = FormItemAnimator()
-        if (isInEditMode) {
-            layoutManager = FormLayoutManager(context)
-        }
     }
 
     fun setPadding(paddingVertical: Int, paddingHorizontal: Int) {
@@ -58,7 +54,4 @@ class FormView @JvmOverloads constructor(
         }
         super.setLayoutManager(layout)
     }
-
-    fun dp2px(dp: Float) =
-        (dp * Resources.getSystem().displayMetrics.density + 0.5f).toInt()
 }

@@ -1,7 +1,6 @@
 package com.chooongg.formAdapter
 
 import android.content.Context
-import android.util.Log
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
@@ -49,16 +48,17 @@ class FormLayoutManager(context: Context) : GridLayoutManager(context, 2520) {
     }
 
     override fun onLayoutChildren(recycler: RecyclerView.Recycler, state: RecyclerView.State) {
-        if (!state.isPreLayout) calculateBoundary()
+        if (state.didStructureChange()) calculateBoundary()
         super.onLayoutChildren(recycler, state)
     }
 
     private fun calculateBoundary() {
-        Log.e("Form", "calculateBoundary")
         val formAdapter = recyclerView?.adapter as? FormAdapter ?: return
         var spanIndex = 0
-        formAdapter.partAdapters.forEachIndexed { partIndex, adapter ->
+        var globalPosition = 0
+        formAdapter.partAdapters.forEach { adapter ->
             adapter.getItemList().forEachIndexed { index, item ->
+                item.globalPosition = globalPosition
                 item.itemSpan = if (item.isSingleLineItem) {
                     item.itemSpan
                 } else if (item.isMustSingleColumn) {
@@ -89,7 +89,7 @@ class FormLayoutManager(context: Context) : GridLayoutManager(context, 2520) {
                         if (item.isSingleLineItem) FormManager.singleLineDividerType else FormManager.horizontalDividerType
                 }
                 if (item.positionForGroup == 0) {
-                    if (partIndex == 0 && index == 0) {
+                    if (item.globalPosition == 0) {
                         item.marginBoundary.topType = Boundary.GLOBAL
                         item.paddingBoundary.topType = Boundary.GLOBAL
                     } else {
@@ -98,22 +98,23 @@ class FormLayoutManager(context: Context) : GridLayoutManager(context, 2520) {
                     }
                 } else if (item.spanIndex != 0) {
                     var lastIndex = index - 1
-                    while (adapter.getItemList()[lastIndex].spanIndex != 0) {
+                    while (adapter.getItem(lastIndex).spanIndex != 0) {
                         lastIndex--
                     }
                     item.marginBoundary.topType =
-                        adapter.getItemList()[lastIndex].marginBoundary.topType
+                        adapter.getItem(lastIndex).marginBoundary.topType
                     item.paddingBoundary.topType =
-                        adapter.getItemList()[lastIndex].paddingBoundary.topType
+                        adapter.getItem(lastIndex).paddingBoundary.topType
                 } else {
                     item.marginBoundary.topType = Boundary.NONE
                     item.paddingBoundary.topType = Boundary.LOCAL
                 }
+                globalPosition++
             }
             for (index in adapter.getItemList().lastIndex downTo 0) {
-                val item = adapter.getItemList()[index]
+                val item = adapter.getItem(index)
                 if (item.itemCountForGroup - item.positionForGroup == 1) {
-                    if (partIndex == formAdapter.partSize() - 1 && index == adapter.getItemList().lastIndex) {
+                    if (item.globalPosition == formAdapter.itemCount - 1) {
                         item.marginBoundary.bottomType = Boundary.GLOBAL
                         item.paddingBoundary.bottomType = Boundary.GLOBAL
                     } else {
@@ -122,13 +123,13 @@ class FormLayoutManager(context: Context) : GridLayoutManager(context, 2520) {
                     }
                 } else if (item.spanIndex + item.itemSpan != spanCount) {
                     var beginIndex = index + 1
-                    while (adapter.getItemList()[beginIndex].spanIndex + adapter.getItemList()[beginIndex].itemSpan != spanCount) {
+                    while (adapter.getItem(beginIndex).spanIndex + adapter.getItem(beginIndex).itemSpan != spanCount) {
                         beginIndex++
                     }
                     item.marginBoundary.bottomType =
-                        adapter.getItemList()[beginIndex].marginBoundary.bottomType
+                        adapter.getItem(beginIndex).marginBoundary.bottomType
                     item.paddingBoundary.bottomType =
-                        adapter.getItemList()[beginIndex].paddingBoundary.bottomType
+                        adapter.getItem(beginIndex).paddingBoundary.bottomType
                 } else {
                     item.marginBoundary.bottomType = Boundary.NONE
                     item.paddingBoundary.bottomType = Boundary.LOCAL

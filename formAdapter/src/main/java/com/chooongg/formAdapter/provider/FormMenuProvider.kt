@@ -230,7 +230,7 @@ object FormMenuProvider : BaseFormProvider() {
         ),
         null,
         holder.itemView.background ?: MaterialShapeDrawable(
-            adapter.style.getShapeAppearanceModel(holder, item)
+            adapter.style.getShapeAppearanceModel(adapter)
         )
     )
 

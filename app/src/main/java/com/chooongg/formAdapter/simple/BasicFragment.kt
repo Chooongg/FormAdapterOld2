@@ -28,7 +28,7 @@ import com.chooongg.formAdapter.item.addTime
 import com.chooongg.formAdapter.item.addTip
 import com.chooongg.formAdapter.option.Option
 import com.chooongg.formAdapter.simple.databinding.FragmentBasicBinding
-import com.chooongg.formAdapter.style.CardElevatedStyle
+import com.chooongg.formAdapter.style.CardFilledStyle
 
 class BasicFragment : Fragment() {
 
@@ -57,11 +57,11 @@ class BasicFragment : Fragment() {
             plusPart {
                 plusGroup {
                     addButton("IsEditable", "isEditable") {
-                        enableMode = FormEnableMode.ALWAYS
+                        this.enableMode = FormEnableMode.ALWAYS
                     }
                 }
             }
-            for (i in 0..6) plusPart(CardElevatedStyle()) {
+            plusPart(CardFilledStyle()) {
                 plusGroup {
                     addLabel("Android FormAdapter") {
                         contentGravity = Gravity.CENTER_HORIZONTAL

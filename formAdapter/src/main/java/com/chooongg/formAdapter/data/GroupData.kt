@@ -32,25 +32,22 @@ open class GroupData : AbstractMenuFormData(), FormCreator {
     fun clearItems() = _items.clear()
 
     internal fun getGroupTitleItem(
-        part: PartData,
-        index: Int
+        part: PartData
     ): InternalFormGroupTitle? {
-        groupTitleItem = if ((part.dynamicPart && part.dynamicPartShowName) || name != null) {
-            (groupTitleItem ?: InternalFormGroupTitle(nameRes, name)).also {
-                it.isDynamicPart = part.dynamicPart
-                it.nameRes = nameRes
-                it.name = if (part.dynamicPart) {
-                    if (part.dynamicPartShowName) {
-                        part.dynamicPartNameFormatBlock?.invoke(part.dynamicPartName, index)
-                    } else null
-                } else name
-                it.menuTextRes = menuTextRes
-                it.menuText = menuText
-                it.menuIconRes = menuIconRes
-                it.menuVisibilityMode = menuVisibilityMode
-                it.menuEnableMode = menuEnableMode
-            }
-        } else null
+        groupTitleItem =
+            if ((part.dynamicPart && part.dynamicPartShowName) || nameRes != null || name != null) {
+                (groupTitleItem ?: InternalFormGroupTitle(nameRes, name)).also {
+                    it.isDynamicPart = part.dynamicPart
+                    it.nameRes = nameRes
+                    it.name = name
+                    it.dynamicPartNameFormatBlock = part.dynamicPartNameFormatBlock
+                    it.menuTextRes = menuTextRes
+                    it.menuText = menuText
+                    it.menuIconRes = menuIconRes
+                    it.menuVisibilityMode = menuVisibilityMode
+                    it.menuEnableMode = menuEnableMode
+                }
+            } else null
         return groupTitleItem
     }
 }

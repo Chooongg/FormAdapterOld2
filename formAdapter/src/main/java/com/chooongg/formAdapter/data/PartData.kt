@@ -1,5 +1,7 @@
 package com.chooongg.formAdapter.data
 
+import com.chooongg.formAdapter.FormPartNameFormatter
+
 class PartData {
 
     val groups = mutableListOf<GroupData>()
@@ -26,8 +28,7 @@ class PartData {
 
     internal var dynamicPartCreateGroupBlock: (GroupData.() -> Unit)? = null
 
-    internal var dynamicPartNameFormatBlock: ((name: CharSequence?, index: Int) -> CharSequence)? =
-        null
+    internal var dynamicPartNameFormatBlock: FormPartNameFormatter? = null
 
     /**
      * 动态片段显示名称
@@ -56,7 +57,7 @@ class PartData {
     /**
      * 动态片段名称格式化
      */
-    fun dynamicPartNameFormatListener(block: ((name: CharSequence?, index: Int) -> CharSequence)?) {
+    fun dynamicPartNameFormatListener(block: FormPartNameFormatter?) {
         dynamicPartNameFormatBlock = block
     }
 

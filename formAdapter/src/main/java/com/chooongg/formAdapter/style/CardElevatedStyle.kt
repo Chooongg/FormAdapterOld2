@@ -37,7 +37,7 @@ open class CardElevatedStyle(
                 else -> 0
             }
         }
-        val shape = getShapeAppearanceModel(holder, item).configShapeAppearanceModel(holder, item)
+        val shape = getShapeAppearanceModel(adapter).configShapeAppearanceModel(holder, item)
         holder.itemView.elevation = customElevation ?: holder.itemView.attrChildDimensionPixelSize(
             com.google.android.material.R.attr.materialCardViewElevatedStyle,
             com.google.android.material.R.attr.cardElevation, 0

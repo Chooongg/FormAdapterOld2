@@ -70,20 +70,9 @@ abstract class Style(val defaultTypeset: Typeset) {
     abstract fun onBindGroupTitle(holder: FormViewHolder, item: InternalFormGroupTitle)
 
     open fun getShapeAppearanceModel(
-        holder: FormViewHolder,
-        item: BaseForm
+        adapter:FormPartAdapter
     ): ShapeAppearanceModel {
-        val originalShape = if (holder.itemView.tag is ShapeAppearanceModel) {
-            holder.itemView.tag as ShapeAppearanceModel
-        } else {
-            val shapeResId = holder.itemView.attrResourcesId(
-                com.google.android.material.R.attr.shapeAppearanceCornerMedium, 0
-            )
-            val temp = ShapeAppearanceModel.builder(holder.itemView.context, shapeResId, 0).build()
-            holder.itemView.tag = temp
-            temp
-        }
-        return originalShape
+        return adapter.formAdapter.shapeAppearanceModel?: ShapeAppearanceModel()
     }
 
     open fun ShapeAppearanceModel.configShapeAppearanceModel(

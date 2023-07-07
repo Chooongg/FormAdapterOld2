@@ -80,9 +80,9 @@ class FormPartAdapter internal constructor(
                 }
             }
         }
-        data.groups.forEachIndexed { groupIndex, group ->
+        data.groups.forEach { group ->
             val groupList = mutableListOf<BaseForm>()
-            group.getGroupTitleItem(data, groupIndex)?.also { groupList.add(it) }
+            group.getGroupTitleItem(data)?.also { groupList.add(it) }
             group@ for (item in group.getItems()) {
                 if (item is SingleLineForm) {
                     val singleLines = ArrayList<BaseForm>()

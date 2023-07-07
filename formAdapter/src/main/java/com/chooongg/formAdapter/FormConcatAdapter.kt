@@ -8,14 +8,24 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.chooongg.formAdapter.format.FormNameFormat
 import com.chooongg.formAdapter.item.BaseForm
 import com.chooongg.formAdapter.provider.BaseFormProvider
-import com.chooongg.formAdapter.style.Style
 import com.chooongg.formAdapter.typeset.Typeset
+import com.chooongg.utils.ext.attrResourcesId
+import com.google.android.material.shape.ShapeAppearanceModel
 import java.lang.ref.WeakReference
 
 open class FormConcatAdapter constructor(isEditable: Boolean) : RecyclerView.Adapter<ViewHolder>() {
 
     private val concatAdapter =
         ConcatAdapter(ConcatAdapter.Config.Builder().setIsolateViewTypes(false).build())
+
+    var shapeAppearanceResId: Int? = null
+        set(value) {
+            field = value
+            concatAdapter.notifyItemRangeChanged(0, itemCount)
+        }
+
+    var shapeAppearanceModel: ShapeAppearanceModel? = null
+        private set
 
     var isEditable: Boolean = isEditable
         set(value) {
@@ -187,15 +197,14 @@ open class FormConcatAdapter constructor(isEditable: Boolean) : RecyclerView.Ada
             recyclerView.layoutManager = layoutManager
             normalColumnCount = layoutManager.normalColumnCount
         }
-//        var isHasFormItemDecoration = false
-//        for (i in 0 until recyclerView.itemDecorationCount){
-//            if (recyclerView.getItemDecorationAt(i) is FormItemDecoration){
-//                isHasFormItemDecoration = true
-//            }
-//        }
-//        if (!isHasFormItemDecoration){
-//            recyclerView.addItemDecoration(FormItemDecoration())
-//        }
+        shapeAppearanceModel = ShapeAppearanceModel.builder(
+            recyclerView.context,
+            shapeAppearanceResId
+                ?: recyclerView.attrResourcesId(
+                    com.google.android.material.R.attr.shapeAppearanceCornerMedium,
+                    com.google.android.material.R.style.ShapeAppearance_Material3_Corner_Medium
+                ), 0
+        ).build()
         concatAdapter.onAttachedToRecyclerView(recyclerView)
         recyclerView.addOnScrollListener(onScrollListener)
     }
@@ -203,6 +212,7 @@ open class FormConcatAdapter constructor(isEditable: Boolean) : RecyclerView.Ada
     override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
         _recyclerView = WeakReference(null)
         concatAdapter.onDetachedFromRecyclerView(recyclerView)
+        shapeAppearanceModel = null
         recyclerView.removeOnScrollListener(onScrollListener)
     }
 

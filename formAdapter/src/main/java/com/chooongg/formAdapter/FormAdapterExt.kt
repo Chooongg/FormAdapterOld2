@@ -15,3 +15,5 @@ typealias FormLinkageBlock = (linkage: LinkageForm, field: String?, content: Any
 typealias FormOptionLoader<T> = suspend (BaseOptionForm<T>) -> OptionResult<T>
 
 typealias FormSliderFormatter = (Float) -> String
+
+typealias FormPartNameFormatter = (context: Context, name: CharSequence?, index: Int) -> CharSequence

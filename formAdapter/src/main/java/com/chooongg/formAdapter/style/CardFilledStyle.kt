@@ -37,7 +37,7 @@ open class CardFilledStyle(
                 else -> 0
             }
         }
-        val shape = getShapeAppearanceModel(holder, item).configShapeAppearanceModel(holder, item)
+        val shape = getShapeAppearanceModel(adapter).configShapeAppearanceModel(holder, item)
         if (holder.itemView.background is MaterialShapeDrawable) {
             (holder.itemView.background as MaterialShapeDrawable).shapeAppearanceModel = shape
         } else holder.itemView.background = MaterialShapeDrawable(shape)
