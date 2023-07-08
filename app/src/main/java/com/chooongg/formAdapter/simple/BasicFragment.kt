@@ -29,6 +29,7 @@ import com.chooongg.formAdapter.item.addTip
 import com.chooongg.formAdapter.option.Option
 import com.chooongg.formAdapter.simple.databinding.FragmentBasicBinding
 import com.chooongg.formAdapter.style.CardFilledStyle
+import kotlinx.coroutines.delay
 
 class BasicFragment : Fragment() {
 
@@ -74,6 +75,15 @@ class BasicFragment : Fragment() {
                         content = "FormSelector"
                         openMode = FormSelectorOpenMode.PAGE
                         optionLoadMode = FormOptionLoadMode.EMPTY
+                        optionLoader {
+                            delay(5000)
+                            throw RuntimeException("1231254124")
+                        }
+                    }
+                    addSelector("Selector", "selector") {
+                        content = "FormSelector"
+                        openMode = FormSelectorOpenMode.PAGE
+                        optionLoadMode = FormOptionLoadMode.EMPTY
                         localOptions(
                             listOf(
                                 Option("张三", "130181199505087310"),
@@ -98,7 +108,8 @@ class BasicFragment : Fragment() {
                     }
                     addInput("Input", "input")
                     addInputAutoComplete("AutoComplete", "inputAutoComplete") {
-                        localOptions(
+                        optionLoader {
+                            delay(5000)
                             listOf(
                                 "张三",
                                 "李四",
@@ -109,7 +120,7 @@ class BasicFragment : Fragment() {
                                 "吴九",
                                 "郑十"
                             )
-                        )
+                        }
                     }
                     addSelector("Selector", "selector") {
                         isMust = true
@@ -152,6 +163,21 @@ class BasicFragment : Fragment() {
                     }
                     addRating("Rating", "rating") {
 
+                    }
+                    addInputAutoComplete("AutoComplete", "inputAutoComplete1") {
+                        optionLoader {
+                            delay(5000)
+                            listOf(
+                                "张三",
+                                "李四",
+                                "王五",
+                                "赵六",
+                                "田七",
+                                "周八",
+                                "吴九",
+                                "郑十"
+                            )
+                        }
                     }
                 }
             }

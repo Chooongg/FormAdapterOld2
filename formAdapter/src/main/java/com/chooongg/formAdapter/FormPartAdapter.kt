@@ -182,7 +182,12 @@ class FormPartAdapter internal constructor(
 
     fun getItem(position: Int) = asyncDiffer.currentList[position]
 
-    fun indexOfPosition(item: BaseForm) = asyncDiffer.currentList.indexOf(item)
+    fun indexOfPosition(item: BaseForm): Int {
+        for (i in 0 until itemCount) {
+            if (getItem(i).antiRepeatCode == item.antiRepeatCode) return i
+        }
+        return -1
+    }
 
     override fun getItemViewType(position: Int): Int {
         val item = asyncDiffer.currentList[position]

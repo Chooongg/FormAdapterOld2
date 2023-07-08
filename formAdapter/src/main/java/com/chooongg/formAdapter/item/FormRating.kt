@@ -1,10 +1,11 @@
 package com.chooongg.formAdapter.item
 
-import android.content.Context
 import androidx.annotation.FloatRange
 import androidx.annotation.StringRes
 import com.chooongg.formAdapter.FormAdapter
 import com.chooongg.formAdapter.FormColorStateListBlock
+import com.chooongg.formAdapter.FormPartAdapter
+import com.chooongg.formAdapter.FormViewHolder
 import com.chooongg.formAdapter.R
 import com.chooongg.formAdapter.data.FormCreator
 import com.chooongg.formAdapter.provider.FormRatingProvider
@@ -36,8 +37,8 @@ class FormRating(@StringRes nameRes: Int?, name: CharSequence?, field: String?) 
 
     override fun getItemProvider(adapter: FormAdapter) = FormRatingProvider
 
-    override fun getContentText(context: Context): CharSequence? {
+    override fun getContentText(adapter: FormPartAdapter, holder: FormViewHolder): CharSequence? {
         val rating = content as? Float ?: return content?.toString()
-        return context.getString(R.string.formRatingFormat, rating)
+        return holder.itemView.context.getString(R.string.formRatingFormat, rating)
     }
 }

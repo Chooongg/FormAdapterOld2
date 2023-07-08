@@ -40,7 +40,7 @@ object FormTextProvider : BaseFormProvider() {
         item: BaseForm
     ) {
         holder.getView<MaterialTextView>(R.id.formInternalContent).apply {
-            text = item.getContentText(context)
+            text = item.getContentText(adapter, holder)
             hint = item.hint ?: resources.getString(R.string.fromDefaultHintNone)
             gravity = typeset.getContentGravity(adapter, item)
             updateLayoutParams<ViewGroup.LayoutParams> {

@@ -3,8 +3,11 @@ package com.chooongg.formAdapter.item
 import androidx.annotation.StringRes
 import com.chooongg.formAdapter.FormOptionLoader
 import com.chooongg.formAdapter.FormPartAdapter
+import com.chooongg.formAdapter.FormViewHolder
 import com.chooongg.formAdapter.enum.FormOptionLoadMode
 import com.chooongg.formAdapter.option.OptionResult
+import com.chooongg.formAdapter.option.OptionState
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -32,42 +35,52 @@ abstract class BaseOptionForm<T>(@StringRes nameRes: Int?, name: CharSequence?, 
      */
     private var optionLoader: FormOptionLoader<T>? = null
 
-    var loaderResult: OptionResult<T> = OptionResult.NotLoading()
+    var optionResult: OptionResult<T> = OptionState.Wait()
         protected set
 
     val options: List<T>?
-        get() = localOptions ?: (loaderResult as? OptionResult.Success<T>)?.options
+        get() = localOptions ?: (optionResult as? OptionResult.Success<T>)?.options
 
     fun localOptions(local: List<T>) {
         localOptions = local
     }
 
-    fun isNeedToLoadOption() =
-        if (localOptions != null) {
-            false
-        } else if (loaderResult is OptionResult.NotLoading || loaderResult is OptionResult.Error) {
-            when (optionLoadMode) {
-                FormOptionLoadMode.ALWAYS -> true
-                FormOptionLoadMode.EMPTY -> options.isNullOrEmpty()
-            }
-        } else false
+    fun isNeedToLoadOption(holder: FormViewHolder): Boolean {
+        if (localOptions != null) return false
+        if (optionLoader == null) return false
+        if (optionResult is OptionState.Loading<T>) return false
+        if (holder.job?.isActive == true) return false
+        return when (optionLoadMode) {
+            FormOptionLoadMode.ALWAYS -> true
+            FormOptionLoadMode.EMPTY -> options.isNullOrEmpty()
+        }
+    }
 
-    open fun loadOption(adapter: FormPartAdapter, notifyUpdate: () -> Unit) {
-        adapter.adapterScope.launch {
-            if (optionLoader == null) {
-                loaderResult = OptionResult.NotLoading()
-                withContext(Dispatchers.Main) {
-                    notifyUpdate.invoke()
-                }
-                return@launch
-            }
-            loaderResult = OptionResult.Loading()
-            withContext(Dispatchers.Main) {
-                notifyUpdate.invoke()
-            }
-            loaderResult = optionLoader!!.invoke(this@BaseOptionForm)
-            withContext(Dispatchers.Main) {
-                notifyUpdate.invoke()
+    open fun loadOption(
+        adapter: FormPartAdapter,
+        holder: FormViewHolder,
+        notifyUpdate: () -> Unit
+    ) {
+        if (optionLoader == null) {
+            optionResult = OptionState.Wait()
+            notifyUpdate.invoke()
+            return
+        }
+        holder.job = adapter.adapterScope.launch {
+            try {
+                optionResult = OptionState.Loading()
+                withContext(Dispatchers.Main) { notifyUpdate.invoke() }
+                val result = optionLoader!!.invoke(this@BaseOptionForm)
+                optionResult = if (result.isNullOrEmpty()) {
+                    OptionResult.Empty()
+                } else OptionResult.Success(result)
+                withContext(Dispatchers.Main) { notifyUpdate.invoke() }
+            } catch (e: CancellationException) {
+                optionResult = OptionState.Wait()
+                holder.job = null
+            } catch (e: Exception) {
+                optionResult = OptionResult.Error(e)
+                withContext(Dispatchers.Main) { notifyUpdate.invoke() }
             }
         }
     }

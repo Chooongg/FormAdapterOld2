@@ -21,17 +21,17 @@ abstract class AbstractFormData {
     /**
      * 可见模式
      */
-    open var visibilityMode: FormVisibilityMode = FormVisibilityMode.ALWAYS
+    var visibilityMode: FormVisibilityMode = FormVisibilityMode.ALWAYS
 
     /**
      * 启用模式
      */
-    open var enableMode: FormEnableMode = FormEnableMode.ONLY_EDIT
+    var enableMode: FormEnableMode = FormEnableMode.ONLY_EDIT
 
     /**
      * 真实的可见性
      */
-    open fun isRealVisible(adapter: FormAdapter): Boolean {
+    fun isRealVisible(adapter: FormAdapter): Boolean {
         return when (visibilityMode) {
             FormVisibilityMode.ALWAYS -> true
             FormVisibilityMode.ONLY_EDIT -> adapter.isEditable
@@ -43,7 +43,7 @@ abstract class AbstractFormData {
     /**
      * 真实的可用性
      */
-    open fun isRealEnable(adapter: FormAdapter): Boolean {
+    fun isRealEnable(adapter: FormAdapter): Boolean {
         return when (enableMode) {
             FormEnableMode.ALWAYS -> true
             FormEnableMode.ONLY_EDIT -> adapter.isEditable

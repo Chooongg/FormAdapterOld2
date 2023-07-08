@@ -40,12 +40,12 @@ abstract class AbstractMenuFormData : AbstractFormData() {
     /**
      * 菜单启用模式
      */
-    open var menuEnableMode: FormEnableMode = FormEnableMode.ONLY_EDIT
+    open var menuEnableMode: FormEnableMode = enableMode
 
     /**
      * 真实的菜单可见性
      */
-    open fun isRealMenuVisible(isEditable: Boolean): Boolean {
+    fun isRealMenuVisible(isEditable: Boolean): Boolean {
         if (menuText == null && menuIconRes == null) return false
         return when (menuVisibilityMode) {
             FormVisibilityMode.ALWAYS -> true
@@ -58,7 +58,7 @@ abstract class AbstractMenuFormData : AbstractFormData() {
     /**
      * 真实的菜单可用性
      */
-    open fun isRealMenuEnable(adapter: FormAdapter): Boolean {
+    fun isRealMenuEnable(adapter: FormAdapter): Boolean {
         return when (menuEnableMode) {
             FormEnableMode.ALWAYS -> true
             FormEnableMode.ONLY_EDIT -> adapter.isEditable

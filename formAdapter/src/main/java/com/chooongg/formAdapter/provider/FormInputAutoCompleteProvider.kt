@@ -13,6 +13,7 @@ import android.widget.Filter
 import android.widget.Filterable
 import android.widget.TextView
 import androidx.appcompat.view.ContextThemeWrapper
+import androidx.appcompat.widget.TooltipCompat
 import androidx.core.view.updatePadding
 import androidx.core.widget.doAfterTextChanged
 import com.chooongg.formAdapter.FormPartAdapter
@@ -21,10 +22,11 @@ import com.chooongg.formAdapter.R
 import com.chooongg.formAdapter.item.BaseForm
 import com.chooongg.formAdapter.item.FormInputAutoComplete
 import com.chooongg.formAdapter.option.OptionResult
+import com.chooongg.formAdapter.option.OptionState
 import com.chooongg.formAdapter.typeset.Typeset
 import com.chooongg.utils.ext.attrColor
-import com.chooongg.utils.ext.attrColorStateList
 import com.chooongg.utils.ext.dp2px
+import com.chooongg.utils.ext.resString
 import com.chooongg.utils.ext.showToast
 import com.google.android.material.progressindicator.CircularProgressIndicatorSpec
 import com.google.android.material.progressindicator.IndeterminateDrawable
@@ -50,7 +52,6 @@ object FormInputAutoCompleteProvider : BaseFormProvider() {
         ).apply {
             id = R.id.formInternalContentChild
             imeOptions = EditorInfo.IME_ACTION_DONE
-            setAdapter(FormArrayAdapter<String>(context))
             isHorizontalFadingEdgeEnabled = true
             isVerticalFadingEdgeEnabled = true
             setFadingEdgeLength(adapter.style.paddingInfo.horizontalGlobal)
@@ -118,8 +119,7 @@ object FormInputAutoCompleteProvider : BaseFormProvider() {
                     isCounterEnabled = true
                     counterMaxLength = itemInput.maxLength
                     getChildAt(1).updatePadding(
-                        top = 0,
-                        bottom = adapter.style.paddingInfo.verticalLocal
+                        top = 0, bottom = adapter.style.paddingInfo.verticalLocal
                     )
                 } else isCounterEnabled = false
             } else isCounterEnabled = false
@@ -127,7 +127,7 @@ object FormInputAutoCompleteProvider : BaseFormProvider() {
         with(holder.getView<MaterialAutoCompleteTextView>(R.id.formInternalContentChild)) {
             if (tag is TextWatcher) removeTextChangedListener(tag as TextWatcher)
             hint = item.hint ?: resources.getString(R.string.formDefaultHintInput)
-            setText(item.content as? CharSequence ?: item.getContentText(context))
+            setText(item.content as? CharSequence ?: item.getContentText(adapter, holder))
             gravity = typeset.getContentGravity(adapter, item)
             if (itemInput?.placeholderText != null) {
                 setOnFocusChangeListener { _, isFocus ->
@@ -179,38 +179,42 @@ object FormInputAutoCompleteProvider : BaseFormProvider() {
         holder: FormViewHolder,
         item: FormInputAutoComplete?
     ) {
-        if (item?.isNeedToLoadOption() == true) {
-            item.loadOption(adapter) {
-                holder.itemView.post {
-                    adapter.notifyItemChanged(adapter.indexOfPosition(item), "changeOption")
+        if (item?.isNeedToLoadOption(holder) == true) {
+            item.loadOption(adapter, holder) {
+                val position = adapter.indexOfPosition(item)
+                if (position != -1) {
+                    holder.itemView.post {
+                        adapter.notifyItemChanged(adapter.indexOfPosition(item), "changeOption")
+                    }
                 }
             }
         }
     }
 
-    @Suppress("UNCHECKED_CAST")
     private fun configOptions(
         adapter: FormPartAdapter,
         holder: FormViewHolder,
         item: FormInputAutoComplete?
     ) {
         val layout = holder.getView<TextInputLayout>(R.id.formInternalContent)
+        val end = layout.findViewById<View>(com.google.android.material.R.id.text_input_end_icon)
         val editText = holder.getView<MaterialAutoCompleteTextView>(R.id.formInternalContentChild)
         with(editText) {
-            val arrayAdapter = getAdapter() as FormArrayAdapter<String>
             if (item?.options.isNullOrEmpty()) {
-                arrayAdapter.submit(null)
-                return@with
+                setAdapter(null)
+            } else {
+                setAdapter(FormArrayAdapter(context, item!!.options!!))
             }
-            arrayAdapter.submit(item!!.options!!)
         }
         with(layout) {
             if (item == null) {
-                setEndIconDrawable(R.drawable.ic_form_arrow_down)
+                TooltipCompat.setTooltipText(end, null)
+                endIconDrawable = null
                 return
             }
-            when (item.loaderResult) {
-                is OptionResult.Loading -> {
+            when (item.optionResult) {
+                is OptionState.Loading -> {
+                    TooltipCompat.setTooltipText(end, resString(R.string.formOptionsLoading))
                     val drawable = IndeterminateDrawable.createCircularDrawable(
                         context,
                         CircularProgressIndicatorSpec(context, null).apply {
@@ -225,23 +229,32 @@ object FormInputAutoCompleteProvider : BaseFormProvider() {
                 }
 
                 is OptionResult.Error -> {
+                    TooltipCompat.setTooltipText(
+                        end, (item.optionResult as OptionResult.Error<String>).e.message
+                    )
                     setEndIconDrawable(R.drawable.ic_form_error)
-                    setEndIconOnClickListener { loadOption(adapter, holder, item) }
+                    setEndIconOnClickListener {
+                        loadOption(adapter, holder, item)
+                    }
+                }
+
+                is OptionResult.Empty -> {
+                    TooltipCompat.setTooltipText(end, resString(R.string.formOptionsEmpty))
+                    endIconDrawable = null
+                    setEndIconOnClickListener { showToast(R.string.formOptionsEmpty) }
                 }
 
                 else -> {
+                    TooltipCompat.setTooltipText(end, null)
                     setEndIconDrawable(R.drawable.ic_form_arrow_down)
-                    setEndIconOnClickListener {
-                        if (editText.adapter != null) editText.showDropDown()
-                        else showToast(R.string.formOptionsEmpty)
-                    }
+                    setEndIconOnClickListener { editText.showDropDown() }
                 }
             }
         }
     }
 
     private class FormArrayAdapter<T>(
-        context: Context
+        context: Context, list: List<T>?
     ) : BaseAdapter(), Filterable {
 
         private val mLock = Any()
@@ -250,15 +263,10 @@ object FormInputAutoCompleteProvider : BaseFormProvider() {
 
         private var mOriginalValues: ArrayList<T> = ArrayList()
 
-        private var mObjects: ArrayList<T> = ArrayList()
+        private var mObjects: ArrayList<T>
 
-        fun submit(list: List<T>?) {
-            synchronized(mLock) {
-                mOriginalValues.clear()
-                mObjects.clear()
-                if (list != null) mObjects.addAll(list)
-            }
-            notifyDataSetChanged()
+        init {
+            mObjects = if (list == null) ArrayList() else ArrayList(list)
         }
 
         override fun getCount(): Int = mObjects.size

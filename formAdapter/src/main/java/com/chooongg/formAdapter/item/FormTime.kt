@@ -1,8 +1,9 @@
 package com.chooongg.formAdapter.item
 
-import android.content.Context
 import androidx.annotation.StringRes
 import com.chooongg.formAdapter.FormAdapter
+import com.chooongg.formAdapter.FormPartAdapter
+import com.chooongg.formAdapter.FormViewHolder
 import com.chooongg.formAdapter.data.FormCreator
 import com.chooongg.formAdapter.enum.FormTimeMode
 import com.chooongg.formAdapter.provider.FormTextProvider
@@ -47,7 +48,7 @@ class FormTime(@StringRes nameRes: Int?, name: CharSequence?, field: String?) :
     override fun getItemProvider(adapter: FormAdapter) =
         if (isRealEnable(adapter)) FormTimeProvider else FormTextProvider
 
-    override fun getContentText(context: Context): CharSequence? {
+    override fun getContentText(adapter: FormPartAdapter, holder: FormViewHolder): CharSequence? {
         val millis = content as? Long ?: return content?.toString()
         if (showFormatPattern != null) return TimeUtils.millis2String(millis, showFormatPattern!!)
         return when (timeMode) {

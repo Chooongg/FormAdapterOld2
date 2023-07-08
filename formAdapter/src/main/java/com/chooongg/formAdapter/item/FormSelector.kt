@@ -1,8 +1,9 @@
 package com.chooongg.formAdapter.item
 
-import android.content.Context
 import androidx.annotation.StringRes
 import com.chooongg.formAdapter.FormAdapter
+import com.chooongg.formAdapter.FormPartAdapter
+import com.chooongg.formAdapter.FormViewHolder
 import com.chooongg.formAdapter.data.FormCreator
 import com.chooongg.formAdapter.enum.FormSelectorOpenMode
 import com.chooongg.formAdapter.option.BaseOption
@@ -31,7 +32,7 @@ open class FormSelector(@StringRes nameRes: Int?, name: CharSequence?, field: St
     override fun getItemProvider(adapter: FormAdapter) =
         if (isRealEnable(adapter)) FormSelectorProvider else FormTextProvider
 
-    override fun getContentText(context: Context): CharSequence? {
+    override fun getContentText(adapter: FormPartAdapter, holder: FormViewHolder): CharSequence? {
         if (content == null) return null
         val option = content as? BaseOption ?: return content?.toString()
         val text =

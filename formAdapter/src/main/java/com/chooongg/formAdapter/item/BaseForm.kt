@@ -1,10 +1,11 @@
 package com.chooongg.formAdapter.item
 
-import android.content.Context
 import androidx.annotation.GravityInt
 import androidx.annotation.StringRes
 import com.chooongg.formAdapter.FormAdapter
 import com.chooongg.formAdapter.FormLinkageBlock
+import com.chooongg.formAdapter.FormPartAdapter
+import com.chooongg.formAdapter.FormViewHolder
 import com.chooongg.formAdapter.boundary.Boundary
 import com.chooongg.formAdapter.data.AbstractMenuFormData
 import com.chooongg.formAdapter.enum.FormOutputMode
@@ -28,7 +29,7 @@ abstract class BaseForm(
     /**
      * 字段
      */
-    open var field: String?
+    var field: String?
 ) : AbstractMenuFormData() {
 
     //<editor-fold desc="基础 Basic">
@@ -41,22 +42,22 @@ abstract class BaseForm(
     /**
      * 提示
      */
-    open var hint: CharSequence? = null
+    var hint: CharSequence? = null
 
     /**
      * 内容
      */
-    open var content: Any? = null
+    var content: Any? = null
 
     /**
      * 是否必填
      */
-    open var isMust: Boolean = false
+    var isMust: Boolean = false
 
     /**
      * 输出模式
      */
-    open var outputMode: FormOutputMode = FormOutputMode.ALWAYS
+    var outputMode: FormOutputMode = FormOutputMode.ALWAYS
 
     /**
      * 是否在组边缘展示
@@ -175,7 +176,7 @@ abstract class BaseForm(
     /**
      * 反重复代码
      */
-    internal val antiRepeatCode = System.currentTimeMillis() + Random.nextLong(10000)
+    internal val antiRepeatCode = Random.nextLong(10000) + System.currentTimeMillis()
 
     /**
      * 扩展字段和内容
@@ -285,5 +286,6 @@ abstract class BaseForm(
     /**
      * 获取内容文本
      */
-    open fun getContentText(context: Context): CharSequence? = content?.toString()
+    open fun getContentText(adapter: FormPartAdapter, holder: FormViewHolder): CharSequence? =
+        content?.toString()
 }

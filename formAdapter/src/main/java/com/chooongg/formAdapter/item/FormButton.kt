@@ -5,6 +5,7 @@ import androidx.annotation.StringRes
 import com.chooongg.formAdapter.FormAdapter
 import com.chooongg.formAdapter.FormColorStateListBlock
 import com.chooongg.formAdapter.data.FormCreator
+import com.chooongg.formAdapter.enum.FormEnableMode
 import com.chooongg.formAdapter.enum.FormVisibilityMode
 import com.chooongg.formAdapter.provider.FormButtonProvider
 import com.chooongg.formAdapter.typeset.NoneTypeset
@@ -50,6 +51,9 @@ class FormButton(@StringRes nameRes: Int?, name: CharSequence?, field: String?) 
 
     @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP_PREFIX)
     override var menuVisibilityMode: FormVisibilityMode = FormVisibilityMode.ALWAYS
+
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP_PREFIX)
+    override var menuEnableMode: FormEnableMode = enableMode
 
     override fun getItemProvider(adapter: FormAdapter) = FormButtonProvider
 }

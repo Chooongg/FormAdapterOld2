@@ -91,7 +91,7 @@ object FormInputProvider : BaseFormProvider() {
         with(holder.getView<TextInputEditText>(R.id.formInternalContentChild)) {
             if (tag is TextWatcher) removeTextChangedListener(tag as TextWatcher)
             hint = item.hint ?: resources.getString(R.string.formDefaultHintInput)
-            setText(item.content as? CharSequence ?: item.getContentText(context))
+            setText(item.content as? CharSequence ?: item.getContentText(adapter, holder))
             gravity = typeset.getContentGravity(adapter, item)
             if (itemInput?.placeholderText != null) {
                 setOnFocusChangeListener { _, isFocus ->

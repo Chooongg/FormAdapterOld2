@@ -57,19 +57,24 @@ object FormTimeProvider : BaseFormProvider() {
     ) {
         with(holder.getView<MaterialButton>(R.id.formInternalContent)) {
             isEnabled = item.isRealMenuEnable(adapter.formAdapter)
-            text = item.getContentText(context)
+            text = item.getContentText(adapter, holder)
             hint = item.hint
                 ?: resources.getString(com.chooongg.formAdapter.R.string.formDefaultHintSelect)
             gravity = typeset.getContentGravity(adapter, item)
             updateLayoutParams<ViewGroup.LayoutParams> {
                 width = typeset.contentWidth()
             }
-            doOnClick { onClickButton(adapter, this, item) }
+            doOnClick { onClickButton(adapter, holder, item) }
         }
     }
 
-    private fun onClickButton(adapter: FormPartAdapter, anchor: MaterialButton, item: BaseForm) {
+    private fun onClickButton(
+        adapter: FormPartAdapter,
+        holder: FormViewHolder,
+        item: BaseForm
+    ) {
         if (item !is FormTime) return
+        val anchor = holder.getView<MaterialButton>(R.id.formInternalContent)
         val activity = anchor.context.getActivity() as? AppCompatActivity
         if (activity == null) {
             showToast(R.string.formPickerOpenError)
@@ -96,7 +101,7 @@ object FormTimeProvider : BaseFormProvider() {
                         calendar.set(Calendar.HOUR_OF_DAY, hour)
                         calendar.set(Calendar.MINUTE, minute)
                         changeContentAndNotifyLinkage(adapter, item, calendar.timeInMillis)
-                        anchor.text = item.getContentText(anchor.context)
+                        anchor.text = item.getContentText(adapter, holder)
                     }
                 }.show(activity.supportFragmentManager, "FormTimePicker")
 
@@ -109,7 +114,7 @@ object FormTimeProvider : BaseFormProvider() {
                     addOnPositiveButtonClickListener {
                         calendar.timeInMillis = it - calendar.timeZone.rawOffset
                         changeContentAndNotifyLinkage(adapter, item, calendar.timeInMillis)
-                        anchor.text = item.getContentText(anchor.context)
+                        anchor.text = item.getContentText(adapter, holder)
                     }
                 }.show(activity.supportFragmentManager, "FormDatePicker")
 
@@ -155,7 +160,7 @@ object FormTimeProvider : BaseFormProvider() {
                                         changeContentAndNotifyLinkage(
                                             adapter, item, calendar.timeInMillis
                                         )
-                                        anchor.text = item.getContentText(anchor.context)
+                                        anchor.text = item.getContentText(adapter, holder)
                                     }
                                 }.show(activity.supportFragmentManager, "FormTimePicker")
                         }

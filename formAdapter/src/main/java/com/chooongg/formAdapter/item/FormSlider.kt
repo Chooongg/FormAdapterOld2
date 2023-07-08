@@ -1,9 +1,10 @@
 package com.chooongg.formAdapter.item
 
-import android.content.Context
 import androidx.annotation.StringRes
 import com.chooongg.formAdapter.FormAdapter
+import com.chooongg.formAdapter.FormPartAdapter
 import com.chooongg.formAdapter.FormSliderFormatter
+import com.chooongg.formAdapter.FormViewHolder
 import com.chooongg.formAdapter.data.FormCreator
 import com.chooongg.formAdapter.provider.FormSliderProvider
 
@@ -34,7 +35,7 @@ class FormSlider(@StringRes nameRes: Int?, name: CharSequence?, field: String?) 
 
     override fun getItemProvider(adapter: FormAdapter) = FormSliderProvider
 
-    override fun getContentText(context: Context): CharSequence? {
+    override fun getContentText(adapter: FormPartAdapter, holder: FormViewHolder): CharSequence? {
         val value = content as? Float ?: return content?.toString()
         return if (formatter != null) {
             formatter?.invoke(value)

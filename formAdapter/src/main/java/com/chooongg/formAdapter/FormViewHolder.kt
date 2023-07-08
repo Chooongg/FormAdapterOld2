@@ -4,19 +4,13 @@ import android.util.SparseArray
 import android.view.View
 import androidx.annotation.IdRes
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.Job
 
 class FormViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
-    private val views: SparseArray<View> = SparseArray()
+    var job: Job? = null
 
-//    val paddingVerticalGlobal =
-//        view.resources.getDimensionPixelOffset(R.dimen.formVerticalGlobalPaddingSize)
-//    val paddingVerticalLocal =
-//        view.resources.getDimensionPixelOffset(R.dimen.formVerticalLocalPaddingSize)
-//    val paddingHorizontalGlobal =
-//        view.resources.getDimensionPixelOffset(R.dimen.formHorizontalGlobalPaddingSize)
-//    val paddingHorizontalLocal =
-//        view.resources.getDimensionPixelOffset(R.dimen.formHorizontalLocalPaddingSize)
+    private val views: SparseArray<View> = SparseArray()
 
     fun <T : View> getView(@IdRes viewId: Int): T {
         val view = getViewOrNull<T>(viewId)

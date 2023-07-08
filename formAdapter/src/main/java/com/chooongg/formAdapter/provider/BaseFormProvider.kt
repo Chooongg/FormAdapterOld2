@@ -65,13 +65,13 @@ abstract class BaseFormProvider {
         holder.itemView.setOnLongClickListener { view ->
             val popupMenu = PopupMenu(view.context, view)
             popupMenu.menu.add(0, 0, 0, "复制名称")
-            if (item.getContentText(view.context) != null) {
+            if (item.getContentText(adapter, holder) != null) {
                 popupMenu.menu.add(0, 1, 1, "复制内容")
             }
             popupMenu.setOnMenuItemClickListener {
                 when (it.itemId) {
                     0 -> ClipboardUtils.copyText(item.name)
-                    1 -> ClipboardUtils.copyText(item.getContentText(view.context))
+                    1 -> ClipboardUtils.copyText(item.getContentText(adapter, holder))
                     else -> return@setOnMenuItemClickListener false
                 }
                 true

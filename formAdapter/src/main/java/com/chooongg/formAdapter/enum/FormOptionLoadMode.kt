@@ -6,12 +6,12 @@ package com.chooongg.formAdapter.enum
 enum class FormOptionLoadMode {
 
     /**
-     * 为空时
-     */
-    EMPTY,
-
-    /**
-     * 总是
+     * 总是加载
      */
     ALWAYS,
+
+    /**
+     * 为空加载
+     */
+    EMPTY,
 }
