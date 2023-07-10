@@ -26,6 +26,7 @@ import com.chooongg.formAdapter.option.OptionState
 import com.chooongg.formAdapter.typeset.Typeset
 import com.chooongg.utils.ext.attrColor
 import com.chooongg.utils.ext.dp2px
+import com.chooongg.utils.ext.logE
 import com.chooongg.utils.ext.resString
 import com.chooongg.utils.ext.showToast
 import com.google.android.material.progressindicator.CircularProgressIndicatorSpec
@@ -37,7 +38,7 @@ import kotlin.math.min
 object FormInputAutoCompleteProvider : BaseFormProvider() {
 
     override fun onCreateItemView(
-        adapter: FormPartAdapter,
+        partAdapter: FormPartAdapter,
         typeset: Typeset,
         parent: ViewGroup
     ) = TextInputLayout(
@@ -54,11 +55,11 @@ object FormInputAutoCompleteProvider : BaseFormProvider() {
             imeOptions = EditorInfo.IME_ACTION_DONE
             isHorizontalFadingEdgeEnabled = true
             isVerticalFadingEdgeEnabled = true
-            setFadingEdgeLength(adapter.style.paddingInfo.horizontalGlobal)
+            setFadingEdgeLength(partAdapter.style.paddingInfo.horizontalGlobal)
             setTextAppearance(R.style.FormAdapter_TextAppearance_Content)
             setPadding(
-                0, adapter.style.paddingInfo.verticalLocal,
-                0, adapter.style.paddingInfo.verticalLocal
+                0, partAdapter.style.paddingInfo.verticalLocal,
+                0, partAdapter.style.paddingInfo.verticalLocal
             )
         }
         addView(editText)
@@ -78,15 +79,15 @@ object FormInputAutoCompleteProvider : BaseFormProvider() {
                 null
             ).apply {
                 radius = endIconMinSize / 2 + min(
-                    adapter.style.paddingInfo.horizontalLocal,
-                    adapter.style.paddingInfo.verticalLocal
+                    partAdapter.style.paddingInfo.horizontalLocal,
+                    partAdapter.style.paddingInfo.verticalLocal
                 )
             }
         endIconMode = TextInputLayout.END_ICON_DROPDOWN_MENU
         setEndIconDrawable(R.drawable.ic_form_arrow_down)
         setPadding(
-            adapter.style.paddingInfo.horizontalLocal, 0,
-            adapter.style.paddingInfo.horizontalLocal, 0
+            partAdapter.style.paddingInfo.horizontalLocal, 0,
+            partAdapter.style.paddingInfo.horizontalLocal, 0
         )
         layoutParams = ViewGroup.MarginLayoutParams(
             ViewGroup.MarginLayoutParams.MATCH_PARENT, ViewGroup.MarginLayoutParams.WRAP_CONTENT
@@ -102,33 +103,31 @@ object FormInputAutoCompleteProvider : BaseFormProvider() {
     }
 
     override fun onBindItemView(
-        adapter: FormPartAdapter,
+        partAdapter: FormPartAdapter,
         typeset: Typeset,
         holder: FormViewHolder,
         item: BaseForm
     ) {
         val itemInput = item as? FormInputAutoComplete
-        configOptions(adapter, holder, itemInput)
+        configOptions(partAdapter, holder, itemInput)
         with(holder.getView<TextInputLayout>(R.id.formInternalContent)) {
-            isEnabled = item.isRealMenuEnable(adapter.formAdapter)
+            isEnabled = item.isRealMenuEnable(partAdapter.formAdapter)
             suffixText = itemInput?.suffixText
             prefixText = itemInput?.prefixText
             placeholderText = itemInput?.placeholderText
-            if (itemInput?.maxLength != null && itemInput.maxLength != Int.MAX_VALUE) {
-                if (itemInput.isShowCounter != false) {
-                    isCounterEnabled = true
-                    counterMaxLength = itemInput.maxLength
-                    getChildAt(1).updatePadding(
-                        top = 0, bottom = adapter.style.paddingInfo.verticalLocal
-                    )
-                } else isCounterEnabled = false
+            if (itemInput?.maxLength != null && itemInput.maxLength != Int.MAX_VALUE && itemInput.isShowCounter != false) {
+                isCounterEnabled = true
+                counterMaxLength = itemInput.maxLength
+                getChildAt(1).updatePadding(
+                    top = 0, bottom = partAdapter.style.paddingInfo.verticalLocal
+                )
             } else isCounterEnabled = false
         }
         with(holder.getView<MaterialAutoCompleteTextView>(R.id.formInternalContentChild)) {
             if (tag is TextWatcher) removeTextChangedListener(tag as TextWatcher)
             hint = item.hint ?: resources.getString(R.string.formDefaultHintInput)
-            setText(item.content as? CharSequence ?: item.getContentText(adapter, holder))
-            gravity = typeset.getContentGravity(adapter, item)
+            setText(item.content as? CharSequence ?: item.getContentText(partAdapter, holder))
+            gravity = typeset.getContentGravity(partAdapter, item)
             if (itemInput?.placeholderText != null) {
                 setOnFocusChangeListener { _, isFocus ->
                     hint = if (isFocus) {
@@ -145,32 +144,32 @@ object FormInputAutoCompleteProvider : BaseFormProvider() {
                 maxLines = itemInput?.maxLines ?: Int.MAX_VALUE
             }
             val watcher = doAfterTextChanged { editable ->
-                changeContentAndNotifyLinkage(adapter, item, editable)
+                changeContentAndNotifyLinkage(partAdapter, item, editable)
             }
             tag = watcher
             setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    adapter.formAdapter.clearFocus()
+                    partAdapter.formAdapter.clearFocus()
                     true
                 } else false
             }
         }
-        loadOption(adapter, holder, itemInput)
+        loadOption(partAdapter, holder, itemInput)
     }
 
     override fun onBindItemView(
-        adapter: FormPartAdapter,
+        partAdapter: FormPartAdapter,
         typeset: Typeset,
         holder: FormViewHolder,
         item: BaseForm,
         payloads: List<Any>
     ) {
         if (payloads.isEmpty()) {
-            super.onBindItemView(adapter, typeset, holder, item, payloads)
+            super.onBindItemView(partAdapter, typeset, holder, item, payloads)
             return
         }
         if (payloads.contains("changeOption")) {
-            configOptions(adapter, holder, item as? FormInputAutoComplete)
+            configOptions(partAdapter, holder, item as? FormInputAutoComplete)
         }
     }
 

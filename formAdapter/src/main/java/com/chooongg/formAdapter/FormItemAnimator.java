@@ -7,6 +7,7 @@ import android.annotation.SuppressLint;
 import android.view.View;
 import android.view.ViewPropertyAnimator;
 import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 
 import androidx.annotation.NonNull;
 import androidx.core.view.ViewCompat;
@@ -320,8 +321,7 @@ public class FormItemAnimator extends SimpleItemAnimator {
         final RecyclerView.ViewHolder newHolder = changeInfo.newHolder;
         final View newView = newHolder != null ? newHolder.itemView : null;
         if (view != null) {
-            final ViewPropertyAnimator oldViewAnim = view.animate().setDuration(
-                    getChangeDuration());
+            final ViewPropertyAnimator oldViewAnim = view.animate().setDuration(getChangeDuration());
             mChangeAnimations.add(changeInfo.oldHolder);
             oldViewAnim.translationX(changeInfo.toX - changeInfo.fromX);
             oldViewAnim.translationY(changeInfo.toY - changeInfo.fromY);
@@ -346,7 +346,11 @@ public class FormItemAnimator extends SimpleItemAnimator {
         if (newView != null) {
             final ViewPropertyAnimator newViewAnimation = newView.animate();
             mChangeAnimations.add(changeInfo.newHolder);
-            newView.setAlpha(1f);
+            if (newView.getElevation() > 0) {
+                newView.setAlpha(1f);
+            } else {
+                newViewAnimation.alpha(1f);
+            }
             newViewAnimation.translationX(0).translationY(0).setDuration(getChangeDuration())
                     .setListener(new AnimatorListenerAdapter() {
                         @Override
@@ -357,6 +361,9 @@ public class FormItemAnimator extends SimpleItemAnimator {
                         @Override
                         public void onAnimationEnd(Animator animator) {
                             newViewAnimation.setListener(null);
+                            if (newView.getElevation() <= 0) {
+                                newView.setAlpha(1f);
+                            }
                             newView.setTranslationX(0);
                             newView.setTranslationY(0);
                             dispatchChangeFinished(changeInfo.newHolder, false);

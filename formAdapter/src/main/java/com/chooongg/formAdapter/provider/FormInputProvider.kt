@@ -19,7 +19,7 @@ import com.google.android.material.textfield.TextInputLayout
 
 object FormInputProvider : BaseFormProvider() {
     override fun onCreateItemView(
-        adapter: FormPartAdapter,
+        partAdapter: FormPartAdapter,
         typeset: Typeset,
         parent: ViewGroup
     ) = TextInputLayout(
@@ -31,11 +31,11 @@ object FormInputProvider : BaseFormProvider() {
             imeOptions = EditorInfo.IME_ACTION_DONE
             isHorizontalFadingEdgeEnabled = true
             isVerticalFadingEdgeEnabled = true
-            setFadingEdgeLength(adapter.style.paddingInfo.horizontalGlobal)
+            setFadingEdgeLength(partAdapter.style.paddingInfo.horizontalGlobal)
             setTextAppearance(R.style.FormAdapter_TextAppearance_Content)
             setPadding(
-                0, adapter.style.paddingInfo.verticalLocal,
-                0, adapter.style.paddingInfo.verticalLocal
+                0, partAdapter.style.paddingInfo.verticalLocal,
+                0, partAdapter.style.paddingInfo.verticalLocal
             )
         }
         addView(editText)
@@ -49,8 +49,8 @@ object FormInputProvider : BaseFormProvider() {
         setEndIconTintList(editText.hintTextColors)
         endIconMinSize = resources.getDimensionPixelSize(R.dimen.formIconSize)
         setPadding(
-            adapter.style.paddingInfo.horizontalLocal, 0,
-            adapter.style.paddingInfo.horizontalLocal, 0
+            partAdapter.style.paddingInfo.horizontalLocal, 0,
+            partAdapter.style.paddingInfo.horizontalLocal, 0
         )
         layoutParams = MarginLayoutParams(
             MarginLayoutParams.MATCH_PARENT, MarginLayoutParams.WRAP_CONTENT
@@ -66,14 +66,14 @@ object FormInputProvider : BaseFormProvider() {
     }
 
     override fun onBindItemView(
-        adapter: FormPartAdapter,
+        partAdapter: FormPartAdapter,
         typeset: Typeset,
         holder: FormViewHolder,
         item: BaseForm
     ) {
         val itemInput = item as? FormInput
         with(holder.getView<TextInputLayout>(R.id.formInternalContent)) {
-            isEnabled = item.isRealMenuEnable(adapter.formAdapter)
+            isEnabled = item.isRealMenuEnable(partAdapter.formAdapter)
             suffixText = itemInput?.suffixText
             prefixText = itemInput?.prefixText
             placeholderText = itemInput?.placeholderText
@@ -83,7 +83,7 @@ object FormInputProvider : BaseFormProvider() {
                     counterMaxLength = itemInput.counterLength
                     getChildAt(1).updatePadding(
                         top = 0,
-                        bottom = adapter.style.paddingInfo.verticalLocal
+                        bottom = partAdapter.style.paddingInfo.verticalLocal
                     )
                 } else isCounterEnabled = false
             } else isCounterEnabled = false
@@ -91,8 +91,8 @@ object FormInputProvider : BaseFormProvider() {
         with(holder.getView<TextInputEditText>(R.id.formInternalContentChild)) {
             if (tag is TextWatcher) removeTextChangedListener(tag as TextWatcher)
             hint = item.hint ?: resources.getString(R.string.formDefaultHintInput)
-            setText(item.content as? CharSequence ?: item.getContentText(adapter, holder))
-            gravity = typeset.getContentGravity(adapter, item)
+            setText(item.content as? CharSequence ?: item.getContentText(partAdapter, holder))
+            gravity = typeset.getContentGravity(partAdapter, item)
             if (itemInput?.placeholderText != null) {
                 setOnFocusChangeListener { _, isFocus ->
                     hint = if (isFocus) {
@@ -109,12 +109,12 @@ object FormInputProvider : BaseFormProvider() {
                 maxLines = itemInput?.maxLines ?: Int.MAX_VALUE
             }
             val watcher = doAfterTextChanged { editable ->
-                changeContentAndNotifyLinkage(adapter, item, editable)
+                changeContentAndNotifyLinkage(partAdapter, item, editable)
             }
             tag = watcher
             setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    adapter.formAdapter.clearFocus()
+                    partAdapter.formAdapter.clearFocus()
                     true
                 } else false
             }

@@ -7,10 +7,10 @@ import com.chooongg.formAdapter.FormViewHolder
 import com.chooongg.formAdapter.item.BaseForm
 import com.chooongg.formAdapter.typeset.Typeset
 
-class FormRadioButtonProvider:BaseFormProvider() {
+class FormRadioButtonProvider : BaseFormProvider() {
 
     override fun onCreateItemView(
-        adapter: FormPartAdapter,
+        partAdapter: FormPartAdapter,
         typeset: Typeset,
         parent: ViewGroup
     ): View {
@@ -18,7 +18,7 @@ class FormRadioButtonProvider:BaseFormProvider() {
     }
 
     override fun onBindItemView(
-        adapter: FormPartAdapter,
+        partAdapter: FormPartAdapter,
         typeset: Typeset,
         holder: FormViewHolder,
         item: BaseForm

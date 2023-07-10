@@ -3,7 +3,6 @@ package com.chooongg.formAdapter.typeset
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.GravityInt
-import androidx.annotation.Px
 import com.chooongg.formAdapter.FormManager
 import com.chooongg.formAdapter.FormPartAdapter
 import com.chooongg.formAdapter.FormViewHolder
@@ -22,15 +21,12 @@ abstract class Typeset(val ems: Int = FormManager.emsSize) {
     @GravityInt
     protected open fun multiColumnContentGravity(): Int = FormManager.multiColumnContentGravity
 
-    @Px
-    open fun contentWidth(): Int = ViewGroup.LayoutParams.MATCH_PARENT
-
     abstract fun onCreateTypesetLayout(parent: ViewGroup, paddingInfo: FormPaddingInfo): ViewGroup?
 
     abstract fun addView(parent: ViewGroup, view: View)
 
     abstract fun onBindTypesetLayout(
-        adapter: FormPartAdapter,
+        partAdapter: FormPartAdapter,
         holder: FormViewHolder,
         item: BaseForm
     )

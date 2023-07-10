@@ -17,7 +17,7 @@ object FormSliderProvider : BaseFormProvider() {
 
     @SuppressLint("RestrictedApi")
     override fun onCreateItemView(
-        adapter: FormPartAdapter,
+        partAdapter: FormPartAdapter,
         typeset: Typeset,
         parent: ViewGroup
     ) = Slider(parent.context).apply {
@@ -28,13 +28,13 @@ object FormSliderProvider : BaseFormProvider() {
             measuredHeight
         }
         setPadding(
-            adapter.style.paddingInfo.horizontalLocal,
-            adapter.style.paddingInfo.verticalLocal,
-            adapter.style.paddingInfo.horizontalLocal,
-            adapter.style.paddingInfo.verticalLocal
+            partAdapter.style.paddingInfo.horizontalLocal,
+            partAdapter.style.paddingInfo.verticalLocal,
+            partAdapter.style.paddingInfo.horizontalLocal,
+            partAdapter.style.paddingInfo.verticalLocal
         )
         val height =
-            textHeight + adapter.style.paddingInfo.verticalLocal * 2
+            textHeight + partAdapter.style.paddingInfo.verticalLocal * 2
         try {
             val widgetHeight = javaClass.superclass.getDeclaredField("widgetHeight")
             widgetHeight.isAccessible = true
@@ -45,7 +45,7 @@ object FormSliderProvider : BaseFormProvider() {
     }
 
     override fun onBindItemView(
-        adapter: FormPartAdapter,
+        partAdapter: FormPartAdapter,
         typeset: Typeset,
         holder: FormViewHolder,
         item: BaseForm
@@ -55,7 +55,7 @@ object FormSliderProvider : BaseFormProvider() {
             if (tag is Slider.OnSliderTouchListener) {
                 removeOnSliderTouchListener(tag as Slider.OnSliderTouchListener)
             }
-            isEnabled = item.isRealEnable(adapter.formAdapter)
+            isEnabled = item.isRealEnable(partAdapter.formAdapter)
             valueFrom = itemSlider?.valueFrom ?: 0f
             valueTo = itemSlider?.valueTo ?: 100f
             stepSize = itemSlider?.stepSize ?: 0f
@@ -65,7 +65,7 @@ object FormSliderProvider : BaseFormProvider() {
             val listener = object : Slider.OnSliderTouchListener {
                 override fun onStartTrackingTouch(slider: Slider) = Unit
                 override fun onStopTrackingTouch(slider: Slider) {
-                    changeContentAndNotifyLinkage(adapter, item, slider.value)
+                    changeContentAndNotifyLinkage(partAdapter, item, slider.value)
                 }
             }
             addOnSliderTouchListener(listener)

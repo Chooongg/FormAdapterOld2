@@ -22,6 +22,7 @@ import com.chooongg.formAdapter.FormViewHolder
 import com.chooongg.formAdapter.R
 import com.chooongg.formAdapter.databinding.FormActivityAdapterSelectorPageBinding
 import com.chooongg.formAdapter.item.FormSelector
+import com.chooongg.utils.SpannableStyle
 import com.chooongg.utils.ext.attrBoolean
 import com.chooongg.utils.ext.attrColor
 import com.chooongg.utils.ext.attrResourcesId
@@ -41,7 +42,6 @@ import com.google.android.material.transition.platform.MaterialContainerTransfor
 import com.google.android.material.transition.platform.MaterialSharedAxis
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import java.util.regex.Pattern
 
 class FormSelectorPageActivity : AppCompatActivity() {
 
@@ -242,20 +242,26 @@ class FormSelectorPageActivity : AppCompatActivity() {
         override fun onBindViewHolder(holder: FormViewHolder, position: Int) {
             val option = asyncDiffer.currentList[position]
             with(holder.itemView as MaterialTextView) {
-                setText((option?.getName() ?: "").style {
+                val span = SpannableStyle(option.getName()).apply {
                     if (option == selected) {
                         setForegroundColor(attrColor(androidx.appcompat.R.attr.colorPrimary))
                     } else {
                         setForegroundColor(attrColor(com.google.android.material.R.attr.colorOnSurface))
                     }
-                } + " ".style {} + (option?.getSecondaryName() ?: "").style {
-                    setTextSizeRelative(0.8f)
-                    if (option == selected) {
-                        setForegroundColor(attrColor(androidx.appcompat.R.attr.colorPrimary))
-                    } else {
-                        setForegroundColor(attrColor(com.google.android.material.R.attr.colorOutline))
-                    }
-                })
+                }
+                val secondaryName = option.getSecondaryName()
+                if (secondaryName != null) {
+                    span.plus(" ")
+                    span.plus(secondaryName.style {
+                        setTextSizeRelative(0.8f)
+                        if (option == selected) {
+                            setForegroundColor(attrColor(androidx.appcompat.R.attr.colorPrimary))
+                        } else {
+                            setForegroundColor(attrColor(com.google.android.material.R.attr.colorOutline))
+                        }
+                    })
+                }
+                setText(span)
                 doOnClick {
                     selectBlock(option)
                 }

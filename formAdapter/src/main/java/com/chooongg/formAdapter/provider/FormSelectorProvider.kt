@@ -8,7 +8,6 @@ import androidx.appcompat.view.menu.MenuPopupHelper
 import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.TooltipCompat
 import androidx.core.app.ActivityOptionsCompat
-import androidx.core.view.updateLayoutParams
 import com.chooongg.formAdapter.FormPartAdapter
 import com.chooongg.formAdapter.FormViewHolder
 import com.chooongg.formAdapter.R
@@ -20,6 +19,7 @@ import com.chooongg.formAdapter.option.FormSelectorPageActivity
 import com.chooongg.formAdapter.option.OptionResult
 import com.chooongg.formAdapter.option.OptionState
 import com.chooongg.formAdapter.typeset.Typeset
+import com.chooongg.utils.SpannableStyle
 import com.chooongg.utils.ext.attrColor
 import com.chooongg.utils.ext.doOnClick
 import com.chooongg.utils.ext.dp2px
@@ -36,7 +36,7 @@ import java.lang.reflect.Field
 object FormSelectorProvider : BaseFormProvider() {
 
     override fun onCreateItemView(
-        adapter: FormPartAdapter, typeset: Typeset, parent: ViewGroup
+        partAdapter: FormPartAdapter, typeset: Typeset, parent: ViewGroup
     ) = MaterialButton(
         parent.context, null, com.google.android.material.R.attr.borderlessButtonStyle
     ).apply {
@@ -52,10 +52,10 @@ object FormSelectorProvider : BaseFormProvider() {
         iconGravity = MaterialButton.ICON_GRAVITY_END
         setTextAppearance(R.style.FormAdapter_TextAppearance_Content)
         setPadding(
-            adapter.style.paddingInfo.horizontalLocal,
-            adapter.style.paddingInfo.verticalLocal,
-            adapter.style.paddingInfo.horizontalLocal,
-            adapter.style.paddingInfo.verticalLocal
+            partAdapter.style.paddingInfo.horizontalLocal,
+            partAdapter.style.paddingInfo.verticalLocal,
+            partAdapter.style.paddingInfo.horizontalLocal,
+            partAdapter.style.paddingInfo.verticalLocal
         )
         layoutParams = MarginLayoutParams(
             MarginLayoutParams.MATCH_PARENT, MarginLayoutParams.WRAP_CONTENT
@@ -64,30 +64,29 @@ object FormSelectorProvider : BaseFormProvider() {
 
     @SuppressLint("ResourceType")
     override fun onBindItemView(
-        adapter: FormPartAdapter, typeset: Typeset, holder: FormViewHolder, item: BaseForm
+        partAdapter: FormPartAdapter, typeset: Typeset, holder: FormViewHolder, item: BaseForm
     ) {
         val itemSelector = item as? FormSelector
         configOption(holder, itemSelector)
         with(holder.getView<MaterialButton>(R.id.formInternalContent)) {
-            isEnabled = item.isRealMenuEnable(adapter.formAdapter)
-            text = item.getContentText(adapter, holder)
+            isEnabled = item.isRealMenuEnable(partAdapter.formAdapter)
+            text = item.getContentText(partAdapter, holder)
             hint = item.hint ?: resources.getString(R.string.formDefaultHintSelect)
-            gravity = typeset.getContentGravity(adapter, item)
-            updateLayoutParams<ViewGroup.LayoutParams> { width = typeset.contentWidth() }
-            doOnClick { onClickButton(adapter, holder, item) }
+            gravity = typeset.getContentGravity(partAdapter, item)
+            doOnClick { onClickButton(partAdapter, holder, item) }
         }
-        loadOption(adapter, holder, itemSelector)
+        loadOption(partAdapter, holder, itemSelector)
     }
 
     override fun onBindItemView(
-        adapter: FormPartAdapter,
+        partAdapter: FormPartAdapter,
         typeset: Typeset,
         holder: FormViewHolder,
         item: BaseForm,
         payloads: List<Any>
     ) {
         if (payloads.isEmpty()) {
-            super.onBindItemView(adapter, typeset, holder, item, payloads)
+            super.onBindItemView(partAdapter, typeset, holder, item, payloads)
             return
         }
         if (payloads.contains("changeOption")) {
@@ -116,7 +115,7 @@ object FormSelectorProvider : BaseFormProvider() {
         with(holder.getView<MaterialButton>(R.id.formInternalContent)) {
             if (item == null) {
                 TooltipCompat.setTooltipText(this, null)
-                setIconResource(R.drawable.ic_form_arrow_down)
+                icon = null
                 return@with
             }
             when (item.optionResult) {
@@ -144,7 +143,10 @@ object FormSelectorProvider : BaseFormProvider() {
                     icon = null
                 }
 
-                else -> {
+                else -> if (item.options.isNullOrEmpty()) {
+                    TooltipCompat.setTooltipText(this, resString(R.string.formOptionsEmpty))
+                    icon = null
+                } else {
                     TooltipCompat.setTooltipText(this, null)
                     setIconResource(R.drawable.ic_form_arrow_down)
                 }
@@ -197,25 +199,26 @@ object FormSelectorProvider : BaseFormProvider() {
             }.toSpannableString())
         }
         item.options!!.forEachIndexed { index, option ->
-            val text = (option.getName()).style {
-                setForegroundColor(
-                    if (item.content == option) {
-                        view.attrColor(androidx.appcompat.R.attr.colorPrimary)
-                    } else {
-                        view.attrColor(com.google.android.material.R.attr.colorOnSurface)
-                    }
-                )
-            } + " ".style {} + (option.getSecondaryName() ?: "").style {
-                setTextSizeRelative(0.8f)
-                setForegroundColor(
-                    if (item.content == option) {
-                        view.attrColor(androidx.appcompat.R.attr.colorPrimary)
-                    } else {
-                        view.attrColor(com.google.android.material.R.attr.colorOutline)
-                    }
-                )
+            val span = SpannableStyle(option.getName()).apply {
+                if (option == item.content) {
+                    setForegroundColor(view.attrColor(androidx.appcompat.R.attr.colorPrimary))
+                } else {
+                    setForegroundColor(view.attrColor(com.google.android.material.R.attr.colorOnSurface))
+                }
             }
-            popupMenu.menu.add(0, index + 1, index + 1, text.toSpannableString())
+            val secondaryName = option.getSecondaryName()
+            if (secondaryName != null) {
+                span.plus(" ")
+                span.plus(secondaryName.style {
+                    setTextSizeRelative(0.8f)
+                    if (option == item.content) {
+                        setForegroundColor(view.attrColor(androidx.appcompat.R.attr.colorPrimary))
+                    } else {
+                        setForegroundColor(view.attrColor(com.google.android.material.R.attr.colorOutline))
+                    }
+                })
+            }
+            popupMenu.menu.add(0, index + 1, index + 1, span.toSpannableString())
         }
         popupMenu.setOnMenuItemClickListener {
             if (it.itemId == 0) {

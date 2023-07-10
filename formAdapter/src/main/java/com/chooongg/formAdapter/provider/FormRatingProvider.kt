@@ -2,7 +2,6 @@ package com.chooongg.formAdapter.provider
 
 import android.content.res.ColorStateList
 import android.view.ViewGroup
-import android.view.ViewGroup.MarginLayoutParams
 import android.widget.FrameLayout
 import androidx.appcompat.widget.AppCompatRatingBar
 import androidx.core.view.updateLayoutParams
@@ -16,7 +15,7 @@ import com.chooongg.utils.ext.attrColor
 
 object FormRatingProvider : BaseFormProvider() {
     override fun onCreateItemView(
-        adapter: FormPartAdapter,
+        partAdapter: FormPartAdapter,
         typeset: Typeset,
         parent: ViewGroup
     ) = FrameLayout(parent.context).apply {
@@ -33,20 +32,20 @@ object FormRatingProvider : BaseFormProvider() {
         }
         addView(rating)
         setPadding(
-            adapter.style.paddingInfo.horizontalLocal, 0,
-            adapter.style.paddingInfo.horizontalLocal, 0
+            partAdapter.style.paddingInfo.horizontalLocal, 0,
+            partAdapter.style.paddingInfo.horizontalLocal, 0
         )
     }
 
     override fun onBindItemView(
-        adapter: FormPartAdapter,
+        partAdapter: FormPartAdapter,
         typeset: Typeset,
         holder: FormViewHolder,
         item: BaseForm
     ) {
         val itemRating = item as? FormRating
         with(holder.getView<AppCompatRatingBar>(R.id.formInternalContentChild)) {
-            setIsIndicator(!item.isRealEnable(adapter.formAdapter))
+            setIsIndicator(!item.isRealEnable(partAdapter.formAdapter))
             numStars = itemRating?.numStars ?: 5
             stepSize = itemRating?.stepSize ?: 1f
             onRatingBarChangeListener = null
@@ -55,11 +54,12 @@ object FormRatingProvider : BaseFormProvider() {
                 attrColor(androidx.appcompat.R.attr.colorPrimary)
             )
             setOnRatingBarChangeListener { _, value, _ ->
-                changeContentAndNotifyLinkage(adapter, item, value)
-                rating = value
+                if (itemRating?.needToChoose == true && value == 0f) {
+                    changeContentAndNotifyLinkage(partAdapter, item, null)
+                } else changeContentAndNotifyLinkage(partAdapter, item, value)
             }
             updateLayoutParams<FrameLayout.LayoutParams> {
-                gravity = typeset.getContentGravity(adapter, item)
+                gravity = typeset.getContentGravity(partAdapter, item)
             }
         }
     }

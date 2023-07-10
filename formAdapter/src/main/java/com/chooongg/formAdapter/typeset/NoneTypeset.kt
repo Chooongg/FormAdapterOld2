@@ -37,26 +37,26 @@ object NoneTypeset : Typeset(0) {
     }
 
     override fun onBindTypesetLayout(
-        adapter: FormPartAdapter,
+        partAdapter: FormPartAdapter,
         holder: FormViewHolder,
         item: BaseForm
     ) {
         with(holder.getView<FrameLayout>(R.id.formInternalTypesetParent)) {
             setPaddingRelative(
                 when (item.paddingBoundary.startType) {
-                    Boundary.GLOBAL -> adapter.style.paddingInfo.horizontalGlobal - adapter.style.paddingInfo.horizontalLocal
+                    Boundary.GLOBAL -> partAdapter.style.paddingInfo.horizontalGlobal - partAdapter.style.paddingInfo.horizontalLocal
                     else -> 0
                 },
                 when (item.paddingBoundary.topType) {
-                    Boundary.GLOBAL -> adapter.style.paddingInfo.verticalGlobal - adapter.style.paddingInfo.verticalLocal
+                    Boundary.GLOBAL -> partAdapter.style.paddingInfo.verticalGlobal - partAdapter.style.paddingInfo.verticalLocal
                     else -> 0
                 },
                 when (item.paddingBoundary.endType) {
-                    Boundary.GLOBAL -> adapter.style.paddingInfo.horizontalGlobal - adapter.style.paddingInfo.horizontalLocal
+                    Boundary.GLOBAL -> partAdapter.style.paddingInfo.horizontalGlobal - partAdapter.style.paddingInfo.horizontalLocal
                     else -> 0
                 },
                 when (item.paddingBoundary.bottomType) {
-                    Boundary.GLOBAL -> adapter.style.paddingInfo.verticalGlobal - adapter.style.paddingInfo.verticalLocal
+                    Boundary.GLOBAL -> partAdapter.style.paddingInfo.verticalGlobal - partAdapter.style.paddingInfo.verticalLocal
                     else -> 0
                 }
             )

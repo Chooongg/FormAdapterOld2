@@ -30,7 +30,7 @@ import com.google.android.material.textview.MaterialTextView
 object FormMenuProvider : BaseFormProvider() {
 
     override fun onCreateItemView(
-        adapter: FormPartAdapter,
+        partAdapter: FormPartAdapter,
         typeset: Typeset,
         parent: ViewGroup
     ) = LinearLayoutCompat(parent.context).apply {
@@ -46,17 +46,17 @@ object FormMenuProvider : BaseFormProvider() {
                 LinearLayoutCompat.LayoutParams.WRAP_CONTENT,
                 LinearLayoutCompat.LayoutParams.WRAP_CONTENT
             ).apply {
-                marginStart = adapter.style.paddingInfo.horizontalLocal
+                marginStart = partAdapter.style.paddingInfo.horizontalLocal
             }
         })
         addView(MaterialTextView(context).apply {
             id = R.id.formInternalContentChildName
             setTextAppearance(R.style.FormAdapter_TextAppearance_Content)
             setPadding(
-                adapter.style.paddingInfo.horizontalLocal,
-                adapter.style.paddingInfo.verticalLocal,
-                adapter.style.paddingInfo.horizontalLocal,
-                adapter.style.paddingInfo.verticalLocal
+                partAdapter.style.paddingInfo.horizontalLocal,
+                partAdapter.style.paddingInfo.verticalLocal,
+                partAdapter.style.paddingInfo.horizontalLocal,
+                partAdapter.style.paddingInfo.verticalLocal
             )
             layoutParams = LinearLayoutCompat.LayoutParams(
                 LinearLayoutCompat.LayoutParams.WRAP_CONTENT,
@@ -79,10 +79,10 @@ object FormMenuProvider : BaseFormProvider() {
                 )
             )
             setPadding(
-                adapter.style.paddingInfo.horizontalLocal,
-                adapter.style.paddingInfo.verticalLocal,
-                adapter.style.paddingInfo.horizontalLocal,
-                adapter.style.paddingInfo.verticalLocal
+                partAdapter.style.paddingInfo.horizontalLocal,
+                partAdapter.style.paddingInfo.verticalLocal,
+                partAdapter.style.paddingInfo.horizontalLocal,
+                partAdapter.style.paddingInfo.verticalLocal
             )
             gravity = Gravity.END
             layoutParams = LinearLayoutCompat.LayoutParams(
@@ -125,14 +125,14 @@ object FormMenuProvider : BaseFormProvider() {
                 LinearLayoutCompat.LayoutParams.WRAP_CONTENT,
                 LinearLayoutCompat.LayoutParams.WRAP_CONTENT
             ).apply {
-                marginEnd = adapter.style.paddingInfo.horizontalLocal
+                marginEnd = partAdapter.style.paddingInfo.horizontalLocal
             }
         })
     }
 
     @SuppressLint("SetTextI18n")
     override fun onBindItemView(
-        adapter: FormPartAdapter,
+        partAdapter: FormPartAdapter,
         typeset: Typeset,
         holder: FormViewHolder,
         item: BaseForm
@@ -142,41 +142,41 @@ object FormMenuProvider : BaseFormProvider() {
 
         }
         with(holder.getView<LinearLayoutCompat>(R.id.formInternalContent)) {
-            isEnabled = item.isRealEnable(adapter.formAdapter)
+            isEnabled = item.isRealEnable(partAdapter.formAdapter)
             setPadding(
                 when (item.paddingBoundary.startType) {
-                    Boundary.GLOBAL -> adapter.style.paddingInfo.horizontalGlobal - adapter.style.paddingInfo.horizontalLocal
+                    Boundary.GLOBAL -> partAdapter.style.paddingInfo.horizontalGlobal - partAdapter.style.paddingInfo.horizontalLocal
                     else -> 0
                 }, if (itemMenu?.isGlobalPadding == true) {
-                    adapter.style.paddingInfo.verticalGlobal - adapter.style.paddingInfo.verticalLocal
+                    partAdapter.style.paddingInfo.verticalGlobal - partAdapter.style.paddingInfo.verticalLocal
                 } else when (item.paddingBoundary.topType) {
-                    Boundary.GLOBAL -> adapter.style.paddingInfo.verticalGlobal - adapter.style.paddingInfo.verticalLocal
+                    Boundary.GLOBAL -> partAdapter.style.paddingInfo.verticalGlobal - partAdapter.style.paddingInfo.verticalLocal
                     else -> 0
                 }, when (item.paddingBoundary.endType) {
-                    Boundary.GLOBAL -> adapter.style.paddingInfo.horizontalGlobal - adapter.style.paddingInfo.horizontalLocal
+                    Boundary.GLOBAL -> partAdapter.style.paddingInfo.horizontalGlobal - partAdapter.style.paddingInfo.horizontalLocal
                     else -> 0
                 }, if (itemMenu?.isGlobalPadding == true) {
-                    adapter.style.paddingInfo.verticalGlobal - adapter.style.paddingInfo.verticalLocal
+                    partAdapter.style.paddingInfo.verticalGlobal - partAdapter.style.paddingInfo.verticalLocal
                 } else when (item.paddingBoundary.bottomType) {
-                    Boundary.GLOBAL -> adapter.style.paddingInfo.verticalGlobal - adapter.style.paddingInfo.verticalLocal
+                    Boundary.GLOBAL -> partAdapter.style.paddingInfo.verticalGlobal - partAdapter.style.paddingInfo.verticalLocal
                     else -> 0
                 }
             )
             updateLayoutParams<MarginLayoutParams> {
                 marginStart = when (item.paddingBoundary.startType) {
-                    Boundary.GLOBAL -> -(adapter.style.paddingInfo.horizontalGlobal - adapter.style.paddingInfo.horizontalLocal)
+                    Boundary.GLOBAL -> -(partAdapter.style.paddingInfo.horizontalGlobal - partAdapter.style.paddingInfo.horizontalLocal)
                     else -> 0
                 }
                 marginEnd = when (item.paddingBoundary.endType) {
-                    Boundary.GLOBAL -> -(adapter.style.paddingInfo.horizontalGlobal - adapter.style.paddingInfo.horizontalLocal)
+                    Boundary.GLOBAL -> -(partAdapter.style.paddingInfo.horizontalGlobal - partAdapter.style.paddingInfo.horizontalLocal)
                     else -> 0
                 }
                 topMargin = when (item.paddingBoundary.topType) {
-                    Boundary.GLOBAL -> -(adapter.style.paddingInfo.verticalGlobal - adapter.style.paddingInfo.verticalLocal)
+                    Boundary.GLOBAL -> -(partAdapter.style.paddingInfo.verticalGlobal - partAdapter.style.paddingInfo.verticalLocal)
                     else -> 0
                 }
                 bottomMargin = when (item.paddingBoundary.bottomType) {
-                    Boundary.GLOBAL -> -(adapter.style.paddingInfo.verticalGlobal - adapter.style.paddingInfo.verticalLocal)
+                    Boundary.GLOBAL -> -(partAdapter.style.paddingInfo.verticalGlobal - partAdapter.style.paddingInfo.verticalLocal)
                     else -> 0
                 }
             }
@@ -185,7 +185,7 @@ object FormMenuProvider : BaseFormProvider() {
             text = item.name
         }
         with(holder.getView<MaterialTextView>(R.id.formInternalContentChild)) {
-            isEnabled = item.isRealEnable(adapter.formAdapter)
+            isEnabled = item.isRealEnable(partAdapter.formAdapter)
             text = item.content?.toString()
             maxLines = 2
         }
@@ -221,7 +221,7 @@ object FormMenuProvider : BaseFormProvider() {
     }
 
     override fun onBindItemViewForeground(
-        adapter: FormPartAdapter,
+        partAdapter: FormPartAdapter,
         holder: FormViewHolder,
         item: BaseForm
     ) = RippleDrawable(
@@ -230,12 +230,12 @@ object FormMenuProvider : BaseFormProvider() {
         ),
         null,
         holder.itemView.background ?: MaterialShapeDrawable(
-            adapter.style.getShapeAppearanceModel(adapter)
+            partAdapter.style.getShapeAppearanceModel(partAdapter)
         )
     )
 
     override fun onBindItemViewLongClick(
-        adapter: FormPartAdapter,
+        partAdapter: FormPartAdapter,
         holder: FormViewHolder,
         item: BaseForm
     ) = Unit

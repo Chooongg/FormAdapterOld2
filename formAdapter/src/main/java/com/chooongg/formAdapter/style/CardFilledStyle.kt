@@ -23,7 +23,7 @@ open class CardFilledStyle(
     defaultTypeset: Typeset = HorizontalTypeset
 ) : Style(defaultTypeset) {
 
-    override fun onBindStyle(adapter: FormPartAdapter, holder: FormViewHolder, item: BaseForm) {
+    override fun onBindStyle(partAdapter: FormPartAdapter, holder: FormViewHolder, item: BaseForm) {
         holder.itemView.clipToOutline = true
         holder.itemView.updateLayoutParams<ViewGroup.MarginLayoutParams> {
             topMargin = when (item.marginBoundary.topType) {
@@ -37,7 +37,7 @@ open class CardFilledStyle(
                 else -> 0
             }
         }
-        val shape = getShapeAppearanceModel(adapter).configShapeAppearanceModel(holder, item)
+        val shape = getShapeAppearanceModel(partAdapter).configShapeAppearanceModel(holder, item)
         if (holder.itemView.background is MaterialShapeDrawable) {
             (holder.itemView.background as MaterialShapeDrawable).shapeAppearanceModel = shape
         } else holder.itemView.background = MaterialShapeDrawable(shape)

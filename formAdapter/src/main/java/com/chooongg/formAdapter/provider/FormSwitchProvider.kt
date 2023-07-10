@@ -13,7 +13,7 @@ import com.google.android.material.materialswitch.MaterialSwitch
 
 object FormSwitchProvider : BaseFormProvider() {
     override fun onCreateItemView(
-        adapter: FormPartAdapter,
+        partAdapter: FormPartAdapter,
         typeset: Typeset,
         parent: ViewGroup
     ) = FrameLayout(parent.context).apply {
@@ -26,10 +26,10 @@ object FormSwitchProvider : BaseFormProvider() {
             id = R.id.formInternalContentChild
             setTextAppearance(R.style.FormAdapter_TextAppearance_Content)
             setPadding(
-                adapter.style.paddingInfo.horizontalLocal,
-                adapter.style.paddingInfo.verticalLocal,
-                adapter.style.paddingInfo.horizontalLocal,
-                adapter.style.paddingInfo.verticalLocal,
+                partAdapter.style.paddingInfo.horizontalLocal,
+                partAdapter.style.paddingInfo.verticalLocal,
+                partAdapter.style.paddingInfo.horizontalLocal,
+                partAdapter.style.paddingInfo.verticalLocal,
             )
             minimumHeight = 0
             minHeight = 0
@@ -45,20 +45,20 @@ object FormSwitchProvider : BaseFormProvider() {
     }
 
     override fun onBindItemView(
-        adapter: FormPartAdapter,
+        partAdapter: FormPartAdapter,
         typeset: Typeset,
         holder: FormViewHolder,
         item: BaseForm
     ) {
         with(holder.getView<MaterialSwitch>(R.id.formInternalContentChild)) {
-            isEnabled = item.isRealEnable(adapter.formAdapter)
+            isEnabled = item.isRealEnable(partAdapter.formAdapter)
             setOnCheckedChangeListener(null)
             isChecked = item.content as? Boolean ?: false
             setOnCheckedChangeListener { _, isCheck ->
-                changeContentAndNotifyLinkage(adapter, item, isCheck)
+                changeContentAndNotifyLinkage(partAdapter, item, isCheck)
             }
             updateLayoutParams<FrameLayout.LayoutParams> {
-                gravity = typeset.getContentGravity(adapter, item)
+                gravity = typeset.getContentGravity(partAdapter, item)
             }
         }
     }

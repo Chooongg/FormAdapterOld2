@@ -52,33 +52,33 @@ object HorizontalTypeset : Typeset(FormManager.emsSize) {
     }
 
     override fun onBindTypesetLayout(
-        adapter: FormPartAdapter,
+        partAdapter: FormPartAdapter,
         holder: FormViewHolder,
         item: BaseForm
     ) {
         with(holder.getView<LinearLayoutCompat>(R.id.formInternalTypesetParent)) {
             setPaddingRelative(
                 when (item.paddingBoundary.startType) {
-                    Boundary.GLOBAL -> adapter.style.paddingInfo.horizontalGlobal - adapter.style.paddingInfo.horizontalLocal
+                    Boundary.GLOBAL -> partAdapter.style.paddingInfo.horizontalGlobal - partAdapter.style.paddingInfo.horizontalLocal
                     else -> 0
                 },
                 when (item.paddingBoundary.topType) {
-                    Boundary.GLOBAL -> adapter.style.paddingInfo.verticalGlobal - adapter.style.paddingInfo.verticalLocal
+                    Boundary.GLOBAL -> partAdapter.style.paddingInfo.verticalGlobal - partAdapter.style.paddingInfo.verticalLocal
                     else -> 0
                 },
                 when (item.paddingBoundary.endType) {
-                    Boundary.GLOBAL -> adapter.style.paddingInfo.horizontalGlobal - adapter.style.paddingInfo.horizontalLocal
+                    Boundary.GLOBAL -> partAdapter.style.paddingInfo.horizontalGlobal - partAdapter.style.paddingInfo.horizontalLocal
                     else -> 0
                 },
                 when (item.paddingBoundary.bottomType) {
-                    Boundary.GLOBAL -> adapter.style.paddingInfo.verticalGlobal - adapter.style.paddingInfo.verticalLocal
+                    Boundary.GLOBAL -> partAdapter.style.paddingInfo.verticalGlobal - partAdapter.style.paddingInfo.verticalLocal
                     else -> 0
                 }
             )
         }
         with(holder.getView<MaterialTextView>(R.id.formInternalName)) {
-            text = adapter.formAdapter.nameFormat.format(context, item.name, item.isMust)
-            if (getContentGravity(adapter, item) and Gravity.END == Gravity.END) {
+            text = partAdapter.formAdapter.nameFormat.format(context, item.name, item.isMust)
+            if (getContentGravity(partAdapter, item) and Gravity.END == Gravity.END) {
                 minWidth = 0
                 maxEms = ems
             } else setEms(ems)

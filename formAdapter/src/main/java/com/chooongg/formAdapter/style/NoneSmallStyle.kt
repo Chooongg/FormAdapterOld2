@@ -1,7 +1,6 @@
 package com.chooongg.formAdapter.style
 
 import android.content.Context
-import android.content.res.ColorStateList
 import android.view.ViewGroup
 import androidx.core.view.updatePaddingRelative
 import com.chooongg.formAdapter.FormPartAdapter
@@ -12,8 +11,6 @@ import com.chooongg.formAdapter.boundary.FormPaddingInfo
 import com.chooongg.formAdapter.item.BaseForm
 import com.chooongg.formAdapter.item.InternalFormGroupTitle
 import com.chooongg.formAdapter.typeset.HorizontalTypeset
-import com.chooongg.utils.ext.attrColor
-import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.textview.MaterialTextView
 
 object NoneSmallStyle : Style(HorizontalTypeset) {
@@ -31,7 +28,7 @@ object NoneSmallStyle : Style(HorizontalTypeset) {
         )
     }
 
-    override fun onBindStyle(adapter: FormPartAdapter, holder: FormViewHolder, item: BaseForm) {
+    override fun onBindStyle(partAdapter: FormPartAdapter, holder: FormViewHolder, item: BaseForm) {
         holder.itemView.clipToOutline = false
         holder.itemView.background = null
     }

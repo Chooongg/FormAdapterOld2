@@ -13,7 +13,7 @@ import com.google.android.material.divider.MaterialDivider
 
 object FormDividerProvider : BaseFormProvider() {
     override fun onCreateItemView(
-        adapter: FormPartAdapter,
+        partAdapter: FormPartAdapter,
         typeset: Typeset,
         parent: ViewGroup
     ) = MaterialDivider(parent.context).apply {
@@ -21,13 +21,13 @@ object FormDividerProvider : BaseFormProvider() {
         layoutParams = MarginLayoutParams(
             MarginLayoutParams.MATCH_PARENT, MarginLayoutParams.WRAP_CONTENT
         ).apply {
-            topMargin = adapter.style.paddingInfo.verticalLocal
-            bottomMargin = adapter.style.paddingInfo.verticalLocal
+            topMargin = partAdapter.style.paddingInfo.verticalLocal
+            bottomMargin = partAdapter.style.paddingInfo.verticalLocal
         }
     }
 
     override fun onBindItemView(
-        adapter: FormPartAdapter,
+        partAdapter: FormPartAdapter,
         typeset: Typeset,
         holder: FormViewHolder,
         item: BaseForm
@@ -39,13 +39,13 @@ object FormDividerProvider : BaseFormProvider() {
                 dividerInsetEnd = 0
                 updateLayoutParams<MarginLayoutParams> {
                     marginStart =
-                        -(adapter.style.paddingInfo.horizontalGlobal - adapter.style.paddingInfo.horizontalLocal)
+                        -(partAdapter.style.paddingInfo.horizontalGlobal - partAdapter.style.paddingInfo.horizontalLocal)
                     marginEnd =
-                        -(adapter.style.paddingInfo.horizontalGlobal - adapter.style.paddingInfo.horizontalLocal)
+                        -(partAdapter.style.paddingInfo.horizontalGlobal - partAdapter.style.paddingInfo.horizontalLocal)
                 }
             } else {
-                dividerInsetStart = adapter.style.paddingInfo.horizontalLocal
-                dividerInsetEnd = adapter.style.paddingInfo.horizontalLocal
+                dividerInsetStart = partAdapter.style.paddingInfo.horizontalLocal
+                dividerInsetEnd = partAdapter.style.paddingInfo.horizontalLocal
                 updateLayoutParams<MarginLayoutParams> {
                     marginStart = 0
                     marginEnd = 0
@@ -55,13 +55,13 @@ object FormDividerProvider : BaseFormProvider() {
     }
 
     override fun onBindItemViewForeground(
-        adapter: FormPartAdapter,
+        partAdapter: FormPartAdapter,
         holder: FormViewHolder,
         item: BaseForm
     ) = null
 
     override fun onBindItemViewLongClick(
-        adapter: FormPartAdapter,
+        partAdapter: FormPartAdapter,
         holder: FormViewHolder,
         item: BaseForm
     ) = Unit

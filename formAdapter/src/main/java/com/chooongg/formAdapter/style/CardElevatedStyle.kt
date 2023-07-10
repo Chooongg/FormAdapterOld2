@@ -23,7 +23,7 @@ open class CardElevatedStyle(
     defaultTypeset: Typeset = HorizontalTypeset
 ) : Style(defaultTypeset) {
 
-    override fun onBindStyle(adapter: FormPartAdapter, holder: FormViewHolder, item: BaseForm) {
+    override fun onBindStyle(partAdapter: FormPartAdapter, holder: FormViewHolder, item: BaseForm) {
         holder.itemView.clipToOutline = true
         holder.itemView.updateLayoutParams<MarginLayoutParams> {
             topMargin = when (item.marginBoundary.topType) {
@@ -37,7 +37,7 @@ open class CardElevatedStyle(
                 else -> 0
             }
         }
-        val shape = getShapeAppearanceModel(adapter).configShapeAppearanceModel(holder, item)
+        val shape = getShapeAppearanceModel(partAdapter).configShapeAppearanceModel(holder, item)
         holder.itemView.elevation = customElevation ?: holder.itemView.attrChildDimensionPixelSize(
             com.google.android.material.R.attr.materialCardViewElevatedStyle,
             com.google.android.material.R.attr.cardElevation, 0

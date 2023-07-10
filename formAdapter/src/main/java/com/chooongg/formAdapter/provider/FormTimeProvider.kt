@@ -2,7 +2,6 @@ package com.chooongg.formAdapter.provider
 
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.updateLayoutParams
 import com.chooongg.formAdapter.FormPartAdapter
 import com.chooongg.formAdapter.FormViewHolder
 import com.chooongg.formAdapter.R
@@ -20,7 +19,7 @@ import java.util.Calendar
 
 object FormTimeProvider : BaseFormProvider() {
     override fun onCreateItemView(
-        adapter: FormPartAdapter,
+        partAdapter: FormPartAdapter,
         typeset: Typeset,
         parent: ViewGroup
     ) = MaterialButton(
@@ -39,10 +38,10 @@ object FormTimeProvider : BaseFormProvider() {
         setIconResource(R.drawable.ic_form_arrow_down)
         setTextAppearance(R.style.FormAdapter_TextAppearance_Content)
         setPadding(
-            adapter.style.paddingInfo.horizontalLocal,
-            adapter.style.paddingInfo.verticalLocal,
-            adapter.style.paddingInfo.horizontalLocal,
-            adapter.style.paddingInfo.verticalLocal
+            partAdapter.style.paddingInfo.horizontalLocal,
+            partAdapter.style.paddingInfo.verticalLocal,
+            partAdapter.style.paddingInfo.horizontalLocal,
+            partAdapter.style.paddingInfo.verticalLocal
         )
         layoutParams = ViewGroup.MarginLayoutParams(
             ViewGroup.MarginLayoutParams.MATCH_PARENT, ViewGroup.MarginLayoutParams.WRAP_CONTENT
@@ -50,21 +49,18 @@ object FormTimeProvider : BaseFormProvider() {
     }
 
     override fun onBindItemView(
-        adapter: FormPartAdapter,
+        partAdapter: FormPartAdapter,
         typeset: Typeset,
         holder: FormViewHolder,
         item: BaseForm
     ) {
         with(holder.getView<MaterialButton>(R.id.formInternalContent)) {
-            isEnabled = item.isRealMenuEnable(adapter.formAdapter)
-            text = item.getContentText(adapter, holder)
+            isEnabled = item.isRealMenuEnable(partAdapter.formAdapter)
+            text = item.getContentText(partAdapter, holder)
             hint = item.hint
                 ?: resources.getString(com.chooongg.formAdapter.R.string.formDefaultHintSelect)
-            gravity = typeset.getContentGravity(adapter, item)
-            updateLayoutParams<ViewGroup.LayoutParams> {
-                width = typeset.contentWidth()
-            }
-            doOnClick { onClickButton(adapter, holder, item) }
+            gravity = typeset.getContentGravity(partAdapter, item)
+            doOnClick { onClickButton(partAdapter, holder, item) }
         }
     }
 

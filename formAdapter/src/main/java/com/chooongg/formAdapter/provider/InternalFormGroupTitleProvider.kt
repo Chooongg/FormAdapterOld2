@@ -11,17 +11,17 @@ import com.chooongg.formAdapter.typeset.Typeset
 object InternalFormGroupTitleProvider : BaseFormProvider() {
 
     override fun onCreateItemView(
-        adapter: FormPartAdapter,
+        partAdapter: FormPartAdapter,
         typeset: Typeset,
         parent: ViewGroup
-    ): View = adapter.style.onCreateGroupTitle(parent)
+    ): View = partAdapter.style.onCreateGroupTitle(parent)
 
     override fun onBindItemView(
-        adapter: FormPartAdapter,
+        partAdapter: FormPartAdapter,
         typeset: Typeset,
         holder: FormViewHolder,
         item: BaseForm
     ) {
-        if (item is InternalFormGroupTitle) adapter.style.onBindGroupTitle(holder, item)
+        if (item is InternalFormGroupTitle) partAdapter.style.onBindGroupTitle(holder, item)
     }
 }

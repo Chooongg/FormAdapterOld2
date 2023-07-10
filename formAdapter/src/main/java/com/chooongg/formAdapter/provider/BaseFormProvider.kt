@@ -17,28 +17,28 @@ import com.chooongg.utils.ClipboardUtils
 abstract class BaseFormProvider {
 
     abstract fun onCreateItemView(
-        adapter: FormPartAdapter,
+        partAdapter: FormPartAdapter,
         typeset: Typeset,
         parent: ViewGroup
     ): View
 
     abstract fun onBindItemView(
-        adapter: FormPartAdapter,
+        partAdapter: FormPartAdapter,
         typeset: Typeset,
         holder: FormViewHolder,
         item: BaseForm
     )
 
     open fun onBindItemView(
-        adapter: FormPartAdapter,
+        partAdapter: FormPartAdapter,
         typeset: Typeset,
         holder: FormViewHolder,
         item: BaseForm,
         payloads: List<Any>
-    ) = onBindItemView(adapter, typeset, holder, item)
+    ) = onBindItemView(partAdapter, typeset, holder, item)
 
     open fun onBindItemViewForeground(
-        adapter: FormPartAdapter,
+        partAdapter: FormPartAdapter,
         holder: FormViewHolder,
         item: BaseForm
     ): Drawable? = null
@@ -46,7 +46,7 @@ abstract class BaseFormProvider {
     open fun isEnableItemClick(): Boolean = false
 
     open fun onBindItemViewClick(
-        adapter: FormPartAdapter,
+        partAdapter: FormPartAdapter,
         holder: FormViewHolder,
         item: BaseForm
     ) {
@@ -58,20 +58,20 @@ abstract class BaseFormProvider {
     }
 
     open fun onBindItemViewLongClick(
-        adapter: FormPartAdapter,
+        partAdapter: FormPartAdapter,
         holder: FormViewHolder,
         item: BaseForm
     ) {
         holder.itemView.setOnLongClickListener { view ->
             val popupMenu = PopupMenu(view.context, view)
             popupMenu.menu.add(0, 0, 0, "复制名称")
-            if (item.getContentText(adapter, holder) != null) {
+            if (item.getContentText(partAdapter, holder) != null) {
                 popupMenu.menu.add(0, 1, 1, "复制内容")
             }
             popupMenu.setOnMenuItemClickListener {
                 when (it.itemId) {
                     0 -> ClipboardUtils.copyText(item.name)
-                    1 -> ClipboardUtils.copyText(item.getContentText(adapter, holder))
+                    1 -> ClipboardUtils.copyText(item.getContentText(partAdapter, holder))
                     else -> return@setOnMenuItemClickListener false
                 }
                 true
@@ -87,27 +87,36 @@ abstract class BaseFormProvider {
 
     open fun onItemRecycler(holder: FormViewHolder) = Unit
 
-    protected fun changeContentAndNotifyLinkage(
-        adapter: FormPartAdapter,
+    protected open fun changeContentAndNotifyLinkage(
+        partAdapter: FormPartAdapter,
         item: BaseForm,
         content: Any?
     ) {
         if (item.content != content) {
             item.content = content
-            item.linkageBlock?.invoke(LinkageForm(adapter), item.field, item.content)
+            notifyLinkage(partAdapter, item, item.field, content)
         }
     }
 
     protected fun changeExtensionAndNotifyLinkage(
-        adapter: FormPartAdapter,
+        partAdapter: FormPartAdapter,
         item: BaseForm,
         field: String,
         content: Any?
     ) {
         if (item.getExtensionContent(field) != content) {
             item.putExtensionContent(field, content)
-            item.linkageBlock?.invoke(LinkageForm(adapter), field, content)
+            notifyLinkage(partAdapter, item, field, content)
         }
+    }
+
+    protected fun notifyLinkage(
+        partAdapter: FormPartAdapter,
+        item: BaseForm,
+        field: String?,
+        content: Any?
+    ) {
+        item.linkageBlock?.invoke(LinkageForm(partAdapter), field, content)
     }
 
     override fun equals(other: Any?): Boolean {

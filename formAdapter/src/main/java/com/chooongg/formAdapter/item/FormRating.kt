@@ -33,6 +33,11 @@ class FormRating(@StringRes nameRes: Int?, name: CharSequence?, field: String?) 
     @FloatRange(from = 0.0)
     var stepSize: Float = 1f
 
+    /**
+     * 最小值
+     */
+    var needToChoose: Boolean = true
+
     var tint: FormColorStateListBlock? = null
 
     override fun getItemProvider(adapter: FormAdapter) = FormRatingProvider

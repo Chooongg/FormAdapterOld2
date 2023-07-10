@@ -13,7 +13,7 @@ import com.google.android.material.textview.MaterialTextView
 
 object FormLabelProvider : BaseFormProvider() {
     override fun onCreateItemView(
-        adapter: FormPartAdapter,
+        partAdapter: FormPartAdapter,
         typeset: Typeset,
         parent: ViewGroup
     ) = MaterialTextView(parent.context).apply {
@@ -22,7 +22,7 @@ object FormLabelProvider : BaseFormProvider() {
     }
 
     override fun onBindItemView(
-        adapter: FormPartAdapter,
+        partAdapter: FormPartAdapter,
         typeset: Typeset,
         holder: FormViewHolder,
         item: BaseForm
@@ -38,22 +38,22 @@ object FormLabelProvider : BaseFormProvider() {
                 setTextColor(context.attrColor(com.google.android.material.R.attr.colorPrimary))
             }
             setPadding(
-                adapter.style.paddingInfo.horizontalLocal,
-                if (itemTip?.enableTopPadding == true) adapter.style.paddingInfo.verticalLocal else 0,
-                adapter.style.paddingInfo.horizontalLocal,
-                if (itemTip?.enableBottomPadding == true) adapter.style.paddingInfo.verticalLocal else 0
+                partAdapter.style.paddingInfo.horizontalLocal,
+                if (itemTip?.enableTopPadding == true) partAdapter.style.paddingInfo.verticalLocal else 0,
+                partAdapter.style.paddingInfo.horizontalLocal,
+                if (itemTip?.enableBottomPadding == true) partAdapter.style.paddingInfo.verticalLocal else 0
             )
         }
     }
 
     override fun onBindItemViewForeground(
-        adapter: FormPartAdapter,
+        partAdapter: FormPartAdapter,
         holder: FormViewHolder,
         item: BaseForm
     ) = null
 
     override fun onBindItemViewLongClick(
-        adapter: FormPartAdapter,
+        partAdapter: FormPartAdapter,
         holder: FormViewHolder,
         item: BaseForm
     ) = Unit

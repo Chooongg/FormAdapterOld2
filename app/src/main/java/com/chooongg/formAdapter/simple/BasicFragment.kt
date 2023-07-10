@@ -15,6 +15,7 @@ import com.chooongg.formAdapter.enum.FormSelectorOpenMode
 import com.chooongg.formAdapter.enum.FormTimeMode
 import com.chooongg.formAdapter.enum.FormVisibilityMode
 import com.chooongg.formAdapter.item.addButton
+import com.chooongg.formAdapter.item.addCheckBox
 import com.chooongg.formAdapter.item.addDivider
 import com.chooongg.formAdapter.item.addInput
 import com.chooongg.formAdapter.item.addInputAutoComplete
@@ -62,7 +63,7 @@ class BasicFragment : Fragment() {
                     }
                 }
             }
-            plusPart(CardFilledStyle()) {
+            for (i in 0..6) plusPart(CardFilledStyle()) {
                 plusGroup {
                     addLabel("Android FormAdapter") {
                         contentGravity = Gravity.CENTER_HORIZONTAL
@@ -71,15 +72,7 @@ class BasicFragment : Fragment() {
                         visibilityMode = FormVisibilityMode.ONLY_EDIT
                         contentGravity = Gravity.CENTER_HORIZONTAL
                     }
-                    addSelector("Selector", "selector") {
-                        content = "FormSelector"
-                        openMode = FormSelectorOpenMode.PAGE
-                        optionLoadMode = FormOptionLoadMode.EMPTY
-                        optionLoader {
-                            delay(5000)
-                            throw RuntimeException("1231254124")
-                        }
-                    }
+                    addSelector("Selector", "selector")
                     addSelector("Selector", "selector") {
                         content = "FormSelector"
                         openMode = FormSelectorOpenMode.PAGE
@@ -124,7 +117,6 @@ class BasicFragment : Fragment() {
                     }
                     addSelector("Selector", "selector") {
                         isMust = true
-                        content = "FormSelector"
                         localOptions(
                             listOf(
                                 Option("张三", "130181199505087310"),
@@ -178,6 +170,21 @@ class BasicFragment : Fragment() {
                                 "郑十"
                             )
                         }
+                    }
+                    addCheckBox("CheckBox", "checkBox") {
+                        localOptions(
+                            listOf(
+                                Option("张三"),
+                                Option("李四"),
+                                Option("王五"),
+                                Option("赵六"),
+                                Option("田七"),
+                                Option("周八"),
+                                Option("吴九"),
+                                Option("郑十"),
+                            )
+                        )
+                        content = arrayListOf(Option("郑十"))
                     }
                 }
             }

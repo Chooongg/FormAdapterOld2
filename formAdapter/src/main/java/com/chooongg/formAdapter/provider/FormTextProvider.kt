@@ -14,7 +14,7 @@ import com.google.android.material.textview.MaterialTextView
 object FormTextProvider : BaseFormProvider() {
 
     override fun onCreateItemView(
-        adapter: FormPartAdapter,
+        partAdapter: FormPartAdapter,
         typeset: Typeset,
         parent: ViewGroup
     ) = MaterialTextView(parent.context).apply {
@@ -22,10 +22,10 @@ object FormTextProvider : BaseFormProvider() {
         setTextAppearance(R.style.FormAdapter_TextAppearance_Content)
         setHintTextColor(attrColor(android.R.attr.textColorHint))
         setPadding(
-            adapter.style.paddingInfo.horizontalLocal,
-            adapter.style.paddingInfo.verticalLocal,
-            adapter.style.paddingInfo.horizontalLocal,
-            adapter.style.paddingInfo.verticalLocal
+            partAdapter.style.paddingInfo.horizontalLocal,
+            partAdapter.style.paddingInfo.verticalLocal,
+            partAdapter.style.paddingInfo.horizontalLocal,
+            partAdapter.style.paddingInfo.verticalLocal
         )
         alpha = 0.8f
         layoutParams = MarginLayoutParams(
@@ -34,18 +34,15 @@ object FormTextProvider : BaseFormProvider() {
     }
 
     override fun onBindItemView(
-        adapter: FormPartAdapter,
+        partAdapter: FormPartAdapter,
         typeset: Typeset,
         holder: FormViewHolder,
         item: BaseForm
     ) {
         holder.getView<MaterialTextView>(R.id.formInternalContent).apply {
-            text = item.getContentText(adapter, holder)
+            text = item.getContentText(partAdapter, holder)
             hint = item.hint ?: resources.getString(R.string.fromDefaultHintNone)
-            gravity = typeset.getContentGravity(adapter, item)
-            updateLayoutParams<ViewGroup.LayoutParams> {
-                width = typeset.contentWidth()
-            }
+            gravity = typeset.getContentGravity(partAdapter, item)
         }
     }
 }

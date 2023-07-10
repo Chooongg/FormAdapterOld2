@@ -12,7 +12,6 @@ import androidx.core.view.updateLayoutParams
 import com.chooongg.formAdapter.FormPartAdapter
 import com.chooongg.formAdapter.FormViewHolder
 import com.chooongg.formAdapter.R
-import com.chooongg.formAdapter.data.FormCreator
 import com.chooongg.formAdapter.item.BaseForm
 import com.chooongg.formAdapter.item.FormButton
 import com.chooongg.formAdapter.typeset.Typeset
@@ -22,7 +21,7 @@ import com.google.android.material.theme.overlay.MaterialThemeOverlay
 
 object FormButtonProvider : BaseFormProvider() {
     override fun onCreateItemView(
-        adapter: FormPartAdapter,
+        partAdapter: FormPartAdapter,
         typeset: Typeset,
         parent: ViewGroup
     ) = MaterialButton(parent.context).apply {
@@ -31,23 +30,23 @@ object FormButtonProvider : BaseFormProvider() {
             MarginLayoutParams.MATCH_PARENT, MarginLayoutParams.WRAP_CONTENT
         ).apply {
             setMargins(
-                adapter.style.paddingInfo.horizontalLocal,
-                adapter.style.paddingInfo.verticalLocal - insetTop,
-                adapter.style.paddingInfo.horizontalLocal,
-                adapter.style.paddingInfo.verticalLocal - insetBottom
+                partAdapter.style.paddingInfo.horizontalLocal,
+                partAdapter.style.paddingInfo.verticalLocal - insetTop,
+                partAdapter.style.paddingInfo.horizontalLocal,
+                partAdapter.style.paddingInfo.verticalLocal - insetBottom
             )
         }
     }
 
     override fun onBindItemView(
-        adapter: FormPartAdapter,
+        partAdapter: FormPartAdapter,
         typeset: Typeset,
         holder: FormViewHolder,
         item: BaseForm
     ) {
         val itemButton = item as? FormButton
         with(holder.getView<MaterialButton>(R.id.formInternalContent)) {
-            isEnabled = item.isRealEnable(adapter.formAdapter)
+            isEnabled = item.isRealEnable(partAdapter.formAdapter)
             text = item.name
             hint = item.hint
             if (itemButton?.iconRes != null) {
@@ -156,13 +155,13 @@ object FormButtonProvider : BaseFormProvider() {
     }
 
     override fun onBindItemViewForeground(
-        adapter: FormPartAdapter,
+        partAdapter: FormPartAdapter,
         holder: FormViewHolder,
         item: BaseForm
     ) = null
 
     override fun onBindItemViewLongClick(
-        adapter: FormPartAdapter,
+        partAdapter: FormPartAdapter,
         holder: FormViewHolder,
         item: BaseForm
     ) {

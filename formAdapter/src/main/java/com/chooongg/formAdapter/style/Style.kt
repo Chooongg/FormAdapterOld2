@@ -11,7 +11,6 @@ import com.chooongg.formAdapter.boundary.FormPaddingInfo
 import com.chooongg.formAdapter.item.BaseForm
 import com.chooongg.formAdapter.item.InternalFormGroupTitle
 import com.chooongg.formAdapter.typeset.Typeset
-import com.chooongg.utils.ext.attrResourcesId
 import com.google.android.material.shape.ShapeAppearanceModel
 
 /**
@@ -57,7 +56,7 @@ abstract class Style(val defaultTypeset: Typeset) {
         )
     }
 
-    abstract fun onBindStyle(adapter: FormPartAdapter, holder: FormViewHolder, item: BaseForm)
+    abstract fun onBindStyle(partAdapter: FormPartAdapter, holder: FormViewHolder, item: BaseForm)
 
     /**
      * 创建分组标题
@@ -69,10 +68,8 @@ abstract class Style(val defaultTypeset: Typeset) {
      */
     abstract fun onBindGroupTitle(holder: FormViewHolder, item: InternalFormGroupTitle)
 
-    open fun getShapeAppearanceModel(
-        adapter:FormPartAdapter
-    ): ShapeAppearanceModel {
-        return adapter.formAdapter.shapeAppearanceModel?: ShapeAppearanceModel()
+    open fun getShapeAppearanceModel(partAdapter: FormPartAdapter): ShapeAppearanceModel {
+        return partAdapter.formAdapter.shapeAppearanceModel ?: ShapeAppearanceModel()
     }
 
     open fun ShapeAppearanceModel.configShapeAppearanceModel(

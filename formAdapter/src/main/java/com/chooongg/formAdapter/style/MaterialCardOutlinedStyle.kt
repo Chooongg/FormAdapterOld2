@@ -15,7 +15,7 @@ class MaterialCardOutlinedStyle(
     defaultTypeset: Typeset = HorizontalTypeset
 ) : Style(defaultTypeset) {
 
-    override fun onBindStyle(adapter: FormPartAdapter, holder: FormViewHolder, item: BaseForm) {
+    override fun onBindStyle(partAdapter: FormPartAdapter, holder: FormViewHolder, item: BaseForm) {
         TODO("Not yet implemented")
     }
 

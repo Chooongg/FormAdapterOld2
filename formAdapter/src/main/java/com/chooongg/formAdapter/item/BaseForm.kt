@@ -47,7 +47,7 @@ abstract class BaseForm(
     /**
      * 内容
      */
-    var content: Any? = null
+    open var content: Any? = null
 
     /**
      * 是否必填
