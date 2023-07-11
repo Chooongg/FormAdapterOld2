@@ -87,7 +87,7 @@ abstract class BaseFormProvider {
 
     open fun onItemRecycler(holder: FormViewHolder) = Unit
 
-    protected open fun changeContentAndNotifyLinkage(
+    open fun changeContentAndNotifyLinkage(
         partAdapter: FormPartAdapter,
         item: BaseForm,
         content: Any?
@@ -98,7 +98,7 @@ abstract class BaseFormProvider {
         }
     }
 
-    protected fun changeExtensionAndNotifyLinkage(
+    fun changeExtensionAndNotifyLinkage(
         partAdapter: FormPartAdapter,
         item: BaseForm,
         field: String,
@@ -110,7 +110,7 @@ abstract class BaseFormProvider {
         }
     }
 
-    protected fun notifyLinkage(
+    fun notifyLinkage(
         partAdapter: FormPartAdapter,
         item: BaseForm,
         field: String?,

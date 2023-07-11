@@ -1,6 +1,7 @@
 package com.chooongg.formAdapter.provider
 
 import android.content.res.ColorStateList
+import android.os.Build
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.appcompat.widget.AppCompatRatingBar
@@ -59,6 +60,7 @@ object FormRatingProvider : BaseFormProvider() {
                 } else changeContentAndNotifyLinkage(partAdapter, item, value)
             }
             updateLayoutParams<FrameLayout.LayoutParams> {
+                width = minimumHeight * numStars
                 gravity = typeset.getContentGravity(partAdapter, item)
             }
         }

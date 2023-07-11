@@ -4,7 +4,7 @@ import androidx.annotation.StringRes
 import com.chooongg.formAdapter.FormAdapter
 import com.chooongg.formAdapter.data.FormCreator
 import com.chooongg.formAdapter.option.BaseOption
-import com.chooongg.formAdapter.provider.BaseFormProvider
+import com.chooongg.formAdapter.provider.FormRadioButtonProvider
 
 fun FormCreator.addRadioButton(
     name: CharSequence?, field: String? = null, block: (FormRadioButton.() -> Unit)? = null
@@ -20,7 +20,5 @@ class FormRadioButton(
 
     override fun hasOpenOperation() = false
 
-    override fun getItemProvider(adapter: FormAdapter): BaseFormProvider {
-        TODO("Not yet implemented")
-    }
+    override fun getItemProvider(adapter: FormAdapter) = FormRadioButtonProvider
 }

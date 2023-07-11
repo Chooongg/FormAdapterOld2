@@ -1,6 +1,8 @@
 package com.chooongg.formAdapter.provider
 
 import android.annotation.SuppressLint
+import android.content.res.ColorStateList
+import android.graphics.drawable.RippleDrawable
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
@@ -18,8 +20,10 @@ import com.chooongg.utils.ext.style
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.flexbox.JustifyContent
 import com.google.android.material.checkbox.MaterialCheckBox
+import kotlin.math.min
 
 object FormCheckBoxProvider : BaseFormProvider() {
+
     override fun onCreateItemView(
         partAdapter: FormPartAdapter,
         typeset: Typeset,
@@ -55,6 +59,10 @@ object FormCheckBoxProvider : BaseFormProvider() {
         }
     }
 
+    override fun onItemRecycler(holder: FormViewHolder) {
+        holder.job?.cancel()
+    }
+
     private class ChildAdapter : RecyclerView.Adapter<FormViewHolder>() {
 
         lateinit var partAdapter: FormPartAdapter
@@ -63,12 +71,9 @@ object FormCheckBoxProvider : BaseFormProvider() {
             set(value) {
                 field = value
                 options = itemCheckBox?.options
-                selected = itemCheckBox?.selected
             }
 
         private var options: List<BaseOption>? = null
-
-        private var selected: List<BaseOption>? = null
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FormViewHolder {
             return FormViewHolder(MaterialCheckBox(parent.context).apply {
@@ -77,6 +82,16 @@ object FormCheckBoxProvider : BaseFormProvider() {
                 minHeight = 0
                 minimumWidth = 0
                 minimumHeight = 0
+                background = RippleDrawable(
+                    ColorStateList.valueOf(attrColor(android.R.attr.colorControlHighlight)),
+                    null,
+                    null
+                ).apply {
+                    radius = textSize.toInt() / 2 + min(
+                        partAdapter.style.paddingInfo.verticalLocal,
+                        partAdapter.style.paddingInfo.horizontalLocal
+                    )
+                }
             })
         }
 
@@ -101,7 +116,7 @@ object FormCheckBoxProvider : BaseFormProvider() {
                     setOnCheckedChangeListener { _, isChecked ->
                         partAdapter.formAdapter.clearFocus()
                         itemCheckBox!!.checkedOption(item, isChecked)
-                        notifyLinkage(
+                        FormCheckBoxProvider.notifyLinkage(
                             partAdapter,
                             itemCheckBox!!,
                             itemCheckBox!!.field,

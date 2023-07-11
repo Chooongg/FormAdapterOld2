@@ -21,6 +21,7 @@ import com.chooongg.formAdapter.item.addInput
 import com.chooongg.formAdapter.item.addInputAutoComplete
 import com.chooongg.formAdapter.item.addLabel
 import com.chooongg.formAdapter.item.addMenu
+import com.chooongg.formAdapter.item.addRadioButton
 import com.chooongg.formAdapter.item.addRating
 import com.chooongg.formAdapter.item.addSelector
 import com.chooongg.formAdapter.item.addSlider
@@ -185,6 +186,21 @@ class BasicFragment : Fragment() {
                             )
                         )
                         content = arrayListOf(Option("郑十"))
+                    }
+
+                    addRadioButton("RadioButton","radioButton"){
+                        localOptions(
+                            listOf(
+                                Option("张三"),
+                                Option("李四"),
+                                Option("王五"),
+                                Option("赵六"),
+                                Option("田七"),
+                                Option("周八"),
+                                Option("吴九"),
+                                Option("郑十"),
+                            )
+                        )
                     }
                 }
             }

@@ -321,4 +321,8 @@ object FormInputAutoCompleteProvider : BaseFormProvider() {
             }
         }
     }
+
+    override fun onItemRecycler(holder: FormViewHolder) {
+        holder.job?.cancel()
+    }
 }
