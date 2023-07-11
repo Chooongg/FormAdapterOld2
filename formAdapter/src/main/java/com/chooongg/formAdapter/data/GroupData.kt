@@ -39,7 +39,7 @@ open class GroupData : AbstractMenuFormData(), FormCreator {
                 (groupTitleItem ?: InternalFormGroupTitle(nameRes, name)).also {
                     it.isDynamicPart = part.dynamicPart
                     it.nameRes = nameRes
-                    it.name = name
+                    it.name = if (part.dynamicPart) part.dynamicPartName ?: name else name
                     it.dynamicPartNameFormatBlock = part.dynamicPartNameFormatBlock
                     it.menuTextRes = menuTextRes
                     it.menuText = menuText

@@ -4,6 +4,7 @@ import androidx.annotation.GravityInt
 import androidx.annotation.StringRes
 import com.chooongg.formAdapter.FormAdapter
 import com.chooongg.formAdapter.FormLinkageBlock
+import com.chooongg.formAdapter.FormManager
 import com.chooongg.formAdapter.FormPartAdapter
 import com.chooongg.formAdapter.FormViewHolder
 import com.chooongg.formAdapter.boundary.Boundary
@@ -270,6 +271,11 @@ abstract class BaseForm(
             customOutputBlock!!.invoke(json)
             return
         }
+        val provider = FormManager.getOutputProvider(javaClass)
+        if (provider != null) {
+            provider.output(this, json)
+            return
+        }
         outputData(json)
     }
 
@@ -277,7 +283,7 @@ abstract class BaseForm(
      * 输出处理
      */
     protected open fun outputData(json: JSONObject) {
-        json.putOpt(field, content)
+        if (field != null && content != null) json.put(field!!, content)
         extensionFieldAndContent?.forEach {
             json.put(it.key, it.value)
         }

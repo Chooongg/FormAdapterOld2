@@ -6,6 +6,8 @@ import com.chooongg.formAdapter.FormAdapter
 import com.chooongg.formAdapter.data.FormCreator
 import com.chooongg.formAdapter.option.BaseOption
 import com.chooongg.formAdapter.provider.FormCheckBoxProvider
+import org.json.JSONArray
+import org.json.JSONObject
 
 fun FormCreator.addCheckBox(
     name: CharSequence?, field: String? = null, block: (FormCheckBox.() -> Unit)? = null
@@ -18,26 +20,7 @@ fun FormCreator.addCheckBox(
 class FormCheckBox(@StringRes nameRes: Int?, name: CharSequence?, field: String?) :
     BaseMultipleOptionForm<BaseOption>(nameRes, name, field) {
 
-    var selected: ArrayList<BaseOption>? = null
-
-    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP_PREFIX)
-    override var content: Any? = null
-
     override fun hasOpenOperation() = false
 
     override fun getItemProvider(adapter: FormAdapter) = FormCheckBoxProvider
-
-    fun checkedOption(option: BaseOption, isChecked: Boolean) {
-        if (isChecked) {
-            if (selected == null) selected = ArrayList()
-            selected!!.add(option)
-        } else {
-            if (selected != null) {
-                selected!!.remove(option)
-                if (selected!!.isEmpty()) {
-                    selected = null
-                }
-            }
-        }
-    }
 }

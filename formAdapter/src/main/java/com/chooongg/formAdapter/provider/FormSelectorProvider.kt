@@ -121,14 +121,12 @@ object FormSelectorProvider : BaseFormProvider() {
             when (item.optionResult) {
                 is OptionState.Loading -> {
                     TooltipCompat.setTooltipText(this, resString(R.string.formOptionsLoading))
-                    val drawable = IndeterminateDrawable.createCircularDrawable(context,
-                        CircularProgressIndicatorSpec(context, null).apply {
+                    icon = IndeterminateDrawable.createCircularDrawable(
+                        context, CircularProgressIndicatorSpec(context, null).apply {
                             trackThickness = dp2px(1.5f)
                             indicatorSize = iconSize / 2
                             indicatorColors = intArrayOf(attrColor(android.R.attr.textColorHint))
                         })
-                    icon = drawable
-                    drawable.start()
                 }
 
                 is OptionResult.Error -> {

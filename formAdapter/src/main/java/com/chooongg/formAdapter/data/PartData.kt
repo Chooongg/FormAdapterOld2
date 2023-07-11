@@ -1,6 +1,7 @@
 package com.chooongg.formAdapter.data
 
 import com.chooongg.formAdapter.FormPartNameFormatter
+import com.chooongg.formAdapter.enum.FormDynamicPartOutputMode
 
 class PartData {
 
@@ -26,6 +27,11 @@ class PartData {
      */
     var dynamicPartName: CharSequence? = null
 
+    /**
+     * 片段字段
+     */
+    var dynamicPartField: String? = null
+
     internal var dynamicPartCreateGroupBlock: (GroupData.() -> Unit)? = null
 
     internal var dynamicPartNameFormatBlock: FormPartNameFormatter? = null
@@ -46,6 +52,11 @@ class PartData {
      */
     @androidx.annotation.IntRange(from = 1)
     var dynamicPartMaxGroupCount: Int = Int.MAX_VALUE
+
+    /**
+     * 动态片段输出模式
+     */
+    var dynamicPartOutMode: FormDynamicPartOutputMode = FormDynamicPartOutputMode.OBJECT
 
     /**
      * 动态片段添加组

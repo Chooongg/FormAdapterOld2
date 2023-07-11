@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
 import com.chooongg.formAdapter.boundary.Boundary
+import com.chooongg.utils.ext.logE
 import kotlin.math.max
 import kotlin.math.min
 
@@ -16,7 +17,13 @@ class FormLayoutManager(context: Context) : GridLayoutManager(context, 2520) {
         set(value) {
             field = value
             if (recyclerView != null) {
-                normalColumnCount = max(1, min(10, recyclerView!!.measuredWidth / maxItemWidth))
+                normalColumnCount = max(
+                    1,
+                    min(
+                        10,
+                        (recyclerView!!.measuredWidth - paddingStart - paddingEnd) / maxItemWidth
+                    )
+                )
             }
         }
 
@@ -53,6 +60,7 @@ class FormLayoutManager(context: Context) : GridLayoutManager(context, 2520) {
     }
 
     private fun calculateBoundary() {
+        logE("Form", "calculateBoundary")
         val formAdapter = recyclerView?.adapter as? FormAdapter ?: return
         var spanIndex = 0
         var globalPosition = 0
@@ -163,7 +171,9 @@ class FormLayoutManager(context: Context) : GridLayoutManager(context, 2520) {
         recycler: RecyclerView.Recycler, state: RecyclerView.State, widthSpec: Int, heightSpec: Int
     ) {
         super.onMeasure(recycler, state, widthSpec, heightSpec)
-        normalColumnCount = max(1, min(10, recyclerView!!.measuredWidth / maxItemWidth))
+        normalColumnCount = max(
+            1, min(10, (recyclerView!!.measuredWidth - paddingStart - paddingEnd) / maxItemWidth)
+        )
     }
 
     override fun onAttachedToWindow(view: RecyclerView) {

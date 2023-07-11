@@ -25,12 +25,11 @@ fun FormCreator.addTime(
 
 class FormTime(@StringRes nameRes: Int?, name: CharSequence?, field: String?) :
     BaseForm(nameRes, name, field) {
-
-    companion object {
-        const val DEFAULT_OUTPUT_FORMAT_TIME = "HH:mm:ss"
-        const val DEFAULT_OUTPUT_FORMAT_DATE = "yyyy-MM-dd"
-        const val DEFAULT_OUTPUT_FORMAT_DATE_TIME = "yyyy-MM-dd HH:mm:ss"
-    }
+//    companion object {
+//        const val DEFAULT_OUTPUT_FORMAT_TIME = "HH:mm:ss"
+//        const val DEFAULT_OUTPUT_FORMAT_DATE = "yyyy-MM-dd"
+//        const val DEFAULT_OUTPUT_FORMAT_DATE_TIME = "yyyy-MM-dd HH:mm:ss"
+//    }
 
     var timeMode: FormTimeMode = FormTimeMode.DATE_TIME
 

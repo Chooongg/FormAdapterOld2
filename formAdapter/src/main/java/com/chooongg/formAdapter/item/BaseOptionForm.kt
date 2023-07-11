@@ -5,8 +5,10 @@ import com.chooongg.formAdapter.FormOptionLoader
 import com.chooongg.formAdapter.FormPartAdapter
 import com.chooongg.formAdapter.FormViewHolder
 import com.chooongg.formAdapter.enum.FormOptionLoadMode
+import com.chooongg.formAdapter.option.BaseOption
 import com.chooongg.formAdapter.option.OptionResult
 import com.chooongg.formAdapter.option.OptionState
+import com.chooongg.utils.ext.style
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -87,5 +89,15 @@ abstract class BaseOptionForm<T>(@StringRes nameRes: Int?, name: CharSequence?, 
 
     fun optionLoader(block: FormOptionLoader<T>?) {
         optionLoader = block
+    }
+
+    override fun getContentText(adapter: FormPartAdapter, holder: FormViewHolder): CharSequence? {
+        if (content == null) return null
+        val option = content as? BaseOption ?: return content?.toString()
+        val text =
+            option.getName().style {} + " ".style {} + (option.getSecondaryName() ?: "").style {
+                setTextSizeRelative(0.8f)
+            }
+        return text.toSpannableString()
     }
 }

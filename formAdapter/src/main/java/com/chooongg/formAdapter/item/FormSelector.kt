@@ -32,13 +32,4 @@ open class FormSelector(@StringRes nameRes: Int?, name: CharSequence?, field: St
     override fun getItemProvider(adapter: FormAdapter) =
         if (isRealEnable(adapter)) FormSelectorProvider else FormTextProvider
 
-    override fun getContentText(adapter: FormPartAdapter, holder: FormViewHolder): CharSequence? {
-        if (content == null) return null
-        val option = content as? BaseOption ?: return content?.toString()
-        val text =
-            option.getName().style {} + " ".style {} + (option.getSecondaryName() ?: "").style {
-                setTextSizeRelative(0.8f)
-            }
-        return text.toSpannableString()
-    }
 }

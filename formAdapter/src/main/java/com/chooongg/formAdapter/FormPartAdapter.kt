@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.ListUpdateCallback
 import androidx.recyclerview.widget.RecyclerView
 import com.chooongg.formAdapter.data.GroupData
 import com.chooongg.formAdapter.data.PartData
+import com.chooongg.formAdapter.enum.FormDynamicPartOutputMode
 import com.chooongg.formAdapter.item.BaseForm
 import com.chooongg.formAdapter.item.SingleLineForm
 import com.chooongg.formAdapter.style.NoneStyle
@@ -16,6 +17,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import org.json.JSONArray
+import org.json.JSONObject
 import java.lang.ref.WeakReference
 
 class FormPartAdapter internal constructor(
@@ -256,5 +259,44 @@ class FormPartAdapter internal constructor(
         _recyclerView = null
         adapterScope.cancel()
         adapterScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
+    }
+
+    fun checkDataCorrectness(): Boolean {
+        return false
+    }
+
+    fun executeOutput(json: JSONObject) {
+        if (data.dynamicPart && data.dynamicPartField != null) {
+            when (data.dynamicPartOutMode) {
+                FormDynamicPartOutputMode.OBJECT -> if (data.dynamicPartField != null) {
+                    json.put(data.dynamicPartField!!, JSONArray().apply {
+                        data.groups.forEach { group ->
+                            put(JSONObject().apply {
+                                group.getItems().forEach {
+                                    it.executeOutput(formAdapter, this)
+                                }
+                            })
+                        }
+                    })
+                }
+
+                FormDynamicPartOutputMode.ARRAY -> {
+                    data.groups.forEach { group ->
+                        group.getItems().forEach {
+                            val temp = JSONObject()
+                            it.executeOutput(formAdapter, temp)
+                            temp.keys().forEach { key ->
+                                if (!json.has(key)) json.put(key, JSONArray())
+                                json.optJSONArray(key)?.put(temp.get(key))
+                            }
+                        }
+                    }
+                }
+            }
+        } else data.groups.forEach { group ->
+            group.getItems().forEach {
+                it.executeOutput(formAdapter, json)
+            }
+        }
     }
 }

@@ -26,7 +26,6 @@ import com.chooongg.formAdapter.option.OptionState
 import com.chooongg.formAdapter.typeset.Typeset
 import com.chooongg.utils.ext.attrColor
 import com.chooongg.utils.ext.dp2px
-import com.chooongg.utils.ext.logE
 import com.chooongg.utils.ext.resString
 import com.chooongg.utils.ext.showToast
 import com.google.android.material.progressindicator.CircularProgressIndicatorSpec
@@ -214,16 +213,13 @@ object FormInputAutoCompleteProvider : BaseFormProvider() {
             when (item.optionResult) {
                 is OptionState.Loading -> {
                     TooltipCompat.setTooltipText(end, resString(R.string.formOptionsLoading))
-                    val drawable = IndeterminateDrawable.createCircularDrawable(
-                        context,
-                        CircularProgressIndicatorSpec(context, null).apply {
+                    endIconDrawable = IndeterminateDrawable.createCircularDrawable(
+                        context, CircularProgressIndicatorSpec(context, null).apply {
                             trackThickness = dp2px(1.5f)
                             indicatorSize = endIconMinSize / 2
                             indicatorColors = intArrayOf(attrColor(android.R.attr.textColorHint))
                         }
                     )
-                    endIconDrawable = drawable
-                    drawable.start()
                     setEndIconOnClickListener { showToast(R.string.formOptionsLoading) }
                 }
 

@@ -6,6 +6,7 @@ import com.chooongg.formAdapter.FormPartNameFormatter
 import com.chooongg.formAdapter.provider.InternalFormGroupTitleProvider
 import com.chooongg.formAdapter.typeset.NoneTypeset
 import com.chooongg.formAdapter.typeset.Typeset
+import org.json.JSONObject
 
 class InternalFormGroupTitle internal constructor(
     @StringRes nameRes: Int?, name: CharSequence?
@@ -21,5 +22,7 @@ class InternalFormGroupTitle internal constructor(
         internal set
 
     override fun getItemProvider(adapter: FormAdapter) = InternalFormGroupTitleProvider
+
+    override fun outputData(json: JSONObject) = Unit
 
 }

@@ -73,7 +73,6 @@ class BasicFragment : Fragment() {
                         visibilityMode = FormVisibilityMode.ONLY_EDIT
                         contentGravity = Gravity.CENTER_HORIZONTAL
                     }
-                    addSelector("Selector", "selector")
                     addSelector("Selector", "selector") {
                         content = "FormSelector"
                         openMode = FormSelectorOpenMode.PAGE
@@ -102,19 +101,19 @@ class BasicFragment : Fragment() {
                     }
                     addInput("Input", "input")
                     addInputAutoComplete("AutoComplete", "inputAutoComplete") {
-                        optionLoader {
-                            delay(5000)
-                            listOf(
-                                "张三",
-                                "李四",
-                                "王五",
-                                "赵六",
-                                "田七",
-                                "周八",
-                                "吴九",
-                                "郑十"
-                            )
-                        }
+//                        optionLoader {
+//                            delay(5000)
+//                            listOf(
+//                                "张三",
+//                                "李四",
+//                                "王五",
+//                                "赵六",
+//                                "田七",
+//                                "周八",
+//                                "吴九",
+//                                "郑十"
+//                            )
+//                        }
                     }
                     addSelector("Selector", "selector") {
                         isMust = true
@@ -158,19 +157,19 @@ class BasicFragment : Fragment() {
 
                     }
                     addInputAutoComplete("AutoComplete", "inputAutoComplete1") {
-                        optionLoader {
-                            delay(5000)
-                            listOf(
-                                "张三",
-                                "李四",
-                                "王五",
-                                "赵六",
-                                "田七",
-                                "周八",
-                                "吴九",
-                                "郑十"
-                            )
-                        }
+//                        optionLoader {
+//                            delay(5000)
+//                            listOf(
+//                                "张三",
+//                                "李四",
+//                                "王五",
+//                                "赵六",
+//                                "田七",
+//                                "周八",
+//                                "吴九",
+//                                "郑十"
+//                            )
+//                        }
                     }
                     addCheckBox("CheckBox", "checkBox") {
                         localOptions(
@@ -178,11 +177,16 @@ class BasicFragment : Fragment() {
                                 Option("张三"),
                                 Option("李四"),
                                 Option("王五"),
-                                Option("赵六"),
-                                Option("田七"),
-                                Option("周八"),
-                                Option("吴九"),
-                                Option("郑十"),
+                            )
+                        )
+                        content = arrayListOf(Option("郑十"))
+                    }
+                    addCheckBox("CheckBox", "checkBox") {
+                        localOptions(
+                            listOf(
+                                Option("张三"),
+                                Option("李四"),
+                                Option("王五"),
                             )
                         )
                         content = arrayListOf(Option("郑十"))
@@ -194,11 +198,15 @@ class BasicFragment : Fragment() {
                                 Option("张三"),
                                 Option("李四"),
                                 Option("王五"),
-                                Option("赵六"),
-                                Option("田七"),
-                                Option("周八"),
-                                Option("吴九"),
-                                Option("郑十"),
+                            )
+                        )
+                    }
+                    addRadioButton("RadioButton","radioButton"){
+                        localOptions(
+                            listOf(
+                                Option("张三"),
+                                Option("李四"),
+                                Option("王五"),
                             )
                         )
                     }

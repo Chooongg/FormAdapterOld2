@@ -1,12 +1,11 @@
 package com.chooongg.formAdapter
 
-import android.view.inputmethod.InputMethodManager
-import androidx.core.content.getSystemService
 import com.chooongg.formAdapter.data.PartData
 import com.chooongg.formAdapter.style.NoneStyle
 import com.chooongg.formAdapter.style.Style
 import com.chooongg.utils.ext.getActivity
 import com.chooongg.utils.ext.hideIME
+import org.json.JSONObject
 
 class FormAdapter(isEditable: Boolean, block: (FormAdapter.() -> Unit)? = null) :
     FormConcatAdapter(isEditable) {
@@ -30,6 +29,8 @@ class FormAdapter(isEditable: Boolean, block: (FormAdapter.() -> Unit)? = null) 
             plusPart(index, this)
             create(block)
         }
+
+    fun executeOutput() = JSONObject().apply { partAdapters.forEach { it.executeOutput(this) } }
 
     fun clearFocus() {
         _recyclerView.get()?.also {
