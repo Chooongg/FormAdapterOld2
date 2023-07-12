@@ -3,6 +3,7 @@ package com.chooongg.formAdapter.item
 import androidx.annotation.GravityInt
 import androidx.annotation.StringRes
 import com.chooongg.formAdapter.FormAdapter
+import com.chooongg.formAdapter.FormDataVerificationException
 import com.chooongg.formAdapter.FormLinkageBlock
 import com.chooongg.formAdapter.FormManager
 import com.chooongg.formAdapter.FormPartAdapter
@@ -251,11 +252,22 @@ abstract class BaseForm(
         customOutputBlock = block
     }
 
+    @Throws(FormDataVerificationException::class)
+    fun executeDataCorrectness() {
+        val provider = FormManager.getItemDataProvider(javaClass)
+        if (provider != null) {
+            provider.dataCorrectness(this)
+            return
+        }
+        dataCorrectness()
+    }
+
     /**
-     * 检查数据正确性
+     * 数据验证
      */
-    open fun checkDataCorrectness(): Boolean {
-        return if (isMust) content != null else true
+    @Throws(FormDataVerificationException::class)
+    open fun dataCorrectness() {
+        if (isMust && content == null) throw FormDataVerificationException(name, globalPosition)
     }
 
     /**
@@ -271,7 +283,7 @@ abstract class BaseForm(
             customOutputBlock!!.invoke(json)
             return
         }
-        val provider = FormManager.getOutputProvider(javaClass)
+        val provider = FormManager.getItemDataProvider(javaClass)
         if (provider != null) {
             provider.output(this, json)
             return

@@ -19,9 +19,7 @@ class MainActivity : AppCompatActivity() {
 
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
 
-    private val fragments = listOf(
-        BasicFragment()
-    )
+    private val fragments = listOf(BasicFragment())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

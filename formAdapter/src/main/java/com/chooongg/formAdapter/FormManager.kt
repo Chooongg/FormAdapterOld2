@@ -6,11 +6,11 @@ import com.chooongg.formAdapter.boundary.Boundary
 import com.chooongg.formAdapter.format.DefaultNameFormat
 import com.chooongg.formAdapter.format.FormNameFormat
 import com.chooongg.formAdapter.item.BaseForm
-import com.chooongg.formAdapter.output.BaseOutputProvider
+import com.chooongg.formAdapter.output.BaseItemDataProvider
 
 object FormManager {
 
-    private val outputProviders = HashSet<BaseOutputProvider>()
+    private val formItemDataProviders = HashSet<BaseItemDataProvider>()
 
     var emsSize = 5
     var maxItemWidth = (300 * Resources.getSystem().displayMetrics.density + 0.5f).toInt()
@@ -25,12 +25,12 @@ object FormManager {
 
     var nameFormat: FormNameFormat = DefaultNameFormat
 
-    fun putOutputProvider(provider: BaseOutputProvider) {
-        outputProviders.removeIf { it.getTargetClass() == provider.getTargetClass() }
-        outputProviders.add(provider)
+    fun putItemDataProvider(provider: BaseItemDataProvider) {
+        formItemDataProviders.removeIf { it.getTargetClass() == provider.getTargetClass() }
+        formItemDataProviders.add(provider)
     }
 
-    internal fun getOutputProvider(clazz: Class<out BaseForm>): BaseOutputProvider? {
-        return outputProviders.find { it.getTargetClass() == clazz }
+    internal fun getItemDataProvider(clazz: Class<out BaseForm>): BaseItemDataProvider? {
+        return formItemDataProviders.find { it.getTargetClass() == clazz }
     }
 }

@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
 import com.chooongg.formAdapter.boundary.Boundary
+import com.chooongg.formAdapter.item.BaseForm
 import com.chooongg.utils.ext.logE
 import kotlin.math.max
 import kotlin.math.min
@@ -87,6 +88,7 @@ class FormLayoutManager(context: Context) : GridLayoutManager(context, 2520) {
                         if (item.isSingleLineItem) FormManager.singleLineDividerType else FormManager.horizontalDividerType
                 }
                 spanIndex += item.itemSpan
+
                 if (spanIndex == spanCount) {
                     item.marginBoundary.endType = Boundary.GLOBAL
                     item.paddingBoundary.endType = Boundary.GLOBAL
@@ -144,6 +146,10 @@ class FormLayoutManager(context: Context) : GridLayoutManager(context, 2520) {
                 }
             }
         }
+    }
+
+    private fun setItemBoundary(partAdapter: FormPartAdapter, item: BaseForm){
+
     }
 
     override fun smoothScrollToPosition(

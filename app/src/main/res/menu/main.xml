@@ -2,14 +2,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/basic"
-        android:icon="@drawable/ic_main_basic"
-        android:title="@string/basic"
+        android:id="@+id/home"
+        android:icon="@drawable/asld_main_home"
+        android:title="@string/home"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/other"
-        android:icon="@drawable/ic_main_basic"
+        android:icon="@drawable/ic_main_solar"
         android:title="@string/basic"
         app:showAsAction="ifRoom" />
 

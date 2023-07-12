@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:drawable="@drawable/ic_main_home">
+
+    <target android:name="block">
+        <aapt:attr name="android:animation">
+            <set>
+                <set android:ordering="sequentially">
+                    <objectAnimator
+                        android:duration="500"
+                        android:interpolator="@android:interpolator/fast_out_slow_in"
+                        android:propertyName="translateY"
+                        android:valueFrom="0"
+                        android:valueTo="-5"
+                        android:valueType="floatType" />
+                    <objectAnimator
+                        android:duration="500"
+                        android:interpolator="@android:interpolator/fast_out_slow_in"
+                        android:propertyName="translateY"
+                        android:valueFrom="-5"
+                        android:valueTo="0"
+                        android:valueType="floatType" />
+                </set>
+            </set>
+        </aapt:attr>
+    </target>
+
+</animated-vector>
