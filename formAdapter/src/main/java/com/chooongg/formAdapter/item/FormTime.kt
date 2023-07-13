@@ -1,5 +1,6 @@
 package com.chooongg.formAdapter.item
 
+import android.icu.text.DateFormat
 import androidx.annotation.StringRes
 import com.chooongg.formAdapter.FormAdapter
 import com.chooongg.formAdapter.FormPartAdapter
@@ -12,8 +13,6 @@ import com.chooongg.utils.TimeUtils
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DayViewDecorator
 import com.google.android.material.timepicker.TimeFormat
-import java.text.DateFormat
-import java.util.Locale
 
 fun FormCreator.addTime(
     name: CharSequence?, field: String? = null, block: (FormTime.() -> Unit)? = null
@@ -52,19 +51,16 @@ class FormTime(@StringRes nameRes: Int?, name: CharSequence?, field: String?) :
         if (showFormatPattern != null) return TimeUtils.millis2String(millis, showFormatPattern!!)
         return when (timeMode) {
             FormTimeMode.TIME -> DateFormat.getTimeInstance(
-                DateFormat.DEFAULT,
-                Locale.getDefault()
+                DateFormat.SHORT
             ).format(millis)
 
             FormTimeMode.DATE -> DateFormat.getDateInstance(
-                DateFormat.DEFAULT,
-                Locale.getDefault()
+                DateFormat.DEFAULT
             ).format(millis)
 
             FormTimeMode.DATE_TIME -> DateFormat.getDateTimeInstance(
                 DateFormat.DEFAULT,
-                DateFormat.DEFAULT,
-                Locale.getDefault()
+                DateFormat.SHORT
             ).format(millis)
         }
     }
