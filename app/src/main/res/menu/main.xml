@@ -13,4 +13,10 @@
         android:title="@string/basic"
         app:showAsAction="ifRoom" />
 
+    <item
+        android:id="@+id/power"
+        android:icon="@drawable/ic_main_power"
+        android:title="@string/basic"
+        app:showAsAction="ifRoom" />
+
 </menu>
