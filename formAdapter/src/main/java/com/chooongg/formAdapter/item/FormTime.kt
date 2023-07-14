@@ -13,6 +13,7 @@ import com.chooongg.utils.TimeUtils
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DayViewDecorator
 import com.google.android.material.timepicker.TimeFormat
+import java.util.Locale
 
 fun FormCreator.addTime(
     name: CharSequence?, field: String? = null, block: (FormTime.() -> Unit)? = null
@@ -51,17 +52,16 @@ class FormTime(@StringRes nameRes: Int?, name: CharSequence?, field: String?) :
         if (showFormatPattern != null) return TimeUtils.millis2String(millis, showFormatPattern!!)
         return when (timeMode) {
             FormTimeMode.TIME -> DateFormat.getTimeInstance(
-                DateFormat.SHORT
-            ).format(millis)
+                DateFormat.SHORT, Locale.getDefault()
+            )
 
             FormTimeMode.DATE -> DateFormat.getDateInstance(
-                DateFormat.DEFAULT
-            ).format(millis)
+                DateFormat.DEFAULT, Locale.getDefault()
+            )
 
             FormTimeMode.DATE_TIME -> DateFormat.getDateTimeInstance(
-                DateFormat.DEFAULT,
-                DateFormat.SHORT
-            ).format(millis)
-        }
+                DateFormat.DEFAULT, DateFormat.SHORT, Locale.getDefault()
+            )
+        }.format(millis)
     }
 }
