@@ -20,6 +20,6 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "FormAdapter"
+rootProject.name = "FormAdapterOld2"
 include ':app'
 include ':formAdapter'
